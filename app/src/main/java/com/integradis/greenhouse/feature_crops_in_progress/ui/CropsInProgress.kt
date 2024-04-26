@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DateRange
+import androidx.compose.material.icons.rounded.Event
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,7 +61,7 @@ fun CropsInProgress(){
                 },
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.DateRange,
+                    imageVector = Icons.Rounded.Event,
                     contentDescription = "Calendario",
                     tint = PrimaryGreen40)
             }

@@ -10,10 +10,11 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.integradis.greenhouse.ui.theme.GrayTextField
-import com.integradis.greenhouse.ui.theme.PrimaryGreen
+import com.integradis.greenhouse.ui.theme.GrayTextField40
+import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
 
 @Composable
@@ -35,14 +36,14 @@ fun InputTextField(
         maxLines = 1,
         shape = RoundedCornerShape(16.dp),
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = GrayTextField,
-            unfocusedContainerColor = GrayTextField,
+            focusedContainerColor = GrayTextField40,
+            unfocusedContainerColor = GrayTextField40,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            cursorColor = PrimaryGreen,
+            cursorColor = PrimaryGreen40,
             selectionColors = TextSelectionColors(
-                handleColor = PrimaryGreen,
-                backgroundColor = PrimaryGreen
+                handleColor = PrimaryGreen40,
+                backgroundColor = PrimaryGreen40
             )
         ),
         textStyle = Typography.labelMedium,

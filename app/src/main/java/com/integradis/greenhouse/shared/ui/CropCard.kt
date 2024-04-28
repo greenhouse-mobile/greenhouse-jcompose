@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.Yard
 import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material.icons.outlined.Yard
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,8 +39,11 @@ fun CropCard(
     imageUrl : String,
     crop : Crop
 ) {
-    Card(
-        modifier = Modifier.padding(35.dp)
+    ElevatedCard(
+        modifier = Modifier.padding(top = 20.dp, start = 30.dp, end = 30.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp
+        )
     ) {
         GlideImage(
             imageModel = { imageUrl },

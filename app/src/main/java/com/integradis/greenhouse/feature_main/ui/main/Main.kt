@@ -28,12 +28,12 @@ fun GreenhouseMainScreen() {
 
 
     Scaffold(
-        bottomBar = { NavBar(navController)}
+        bottomBar = {NavBar(navController)}
     ) {padding->
         Box(modifier = Modifier
             .padding(padding)
             .fillMaxSize()){
-            NavHost(navController = navController, startDestination = Routes.Dashboard.route, modifier = Modifier.verticalScroll(rememberScrollState())) {
+            NavHost(navController = navController, startDestination = Routes.Dashboard.route) {
                 composable(route = Routes.Dashboard.route){
                     Dashboard(userName, navController)
                 }
@@ -44,7 +44,7 @@ fun GreenhouseMainScreen() {
                     Mail()
                 }
                 composable(route = Routes.CropsInProgress.route) {
-                    CropsInProgress()
+                    CropsInProgress(navController)
                 }
                 composable(route = Routes.Archives.route) {
                     Archives()

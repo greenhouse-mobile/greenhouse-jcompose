@@ -4,5 +4,5 @@ typealias Crops = List<Crop>
 data class Crop(
     val id: String,
     val startDate: String,
-    val phase: String,
+    val phase: CropPhase,
 )

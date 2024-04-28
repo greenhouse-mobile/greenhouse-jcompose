@@ -48,7 +48,7 @@ fun StepperButton(
             }
             Text(
                 text = phase.getPhaseName(),
-                style = Typography.labelMedium,
+                style = Typography.labelLarge,
                 fontWeight = FontWeight.Bold,
                 color = PrimaryGreen40,
                 modifier = Modifier
@@ -76,7 +76,7 @@ fun StepperButton(
                 }
                 Text(
                     text = phase.getPhaseName(),
-                    style = Typography.labelMedium,
+                    style = Typography.labelLarge,
                     color = Color.Gray,
                     modifier = Modifier
                         .padding(top = 10.dp, start = 10.dp)
@@ -102,7 +102,7 @@ fun StepperButton(
                 }
                 Text(
                     text = phase.getPhaseName(),
-                    style = Typography.labelMedium,
+                    style = Typography.labelLarge,
                     color = Color.Gray,
                     modifier = Modifier
                         .padding(top = 10.dp, start = 10.dp)

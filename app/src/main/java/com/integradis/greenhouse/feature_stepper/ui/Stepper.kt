@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.integradis.greenhouse.shared.domain.Crop
 import com.integradis.greenhouse.shared.domain.CropPhase
 import com.integradis.greenhouse.shared.ui.MultiStyleText
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
@@ -27,14 +28,15 @@ import com.integradis.greenhouse.ui.theme.Typography
 
 @Composable
 fun Stepper(
-    navController : NavController
+    navController: NavController,
+    cropId: String?
 ) {
+    val crops = mutableListOf(Crop("29", "29/23/2004",CropPhase.PREPARATION_AREA), Crop("90", "29/14/2004",CropPhase.BUNKER))
     // In production environment this should be obtained from a crop entity
-    var currentCropPhase = CropPhase.TUNNEL
-    val itemsList = mutableListOf<CropPhase>(CropPhase.STOCK,CropPhase.PREPARATION_AREA,
+    val chosenCrop = crops.filter { it.id == cropId }[0]
+    val itemsList = mutableListOf(CropPhase.STOCK,CropPhase.PREPARATION_AREA,
         CropPhase.BUNKER,CropPhase.TUNNEL,CropPhase.INCUBATION,CropPhase.CASING,
-        CropPhase.INDUCTION,CropPhase.HARVEST
-    )
+        CropPhase.INDUCTION,CropPhase.HARVEST)
     Scaffold {paddingValues ->
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -92,10 +94,10 @@ fun Stepper(
                     modifier = Modifier.padding(paddingValues)
                 ) {
                     items(itemsList) {item ->
-                        if (item < currentCropPhase){
+                        if (item < chosenCrop.phase){
                             StepperButton(phase = item, isComplete = true)
                         }
-                        else if (item == currentCropPhase) {
+                        else if (item == chosenCrop.phase) {
                             StepperButton(phase = item, isCurrent = true)
                         }
                         else {

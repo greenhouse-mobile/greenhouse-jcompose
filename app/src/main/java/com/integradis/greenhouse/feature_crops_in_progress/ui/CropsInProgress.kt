@@ -1,5 +1,6 @@
 package com.integradis.greenhouse.feature_crops_in_progress.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -29,7 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.integradis.greenhouse.feature_main.ui.main.Routes
 import com.integradis.greenhouse.shared.domain.Crop
+import com.integradis.greenhouse.shared.domain.CropPhase
 import com.integradis.greenhouse.shared.ui.CropCard
 import com.integradis.greenhouse.shared.ui.InputTextField
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
@@ -40,7 +43,7 @@ import com.integradis.greenhouse.ui.theme.Typography
 fun CropsInProgress(
     navController: NavController,
 ){
-    val crops = mutableListOf(Crop("29", "29/23/2004","Preparation Area"), Crop("90", "29/14/2004","Bunker"))
+    val crops = mutableListOf(Crop("29", "29/23/2004",CropPhase.PREPARATION_AREA), Crop("90", "29/14/2004",CropPhase.BUNKER))
     val searchCropsInput = remember {
         mutableStateOf("")
     }
@@ -102,7 +105,11 @@ fun CropsInProgress(
                 items(crops) {crop ->
                     CropCard(
                         imageUrl = "https://i.pinimg.com/originals/fd/65/01/fd6501a1ed1fc18cb4685c8f69bb4df3.jpg",
-                        crop = crop)
+                        crop = crop,
+                        navigateTo = {
+                            navController.navigate("${Routes.Stepper.route}/${crop.id}")
+                        }
+                    )
 
                 }
             }

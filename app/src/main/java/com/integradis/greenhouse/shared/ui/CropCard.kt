@@ -2,22 +2,21 @@ package com.integradis.greenhouse.shared.ui
 
 
 import android.graphics.Bitmap
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Yard
 import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material.icons.outlined.Yard
-import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -34,11 +33,15 @@ import java.security.MessageDigest
 
 @Composable
 fun CropCard(
-    imageUrl : String,
-    crop : Crop
+    imageUrl: String,
+    crop: Crop,
+    navigateTo: () -> Unit
 ) {
-    Card(
-        modifier = Modifier.padding(35.dp)
+    ElevatedCard(
+        modifier = Modifier.padding(top = 20.dp, start = 30.dp, end = 30.dp).clickable { navigateTo() },
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp
+        )
     ) {
         GlideImage(
             imageModel = { imageUrl },
@@ -107,7 +110,7 @@ fun CropCard(
                     tint = PrimaryGreen40
                 )
                 Text(
-                    text = "Current Phase: ${crop.phase}",
+                    text = "Current Phase: ${crop.phase.getPhaseName()}",
                     modifier = Modifier.padding(2.dp)
                 )
             }

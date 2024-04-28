@@ -1,13 +1,17 @@
 package com.integradis.greenhouse.feature_crops_in_progress.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.DateRange
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Event
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -25,7 +29,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.integradis.greenhouse.feature_main.ui.main.Routes
 import com.integradis.greenhouse.shared.domain.Crop
+import com.integradis.greenhouse.shared.domain.CropPhase
 import com.integradis.greenhouse.shared.ui.CropCard
 import com.integradis.greenhouse.shared.ui.InputTextField
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
@@ -33,8 +40,11 @@ import com.integradis.greenhouse.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CropsInProgress(){
-    val hola = remember {
+fun CropsInProgress(
+    navController: NavController,
+){
+    val crops = mutableListOf(Crop("29", "29/23/2004",CropPhase.PREPARATION_AREA), Crop("90", "29/14/2004",CropPhase.BUNKER))
+    val searchCropsInput = remember {
         mutableStateOf("")
     }
     val datePickerState = rememberDatePickerState(
@@ -45,14 +55,37 @@ fun CropsInProgress(){
     val selectedDate = remember { mutableStateOf("") }
 
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()){
+        Row (
+            modifier = Modifier
+                .align(Alignment.Start)
+                .height(intrinsicSize = IntrinsicSize.Max)
+        ) {
+            IconButton(
+                onClick = {
+                    navController.navigateUp()
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                    contentDescription = "Go Back",
+                    tint = PrimaryGreen40
+                )
+            }
+            Text(
+                text = "Go Back",
+                color = PrimaryGreen40,
+                modifier = Modifier.padding(top = 12.dp)
+            )
+        }
         Text(
             text = "CROPS IN PROGRESS",
             style = Typography.labelLarge,
-            color = Color(0xFF465B3F)
+            color = Color(0xFF465B3F),
+            modifier = Modifier.padding(bottom = 8.dp)
         )
         Row( horizontalArrangement = Arrangement.SpaceBetween){
             InputTextField(
-                input = hola,
+                input = searchCropsInput,
                 placeholder = "Search crops...",
             )
             IconButton(
@@ -62,24 +95,26 @@ fun CropsInProgress(){
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Event,
-                    contentDescription = "Calendario",
-                    tint = PrimaryGreen40)
+                    contentDescription = "Calendar",
+                    tint
+                    = PrimaryGreen40)
             }
         }
-        Column() {
-            CropCard(
-                imageUrl = "https://i.pinimg.com/originals/fd/65/01/fd6501a1ed1fc18cb4685c8f69bb4df3.jpg",
-                crop = Crop("92", "29/03/04", "Preparation Area")
-            )
+        Scaffold {paddingValues ->
+            LazyColumn(modifier = Modifier.padding(paddingValues)) {
+                items(crops) {crop ->
+                    CropCard(
+                        imageUrl = "https://i.pinimg.com/originals/fd/65/01/fd6501a1ed1fc18cb4685c8f69bb4df3.jpg",
+                        crop = crop,
+                        navigateTo = {
+                            navController.navigate("${Routes.Stepper.route}/${crop.id}")
+                        }
+                    )
+
+                }
+            }
         }
     }
-    /*Scaffold {paddingValues ->
-        LazyColumn (modifier = Modifier.padding(paddingValues)) {
-
-        }
-
-    }*/
-
 
     if (showDatePicker.value) {
         DatePickerDialog(

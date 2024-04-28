@@ -42,7 +42,9 @@ fun Dashboard(
     val rem = remember {
         mutableStateOf("")
     }
-    Column (modifier = Modifier.verticalScroll(rememberScrollState())){
+    Column (
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ){
         Row (modifier = Modifier
             .fillMaxWidth()
             .padding(15.dp), verticalAlignment = Alignment.CenterVertically) {

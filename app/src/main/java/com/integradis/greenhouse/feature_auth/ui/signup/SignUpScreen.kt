@@ -38,7 +38,7 @@ import com.integradis.greenhouse.shared.ui.SideCustomButton
 @Composable
 fun SignUpScreen(navigateToSignUp: () -> Unit,
                  navigateToSignIn: () -> Unit,
-                 navigateToCrops: () -> Unit) {
+                 navigateToDashboard: () -> Unit) {
     Scaffold { paddingValues ->
 
         Image(
@@ -142,7 +142,7 @@ fun SignUpScreen(navigateToSignUp: () -> Unit,
                         }
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        CustomButton(text = "Sign up", navigateToCrops)
+                        CustomButton(text = "Sign up", navigateToDashboard)
                     }
 
 

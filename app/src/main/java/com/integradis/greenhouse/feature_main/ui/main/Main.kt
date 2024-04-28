@@ -34,6 +34,27 @@ fun GreenhouseMainScreen() {
             .padding(padding)
             .fillMaxSize()){
             NavHost(navController = navController, startDestination = Routes.Dashboard.route) {
+                
+                composable(route = Routes.HomeScreen.route){
+                    HomeScreen(navController = navController)
+                }
+                
+                composable(route = Routes.SignIn.route) {
+                    SignInScreen(
+                        navigateToSignUp = {navController.navigate(Routes.SignUp.route)},
+                        navigateToSignIn = {navController.navigate(Routes.SignIn.route)},
+                        navigateToCrops = {navController.navigate(Routes.CropsInProgress.route)}
+                    )
+                }
+
+                composable(route = Routes.SignUp.route) {
+                    SignUpScreen(
+                        navigateToSignUp = {navController.navigate(Routes.SignUp.route)},
+                        navigateToSignIn = {navController.navigate(Routes.SignIn.route)},
+                        navigateToCrops = {navController.navigate(Routes.CropsInProgress.route)}
+                    )
+                }
+                
                 composable(route = Routes.Dashboard.route){
                     Dashboard(userName, navController)
                 }
@@ -60,6 +81,11 @@ fun GreenhouseMainScreen() {
 }
 
 sealed class Routes(val route: String) {
+
+    object HomeScreen : Routes("HomeScreen")
+    object SignIn : Routes("SignIn")
+    object SignUp : Routes("SignUp")
+    
     object CropsInProgress : Routes("CropsInProgress")
     object Dashboard : Routes("Dashboard")
     object Perfil : Routes("Perfil")

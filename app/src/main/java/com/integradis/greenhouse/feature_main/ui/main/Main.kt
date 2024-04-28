@@ -26,9 +26,23 @@ fun GreenhouseMainScreen() {
     val navController = rememberNavController()
     val userName = "Winston Smith"
 
+    val currentRoute = remember { mutableStateOf("") }                  
+                                                                    
+    navController.addOnDestinationChangedListener { _, destination, _ ->
+        currentRoute.value = destination.route ?: ""                
+    }                                                                   
 
     Scaffold(
-        bottomBar = {NavBar(navController)}
+        
+       bottomBar = {                                         
+        if (currentRoute.value != Routes.SignIn.route &&  
+            currentRoute.value != Routes.SignUp.route &&  
+            currentRoute.value != Routes.HomeScreen.route)
+        {                                                 
+            NavBar(navController)                         
+        }                                                 
+}                                                     
+        
     ) {padding->
         Box(modifier = Modifier
             .padding(padding)

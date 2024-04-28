@@ -29,6 +29,8 @@ import com.integradis.greenhouse.ui.theme.Typography
 fun Stepper(
     navController : NavController
 ) {
+    // In production environment this should be obtained from a crop entity
+    var currentCropPhase = CropPhase.TUNNEL
     val itemsList = mutableListOf<CropPhase>(CropPhase.STOCK,CropPhase.PREPARATION_AREA,
         CropPhase.BUNKER,CropPhase.TUNNEL,CropPhase.INCUBATION,CropPhase.CASING,
         CropPhase.INDUCTION,CropPhase.HARVEST
@@ -90,7 +92,15 @@ fun Stepper(
                     modifier = Modifier.padding(paddingValues)
                 ) {
                     items(itemsList) {item ->
-                        StepperButton(phase = item)
+                        if (item < currentCropPhase){
+                            StepperButton(phase = item, isComplete = true)
+                        }
+                        else if (item == currentCropPhase) {
+                            StepperButton(phase = item, isCurrent = true)
+                        }
+                        else {
+                            StepperButton(phase = item)
+                        }
                         if(item != CropPhase.HARVEST) StepperDivider()
 
                     }

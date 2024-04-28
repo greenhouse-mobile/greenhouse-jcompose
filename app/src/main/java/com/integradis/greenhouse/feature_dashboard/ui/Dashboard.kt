@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.NotificationsNone
@@ -40,7 +42,9 @@ fun Dashboard(
     val rem = remember {
         mutableStateOf("")
     }
-    Column (){
+    Column (
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ){
         Row (modifier = Modifier
             .fillMaxWidth()
             .padding(15.dp), verticalAlignment = Alignment.CenterVertically) {

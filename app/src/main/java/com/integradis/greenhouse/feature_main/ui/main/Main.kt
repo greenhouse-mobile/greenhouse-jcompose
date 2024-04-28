@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.integradis.greenhouse.feature_crops_in_progress.ui.CropsInProgress
 import com.integradis.greenhouse.feature_dashboard.ui.Dashboard
+import com.integradis.greenhouse.feature_forgot_password.ui.ForgotPassword
 import com.integradis.greenhouse.feature_mail.ui.Mail
 import com.integradis.greenhouse.feature_notification.ui.Notification
 import com.integradis.greenhouse.feature_perfil.ui.Perfil
@@ -24,7 +25,11 @@ import com.integradis.greenhouse.shared.ui.NavBar
 @Composable
 fun GreenhouseMainScreen() {
     val navController = rememberNavController()
-    val userName = "Winston Smith"
+    val name = "Winston Smith"
+    val username = "wsmith"
+    val company = "Peru Agro J&V S.A.C."
+    val role = "Supervising technician"
+
 
 
     Scaffold(
@@ -33,12 +38,12 @@ fun GreenhouseMainScreen() {
         Box(modifier = Modifier
             .padding(padding)
             .fillMaxSize()){
-            NavHost(navController = navController, startDestination = Routes.Dashboard.route, modifier = Modifier.verticalScroll(rememberScrollState())) {
+            NavHost(navController = navController, startDestination = Routes.Dashboard.route) {
                 composable(route = Routes.Dashboard.route){
-                    Dashboard(userName, navController)
+                    Dashboard(name, navController)
                 }
                 composable(route = Routes.Perfil.route){
-                    Perfil()
+                    Perfil(navController = navController, name, username, company, role)
                 }
                 composable(route = Routes.Correo.route){
                     Mail()
@@ -51,6 +56,9 @@ fun GreenhouseMainScreen() {
                 }
                 composable(route = Routes.Notification.route) {
                     Notification()
+                }
+                composable(route = Routes.ForgotPassword.route) {
+                    ForgotPassword()
                 }
             }
 
@@ -69,5 +77,7 @@ sealed class Routes(val route: String) {
     object Archives : Routes("Archives")
 
     object Notification : Routes("Notification")
+
+    object ForgotPassword : Routes("ForgotPassword")
 
 }

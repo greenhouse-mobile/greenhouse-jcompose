@@ -22,6 +22,7 @@ import com.integradis.greenhouse.feature_home.ui.home.HomeScreen
 import com.integradis.greenhouse.feature_mail.ui.Mail
 import com.integradis.greenhouse.feature_notification.ui.Notification
 import com.integradis.greenhouse.feature_perfil.ui.Perfil
+import com.integradis.greenhouse.feature_stepper.ui.Stepper
 import com.integradis.greenhouse.features_archive.ui.Archives
 import com.integradis.greenhouse.shared.ui.NavBar
 
@@ -52,7 +53,8 @@ fun GreenhouseMainScreen() {
         Box(modifier = Modifier
             .padding(padding)
             .fillMaxSize()){
-            NavHost(navController = navController, startDestination = Routes.SignIn.route) {
+            // Changed to Stepper for testing purposes
+            NavHost(navController = navController, startDestination = Routes.Stepper.route) {
                 
                 composable(route = Routes.HomeScreen.route){
                     HomeScreen(navController = navController)
@@ -86,6 +88,9 @@ fun GreenhouseMainScreen() {
                 composable(route = Routes.CropsInProgress.route) {
                     CropsInProgress(navController)
                 }
+                composable(route = Routes.Stepper.route) {
+                    Stepper(navController = navController)
+                }
                 composable(route = Routes.Archives.route) {
                     Archives()
                 }
@@ -106,6 +111,7 @@ sealed class Routes(val route: String) {
     object SignUp : Routes("SignUp")
     
     object CropsInProgress : Routes("CropsInProgress")
+    object Stepper : Routes("Stepper")
     object Dashboard : Routes("Dashboard")
     object Perfil : Routes("Perfil")
     object Correo : Routes("Correo")

@@ -37,7 +37,7 @@ import com.integradis.greenhouse.ui.theme.Typography
 @Composable
 fun SignInScreen(navigateToSignUp: () -> Unit,
                  navigateToSignIn: () -> Unit,
-                 navigateToCrops: () -> Unit) {
+                 navigateToDashboard: () -> Unit) {
     Scaffold { paddingValues ->
 
         val username = remember {
@@ -120,7 +120,7 @@ fun SignInScreen(navigateToSignUp: () -> Unit,
 
                         CustomButton(
                             text = "Sign up",
-                            navigateToCrops
+                            navigateToDashboard
                         )
 
                     }

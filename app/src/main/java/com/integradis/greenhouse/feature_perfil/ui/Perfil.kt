@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,15 +15,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Logout
-import androidx.compose.material.icons.rounded.NotificationsNone
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -43,6 +39,7 @@ import androidx.navigation.NavHostController
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.integradis.greenhouse.shared.ui.InfoField
+import com.integradis.greenhouse.shared.domain.Information
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
 import com.skydoves.landscapist.glide.GlideImage
@@ -59,6 +56,28 @@ fun Perfil(
     val rem = remember {
         mutableStateOf("")
     }
+    val fields = listOf(
+        Information(
+            title = "Name",
+            placeholder = name,
+            input = rem
+        ),
+        Information(
+            title = "Username",
+            placeholder = username,
+            input = rem
+        ),
+        Information(
+            title = "Company",
+            placeholder = company,
+            input = rem
+        ),
+        Information(
+            title = "Role within the company",
+            placeholder = role,
+            input = rem
+        )
+    )
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())
     ){
         Row (
@@ -118,7 +137,7 @@ fun Perfil(
             }
         }
         Column {
-            InfoField(rem, name, username, company, role)
+            InfoField(fields, false)
             Text(text = "Settings", style = Typography.labelLarge, modifier = Modifier.padding(15.dp))
             Text(text = "Forgot your passowrd?",
                 style = Typography.labelLarge,

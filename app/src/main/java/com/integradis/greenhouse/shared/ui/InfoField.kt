@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.integradis.greenhouse.shared.domain.Information
 import com.integradis.greenhouse.ui.theme.GrayTextField40
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
@@ -22,34 +23,14 @@ import com.integradis.greenhouse.ui.theme.Typography
 
 @Composable
 fun InfoField(
-    input: MutableState<String>,
-    name: String,
-    username: String,
-    company: String,
-    role: String
+    fields: List<Information>,
+    state: Boolean,
 ) {
     val rem = remember {
         mutableStateOf("")
 
     }
-    val fields = listOf(
-        Information(
-            title = "Name",
-            placeholder = name
-        ),
-        Information(
-            title = "Username",
-            placeholder = username
-        ),
-        Information(
-            title = "Company",
-            placeholder = company
-        ),
-        Information(
-            title = "Role within the company",
-            placeholder = role
-        )
-    )
+
     Column (
         modifier = Modifier.padding(15.dp),
     )
@@ -60,10 +41,10 @@ fun InfoField(
                 placeholder = {
                     Text(text = fields.placeholder, style = Typography.labelLarge)
                 },
-                enabled = false,
-                value = input.value,
+                enabled = state,
+                value = fields.input.value,
                 onValueChange = {
-                    input.value = it
+                    fields.input.value = it
                 },
                 maxLines = 1,
                 shape = RoundedCornerShape(10.dp),
@@ -84,6 +65,3 @@ fun InfoField(
     }
 }
 
-data class Information(
-    val title: String,
-    val placeholder: String)

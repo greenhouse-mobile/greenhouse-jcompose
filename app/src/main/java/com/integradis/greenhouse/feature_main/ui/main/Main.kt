@@ -43,7 +43,7 @@ fun GreenhouseMainScreen() {
                     Dashboard(name, navController)
                 }
                 composable(route = Routes.Perfil.route){
-                    Perfil(navController = navController, name, username, company, role)
+                    Perfil(navController, name, username, company, role)
                 }
                 composable(route = Routes.Correo.route){
                     Mail()
@@ -58,7 +58,7 @@ fun GreenhouseMainScreen() {
                     Notification()
                 }
                 composable(route = Routes.ForgotPassword.route) {
-                    ForgotPassword()
+                    ForgotPassword(navController,"", "")
                 }
             }
 

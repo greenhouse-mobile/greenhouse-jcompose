@@ -8,12 +8,17 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.integradis.greenhouse.feature_auth.ui.signin.SignInScreen
+import com.integradis.greenhouse.feature_auth.ui.signup.SignUpScreen
 import com.integradis.greenhouse.feature_crops_in_progress.ui.CropsInProgress
 import com.integradis.greenhouse.feature_dashboard.ui.Dashboard
+import com.integradis.greenhouse.feature_home.ui.home.HomeScreen
 import com.integradis.greenhouse.feature_mail.ui.Mail
 import com.integradis.greenhouse.feature_notification.ui.Notification
 import com.integradis.greenhouse.feature_perfil.ui.Perfil
@@ -26,7 +31,7 @@ fun GreenhouseMainScreen() {
     val navController = rememberNavController()
     val userName = "Winston Smith"
 
-    val currentRoute = remember { mutableStateOf("") }                  
+    val currentRoute = remember { mutableStateOf("") }
                                                                     
     navController.addOnDestinationChangedListener { _, destination, _ ->
         currentRoute.value = destination.route ?: ""                
@@ -47,7 +52,7 @@ fun GreenhouseMainScreen() {
         Box(modifier = Modifier
             .padding(padding)
             .fillMaxSize()){
-            NavHost(navController = navController, startDestination = Routes.Dashboard.route) {
+            NavHost(navController = navController, startDestination = Routes.SignIn.route) {
                 
                 composable(route = Routes.HomeScreen.route){
                     HomeScreen(navController = navController)
@@ -103,7 +108,6 @@ sealed class Routes(val route: String) {
     object CropsInProgress : Routes("CropsInProgress")
     object Dashboard : Routes("Dashboard")
     object Perfil : Routes("Perfil")
-
     object Correo : Routes("Correo")
 
     object Archives : Routes("Archives")

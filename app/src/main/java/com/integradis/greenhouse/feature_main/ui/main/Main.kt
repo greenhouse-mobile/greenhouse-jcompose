@@ -57,7 +57,7 @@ fun GreenhouseMainScreen() {
                     SignInScreen(
                         navigateToSignUp = {navController.navigate(Routes.SignUp.route)},
                         navigateToSignIn = {navController.navigate(Routes.SignIn.route)},
-                        navigateToCrops = {navController.navigate(Routes.CropsInProgress.route)}
+                        navigateToDashboard = {navController.navigate(Routes.Dashboard.route)}
                     )
                 }
 
@@ -65,7 +65,7 @@ fun GreenhouseMainScreen() {
                     SignUpScreen(
                         navigateToSignUp = {navController.navigate(Routes.SignUp.route)},
                         navigateToSignIn = {navController.navigate(Routes.SignIn.route)},
-                        navigateToCrops = {navController.navigate(Routes.CropsInProgress.route)}
+                        navigateToDashboard = {navController.navigate(Routes.Dashboard.route)}
                     )
                 }
                 

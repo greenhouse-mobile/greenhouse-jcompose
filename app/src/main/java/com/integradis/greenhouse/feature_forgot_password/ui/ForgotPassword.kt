@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.integradis.greenhouse.shared.domain.Information
+import com.integradis.greenhouse.shared.domain.UserInformation
 import com.integradis.greenhouse.shared.ui.InfoField
 import com.integradis.greenhouse.ui.theme.Brown
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
@@ -61,12 +61,12 @@ fun ForgotPassword(
         mutableStateOf("")
     }
     val fields = listOf(
-        Information(
+        UserInformation(
             title = "New Password",
             placeholder = newPassword,
             input = remNewPassword
         ),
-        Information(
+        UserInformation(
             title = "Confirm Password",
             placeholder = confirmPassword,
             input = remConfirmPassword
@@ -106,7 +106,7 @@ fun ForgotPassword(
             tint = Color.White,
             modifier = Modifier.size(150.dp).background(Brown, shape = RoundedCornerShape(1000.dp)).border(20.dp, Brown, shape = RoundedCornerShape(1000.dp)).padding(25.dp),
             )
-        InfoField(fields, true)
+        InfoField(fields, true, navController)
 
         //if (remNewPassword == remConfirmPassword) {asd = true}
 

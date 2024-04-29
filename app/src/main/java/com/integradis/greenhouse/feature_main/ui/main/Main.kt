@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.integradis.greenhouse.feature_auth.ui.signin.SignInScreen
 import com.integradis.greenhouse.feature_auth.ui.signup.SignUpScreen
+import com.integradis.greenhouse.feature_company.ui.Company
 import com.integradis.greenhouse.feature_crops_in_progress.ui.CropsInProgress
 import com.integradis.greenhouse.feature_dashboard.ui.Dashboard
 import com.integradis.greenhouse.feature_forgot_password.ui.ForgotPassword
@@ -35,6 +36,7 @@ fun GreenhouseMainScreen() {
     val username = "wsmith"
     val company = "Peru Agro J&V S.A.C."
     val role = "Supervising technician"
+    val tin = "8767"
 
 
     val currentRoute = remember { mutableStateOf("") }
@@ -58,7 +60,7 @@ fun GreenhouseMainScreen() {
         Box(modifier = Modifier
             .padding(padding)
             .fillMaxSize()){
-            NavHost(navController = navController, startDestination = Routes.HomeScreen.route)  {
+            NavHost(navController = navController, startDestination = Routes.Dashboard.route)  {
                 
                 composable(route = Routes.HomeScreen.route){
                     HomeScreen(navController = navController)
@@ -92,6 +94,10 @@ fun GreenhouseMainScreen() {
                 composable(route = Routes.CropsInProgress.route)
                  {
                     CropsInProgress(navController)
+                }
+                composable(route = Routes.Company.route)
+                {
+                    Company(navController, company, tin)
                 }
                 composable(
                     route = Routes.Stepper.routeWithArgument,
@@ -135,6 +141,8 @@ sealed class Routes(val route: String) {
     object Notification : Routes("Notification")
 
     object ForgotPassword : Routes("ForgotPassword")
+
+    object Company : Routes("Company")
 
 }
 

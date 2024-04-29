@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.integradis.greenhouse.feature_auth.ui.signin.SignInScreen
 import com.integradis.greenhouse.feature_auth.ui.signup.SignUpScreen
+import com.integradis.greenhouse.feature_crop_records.ui.CropRecords
 import com.integradis.greenhouse.feature_crops_in_progress.ui.CropsInProgress
 import com.integradis.greenhouse.feature_dashboard.ui.Dashboard
 import com.integradis.greenhouse.feature_home.ui.home.HomeScreen
@@ -26,7 +27,6 @@ import com.integradis.greenhouse.feature_stepper.ui.Stepper
 import com.integradis.greenhouse.features_archive.ui.Archives
 import com.integradis.greenhouse.shared.ui.NavBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GreenhouseMainScreen() {
     val navController = rememberNavController()
@@ -39,7 +39,6 @@ fun GreenhouseMainScreen() {
     }                                                                   
 
     Scaffold(
-        
        bottomBar = {                                         
         if (currentRoute.value != Routes.SignIn.route &&  
             currentRoute.value != Routes.SignUp.route &&  
@@ -54,7 +53,7 @@ fun GreenhouseMainScreen() {
             .padding(padding)
             .fillMaxSize()){
             // Changed to Stepper for testing purposes
-            NavHost(navController = navController, startDestination = Routes.CropsInProgress.route) {
+            NavHost(navController = navController, startDestination = Routes.CropRecords.route) {
                 
                 composable(route = Routes.HomeScreen.route){
                     HomeScreen(navController = navController)
@@ -95,12 +94,16 @@ fun GreenhouseMainScreen() {
                 ) {backStackEntry ->
                     Stepper(navController = navController, backStackEntry.arguments?.getString("cropId"))
                 }
+                composable(route = Routes.CropRecords.route){
+                    CropRecords(navController = navController)
+                }
                 composable(route = Routes.Archives.route) {
                     Archives()
                 }
                 composable(route = Routes.Notification.route) {
                     Notification()
                 }
+
             }
 
         }
@@ -119,12 +122,12 @@ sealed class Routes(val route: String) {
         const val routeWithArgument = "Stepper/{cropId}"
         const val argument = "cropId"
     }
+    object CropRecords : Routes("CropRecords")
     object Dashboard : Routes("Dashboard")
     object Perfil : Routes("Perfil")
     object Correo : Routes("Correo")
 
     object Archives : Routes("Archives")
-
     object Notification : Routes("Notification")
 
 }

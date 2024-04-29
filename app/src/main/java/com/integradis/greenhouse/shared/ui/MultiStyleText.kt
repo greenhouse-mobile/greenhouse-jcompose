@@ -1,5 +1,6 @@
 package com.integradis.greenhouse.shared.ui
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
@@ -17,7 +18,7 @@ fun MultiStyleText(
     secondTextPart: String,
     secondColor: Color,
     typography: TextStyle,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Text(buildAnnotatedString {
         withStyle(style = SpanStyle(color = firstColor)){
@@ -29,4 +30,27 @@ fun MultiStyleText(
     },
         style = typography,
         modifier = modifier)
+}
+
+@Composable
+fun MultiStyleSpacedText(
+    firstTextPart: String,
+    firstColor: Color,
+    secondTextPart: String,
+    secondColor: Color,
+    typography: TextStyle
+) {
+    Row {
+        Text(
+            text = firstTextPart,
+            color = firstColor,
+            style = typography,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = secondTextPart,
+            color = secondColor,
+            style = typography,
+        )
+    }
 }

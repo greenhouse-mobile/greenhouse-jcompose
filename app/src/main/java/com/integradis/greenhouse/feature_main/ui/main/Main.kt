@@ -53,7 +53,7 @@ fun GreenhouseMainScreen() {
             .padding(padding)
             .fillMaxSize()){
             // Changed to Stepper for testing purposes
-            NavHost(navController = navController, startDestination = Routes.CropRecords.route) {
+            NavHost(navController = navController, startDestination = Routes.CropsInProgress.route) {
                 
                 composable(route = Routes.HomeScreen.route){
                     HomeScreen(navController = navController)
@@ -94,8 +94,15 @@ fun GreenhouseMainScreen() {
                 ) {backStackEntry ->
                     Stepper(navController = navController, backStackEntry.arguments?.getString("cropId"))
                 }
-                composable(route = Routes.CropRecords.route){
-                    CropRecords(navController = navController)
+                composable(
+                    route = Routes.CropRecords.routeWithArgument,
+                    arguments = listOf(
+                        navArgument(Routes.CropRecords.firstArgument) { type = NavType.StringType},
+                        navArgument(Routes.CropRecords.secondArgument) { type = NavType.StringType}
+                        )
+                ){backStackEntry ->
+                    CropRecords(navController = navController, backStackEntry.arguments?.getString("cropId"),
+                        backStackEntry.arguments?.getString("phase"))
                 }
                 composable(route = Routes.Archives.route) {
                     Archives()
@@ -122,7 +129,11 @@ sealed class Routes(val route: String) {
         const val routeWithArgument = "Stepper/{cropId}"
         const val argument = "cropId"
     }
-    object CropRecords : Routes("CropRecords")
+    object CropRecords : Routes("CropRecords") {
+        const val routeWithArgument = "CropRecords/{cropId}/{phase}"
+        const val firstArgument = "cropId"
+        const val secondArgument = "phase"
+    }
     object Dashboard : Routes("Dashboard")
     object Perfil : Routes("Perfil")
     object Correo : Routes("Correo")

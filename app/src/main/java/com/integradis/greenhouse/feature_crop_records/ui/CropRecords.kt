@@ -11,8 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.rounded.Event
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -27,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.integradis.greenhouse.shared.domain.CropRecordData
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.SubtitleCropList
@@ -34,11 +33,44 @@ import com.integradis.greenhouse.ui.theme.Typography
 
 @Composable
 fun CropRecords(
-    navController : NavController
+    navController : NavController,
+    cropId : String?,
+    phase : String?
 ) {
     val searchRecordsInput = remember {
         mutableStateOf("")
     }
+    val cropData = CropRecordData(id = "127", author = "Alan Galavis", cropDay = "1", "22/06/2024 12:14")
+    val placeholderCropData = listOf(
+        mapOf(
+            "name" to "Hay",
+            "value" to "128"
+        ),
+        mapOf(
+            "name" to "Corn",
+            "value" to "300"
+        ),
+        mapOf(
+            "name" to "Guano",
+            "value" to "100"
+        ),
+        mapOf(
+            "name" to "Cotton seed cake",
+            "value" to "400"
+        ),
+        mapOf(
+            "name" to "Soybean meal",
+            "value" to "356"
+        ),
+        mapOf(
+            "name" to "Urea",
+            "value" to "356"
+        ),
+        mapOf(
+            "name" to "Ammonium sulfate",
+            "value" to "125"
+        ),
+    )
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
         Row (
             modifier = Modifier
@@ -76,7 +108,7 @@ fun CropRecords(
             color = SubtitleCropList,
         )
         Row(
-            modifier = Modifier.padding(top = 10.dp)
+            modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
         ) {
             SearchCropTextField(
                 input = searchRecordsInput,
@@ -112,6 +144,6 @@ fun CropRecords(
                 }
             }
         }
-        CropRecordCard(modifier = Modifier.padding(20.dp))
+        CropRecordCard(cropRecordData = cropData, phaseData = placeholderCropData)
     }
 }

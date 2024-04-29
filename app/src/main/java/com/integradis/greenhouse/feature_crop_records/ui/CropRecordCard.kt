@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.integradis.greenhouse.shared.domain.CropRecordData
@@ -41,53 +42,20 @@ import com.integradis.greenhouse.ui.theme.Typography
 
 @Composable
 fun CropRecordCard(
-    modifier : Modifier = Modifier
+    cropRecordData: CropRecordData,
+    phaseData: List<Map<String,String>>
 ) {
-    val cropData = CropRecordData(id = "127", author = "Alan Galavis", cropDay = "1", "22/06/2024 12:14")
     // Provisional information for testing
-    val placeholderCropData = listOf(
-        mapOf(
-            "name" to "Hay",
-            "value" to "128"
-        ),
-        mapOf(
-            "name" to "Corn",
-            "value" to "300"
-        ),
-        mapOf(
-            "name" to "Guano",
-            "value" to "100"
-        ),
-        mapOf(
-            "name" to "Cotton seed cake",
-            "value" to "400"
-        ),
-        mapOf(
-            "name" to "Soybean meal",
-            "value" to "356"
-        ),
-        mapOf(
-            "name" to "Urea",
-            "value" to "356"
-        ),
-        mapOf(
-            "name" to "Ammonium sulfate",
-            "value" to "125"
-        ),
-    )
     var expandedState by remember {
         mutableStateOf(false)
     }
-
-    val rotationState by animateFloatAsState(
-        targetValue = if (expandedState) 180f else 0f, label = ""
-    )
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 3.dp
         ),
-        modifier = modifier
+        modifier = Modifier
+            .padding(start = 20.dp, end = 20.dp)
             .fillMaxWidth()
             .animateContentSize(
                 animationSpec = tween(
@@ -105,7 +73,7 @@ fun CropRecordCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Record ID: ID - #${cropData.id}",
+                    text = "Record ID: ID - #${cropRecordData.id}",
                     style = Typography.labelLarge,
                     color = PrimaryGreen40,
                     modifier = Modifier.weight(1f).padding(start = 3.dp)
@@ -144,7 +112,7 @@ fun CropRecordCard(
                 MultiStyleText(
                     firstTextPart = "Author: ",
                     firstColor = Color.Black,
-                    secondTextPart = cropData.author,
+                    secondTextPart = cropRecordData.author,
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier.padding(start = 5.dp)
@@ -161,7 +129,7 @@ fun CropRecordCard(
                 MultiStyleText(
                     firstTextPart = "Day: ",
                     firstColor = Color.Black,
-                    secondTextPart = cropData.cropDay,
+                    secondTextPart = cropRecordData.cropDay,
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier.padding(start = 5.dp)
@@ -178,7 +146,7 @@ fun CropRecordCard(
                 MultiStyleText(
                     firstTextPart = "Entry Date: ",
                     firstColor = Color.Black,
-                    secondTextPart = cropData.entryDate,
+                    secondTextPart = cropRecordData.entryDate,
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier.weight(1f).padding(start = 5.dp)
@@ -193,14 +161,14 @@ fun CropRecordCard(
             }
             if (expandedState) {
                 Text("")
-                for (placeholderCropDatum in placeholderCropData) {
-                    placeholderCropDatum["name"]?.let { name ->
-                        placeholderCropDatum["value"]?.let { data ->
+                for (phaseDataEntry in phaseData) {
+                    phaseDataEntry["name"]?.let { name ->
+                        phaseDataEntry["value"]?.let { data ->
                             MultiStyleSpacedText(
                                 firstTextPart = name,
-                                firstColor = Color.Black,
+                                firstColor = Color.Gray,
                                 secondTextPart = data,
-                                secondColor = Color.Gray,
+                                secondColor = Color.Black,
                                 typography = Typography.labelMedium,
                             )
                         }

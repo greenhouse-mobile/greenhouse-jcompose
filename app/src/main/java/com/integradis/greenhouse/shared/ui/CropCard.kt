@@ -38,7 +38,7 @@ fun CropCard(
     navigateTo: () -> Unit
 ) {
     ElevatedCard(
-        modifier = Modifier.padding(top = 20.dp, start = 30.dp, end = 30.dp).clickable { navigateTo() },
+        modifier = Modifier.padding(30.dp).clickable { navigateTo() },
         elevation = CardDefaults.cardElevation(
             defaultElevation = 3.dp
         )

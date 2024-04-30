@@ -106,7 +106,7 @@ fun GreenhouseMainScreen() {
                     Stepper(navController = navController, backStackEntry.arguments?.getString("cropId"))
                 }
                 composable(route = Routes.Archives.route) {
-                    Archives()
+                    Archives(navController)
                 }
                 composable(route = Routes.Notification.route) {
                     Notification()

@@ -42,8 +42,8 @@ import com.integradis.greenhouse.ui.theme.Typography
 @Composable
 fun CropsInProgress(
     navController: NavController,
+    crops: List<Crop>
 ){
-    val crops = mutableListOf(Crop("29", "29/23/2004",CropPhase.PREPARATION_AREA), Crop("90", "29/14/2004",CropPhase.BUNKER))
     val searchCropsInput = remember {
         mutableStateOf("")
     }
@@ -103,13 +103,15 @@ fun CropsInProgress(
         Scaffold {paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 items(crops) {crop ->
-                    CropCard(
-                        imageUrl = "https://i.pinimg.com/originals/fd/65/01/fd6501a1ed1fc18cb4685c8f69bb4df3.jpg",
-                        crop = crop,
-                        navigateTo = {
-                            navController.navigate("${Routes.Stepper.route}/${crop.id}")
-                        }
-                    )
+                    if (crop.state == "In Progress"){
+                        CropCard(
+                            imageUrl = "https://i.pinimg.com/originals/fd/65/01/fd6501a1ed1fc18cb4685c8f69bb4df3.jpg",
+                            crop = crop,
+                            navigateTo = {
+                                navController.navigate("${Routes.Stepper.route}/${crop.id}")
+                            }
+                        )
+                    }
 
                 }
             }

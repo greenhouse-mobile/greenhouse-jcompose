@@ -5,4 +5,5 @@ data class Crop(
     val id: String,
     val startDate: String,
     val phase: CropPhase,
+    val state: String
 )

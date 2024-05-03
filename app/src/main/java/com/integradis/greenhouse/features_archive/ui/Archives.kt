@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,15 +59,9 @@ import com.integradis.greenhouse.ui.theme.Typography
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Archives(
-    navController: NavController
+    navController: NavController,
+    crops: List<Crop>
 ){
-    val crops = remember{
-        mutableStateListOf(
-            Crop("29", "29/23/2004", CropPhase.PREPARATION_AREA),
-            Crop("90", "29/14/2004", CropPhase.BUNKER),
-            Crop("Carlo", "29/14/2004", CropPhase.BUNKER)
-
-        )}
     val searchCropsInput = remember {
         mutableStateOf("")
     }
@@ -126,57 +121,15 @@ fun Archives(
         Scaffold {paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 items(crops) {crop ->
-                    val swipeState = rememberSwipeToDismissBoxState(
-                        confirmValueChange = {
-                            if (it == SwipeToDismissBoxValue.EndToStart){
-                                crops.remove(crop)
+                    if (crop.state == "Done"){
+                        CropCard(
+                            imageUrl = "https://i.pinimg.com/originals/fd/65/01/fd6501a1ed1fc18cb4685c8f69bb4df3.jpg",
+                            crop = crop,
+                            navigateTo = {
+                                navController.navigate("${Routes.Stepper.route}/${crop.id}")
                             }
-                            true
-                        }
-                    )
-
-                    SwipeToDismissBox(
-                        state = swipeState,
-                        backgroundContent = {
-                            Box(
-                                modifier = Modifier
-                                    .clip(shape = RoundedCornerShape(20.dp))
-                                    .background(Color.Red)
-                                    .padding(30.dp)
-                                    .fillMaxSize()
-
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Delete,
-                                    contentDescription = "Delete",
-                                    modifier = Modifier
-                                        .padding(12.dp)
-                                        .align(Alignment.CenterEnd)
-                                )
-                            }
-                        },
-                        content = {
-                            CropCard(imageUrl = "https://i.pinimg.com/originals/fd/65/01/fd6501a1ed1fc18cb4685c8f69bb4df3.jpg", crop = crop, navigateTo = {navController.navigate("${Routes.Stepper.route}/${crop.id}")})
-                        }
-                    )
-
-                    when (swipeState.dismissDirection) {
-                        SwipeToDismissBoxValue.EndToStart -> {
-                            Text(
-                                text = crops.toString()
-                            )
-                        }
-
-                        SwipeToDismissBoxValue.StartToEnd -> {
-                            Text(
-                                text = crops.indexOf(crop).toString()
-                            )
-                        }
-
-                        SwipeToDismissBoxValue.Settled -> {
-                        }
+                        )
                     }
-
 
                 }
             }

@@ -29,9 +29,9 @@ import com.integradis.greenhouse.ui.theme.Typography
 @Composable
 fun Stepper(
     navController: NavController,
-    cropId: String?
+    cropId: String?,
+    crops: List<Crop>
 ) {
-    val crops = mutableListOf(Crop("29", "29/23/2004",CropPhase.PREPARATION_AREA), Crop("90", "29/14/2004",CropPhase.BUNKER))
     // In production environment this should be obtained from a crop entity
     val chosenCrop = crops.filter { it.id == cropId }[0]
     val itemsList = mutableListOf(CropPhase.STOCK,CropPhase.PREPARATION_AREA,

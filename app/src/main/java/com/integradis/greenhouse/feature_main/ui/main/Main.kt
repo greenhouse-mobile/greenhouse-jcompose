@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -26,6 +27,8 @@ import com.integradis.greenhouse.feature_notification.ui.Notification
 import com.integradis.greenhouse.feature_perfil.ui.Perfil
 import com.integradis.greenhouse.feature_stepper.ui.Stepper
 import com.integradis.greenhouse.features_archive.ui.Archives
+import com.integradis.greenhouse.shared.domain.Crop
+import com.integradis.greenhouse.shared.domain.CropPhase
 import com.integradis.greenhouse.shared.ui.NavBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,6 +41,14 @@ fun GreenhouseMainScreen() {
     val role = "Supervising technician"
     val tin = "8767"
 
+    val crops = remember {
+        mutableStateListOf(
+            Crop("29", "29/23/2004", CropPhase.PREPARATION_AREA, "In Progress"),
+            Crop("90", "29/14/2004", CropPhase.BUNKER, "In Progress"),
+            Crop("54", "29/23/2004", CropPhase.PREPARATION_AREA, "Done"),
+            Crop("32", "29/14/2004", CropPhase.BUNKER, "Done")
+        )
+    }
 
     val currentRoute = remember { mutableStateOf("") }
                                                                     
@@ -93,7 +104,7 @@ fun GreenhouseMainScreen() {
                 }
                 composable(route = Routes.CropsInProgress.route)
                  {
-                    CropsInProgress(navController)
+                    CropsInProgress(navController, crops)
                 }
                 composable(route = Routes.Company.route)
                 {
@@ -103,10 +114,10 @@ fun GreenhouseMainScreen() {
                     route = Routes.Stepper.routeWithArgument,
                     arguments = listOf(navArgument(Routes.Stepper.argument) { type = NavType.StringType})
                 ) {backStackEntry ->
-                    Stepper(navController = navController, backStackEntry.arguments?.getString("cropId"))
+                    Stepper(navController = navController, backStackEntry.arguments?.getString("cropId"), crops)
                 }
                 composable(route = Routes.Archives.route) {
-                    Archives(navController)
+                    Archives(navController, crops)
                 }
                 composable(route = Routes.Notification.route) {
                     Notification()

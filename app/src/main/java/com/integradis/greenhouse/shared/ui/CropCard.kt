@@ -3,11 +3,13 @@ package com.integradis.greenhouse.shared.ui
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material.icons.outlined.Yard
@@ -38,7 +40,9 @@ fun CropCard(
     navigateTo: () -> Unit
 ) {
     ElevatedCard(
-        modifier = Modifier.padding(30.dp).clickable { navigateTo() },
+        modifier = Modifier
+            .padding(30.dp)
+            .clickable { navigateTo() },
         elevation = CardDefaults.cardElevation(
             defaultElevation = 3.dp
         )
@@ -81,16 +85,19 @@ fun CropCard(
                     text = "",
                     modifier = Modifier.weight(1f)
                 )
-                Text(
-                    text = "Settings",
-                    color = Subtitle,
-                )
-                Icon(
-                    Icons.Filled.Settings,
-                    contentDescription = "Settings Icon",
-                    tint = Subtitle,
-                    modifier = Modifier.padding(2.dp)
-                )
+                Row(modifier = Modifier.clickable {  }){
+                    Text(
+                        text = "Delete",
+                        color = Color.Red,
+                        modifier = Modifier.padding(top = 1.dp)
+                    )
+                    Icon(
+                        Icons.Filled.Delete,
+                        contentDescription = "Settings Icon",
+                        tint = Color.Red,
+                        modifier = Modifier.padding(2.dp)
+                    )
+                }
             }
             Row {
                 Icon(

@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.integradis.greenhouse.feature_auth.ui.signin.SignInScreen
 import com.integradis.greenhouse.feature_auth.ui.signup.SignUpScreen
+import com.integradis.greenhouse.feature_crop_records.ui.CropRecords
 import com.integradis.greenhouse.feature_company.ui.Company
 import com.integradis.greenhouse.feature_crops_in_progress.ui.CropsInProgress
 import com.integradis.greenhouse.feature_dashboard.ui.Dashboard
@@ -32,7 +33,6 @@ import com.integradis.greenhouse.shared.domain.CropPhase
 import com.integradis.greenhouse.shared.ui.CropDetail
 import com.integradis.greenhouse.shared.ui.NavBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GreenhouseMainScreen() {
     val navController = rememberNavController()
@@ -62,7 +62,6 @@ fun GreenhouseMainScreen() {
     }                                                                   
 
     Scaffold(
-        
        bottomBar = {                                         
         if (currentRoute.value != Routes.SignIn.route &&  
             currentRoute.value != Routes.SignUp.route &&  
@@ -130,6 +129,16 @@ fun GreenhouseMainScreen() {
                 ) {backStackEntry ->
                     Stepper(navController = navController, backStackEntry.arguments?.getString("cropId"))
                 }
+                composable(
+                    route = Routes.CropRecords.routeWithArgument,
+                    arguments = listOf(
+                        navArgument(Routes.CropRecords.firstArgument) { type = NavType.StringType},
+                        navArgument(Routes.CropRecords.secondArgument) { type = NavType.StringType}
+                        )
+                ){backStackEntry ->
+                    CropRecords(navController = navController, backStackEntry.arguments?.getString("cropId"),
+                        backStackEntry.arguments?.getString("phase"))
+                }
                 composable(route = Routes.Archives.route) {
                     Archives(
                         navController,
@@ -186,12 +195,16 @@ sealed class Routes(val route: String) {
         const val routeWithArgument = "Stepper/{cropId}"
         const val argument = "cropId"
     }
+    object CropRecords : Routes("CropRecords") {
+        const val routeWithArgument = "CropRecords/{cropId}/{phase}"
+        const val firstArgument = "cropId"
+        const val secondArgument = "phase"
+    }
     object Dashboard : Routes("Dashboard")
     object Perfil : Routes("Perfil")
     object Correo : Routes("Correo")
 
     object Archives : Routes("Archives")
-
     object Notification : Routes("Notification")
 
     object ForgotPassword : Routes("ForgotPassword")

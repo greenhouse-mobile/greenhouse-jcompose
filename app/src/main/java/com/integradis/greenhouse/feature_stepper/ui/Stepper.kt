@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.integradis.greenhouse.feature_main.ui.main.Routes
 import com.integradis.greenhouse.shared.domain.Crop
 import com.integradis.greenhouse.shared.domain.CropPhase
 import com.integradis.greenhouse.shared.ui.MultiStyleText
@@ -98,13 +99,27 @@ fun Stepper(
                 ) {
                     items(itemsList) {item ->
                         if (item < chosenCrop.phase){
-                            StepperButton(phase = item, isComplete = true)
+                            StepperButton(
+                                phase = item,
+                                isComplete = true,
+                                navigateTo = {
+                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getPhaseName()}")
+                                })
                         }
                         else if (item == chosenCrop.phase) {
-                            StepperButton(phase = item, isCurrent = true)
+                            StepperButton(
+                                phase = item,
+                                isCurrent = true,
+                                navigateTo = {
+                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getPhaseName()}")
+                                })
                         }
                         else {
-                            StepperButton(phase = item)
+                            StepperButton(
+                                phase = item,
+                                navigateTo = {
+                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getPhaseName()}")
+                                })
                         }
                         if(item != CropPhase.HARVEST) StepperDivider()
 

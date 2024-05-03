@@ -39,7 +39,7 @@ import com.integradis.greenhouse.feature_main.ui.main.Routes
 import com.integradis.greenhouse.shared.domain.Crop
 import com.integradis.greenhouse.shared.domain.CropPhase
 import com.integradis.greenhouse.shared.ui.CropCard
-import com.integradis.greenhouse.shared.ui.InputTextField
+import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.Brown
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
@@ -93,7 +93,7 @@ fun CropsInProgress(
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Row( horizontalArrangement = Arrangement.SpaceBetween){
-            InputTextField(
+            SearchCropTextField(
                 input = searchCropsInput,
                 placeholder = "Search crops...",
             )

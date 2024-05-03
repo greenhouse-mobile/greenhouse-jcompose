@@ -29,7 +29,7 @@ fun NavBar(
         mutableStateOf("")
     }
     Row(verticalAlignment = Alignment.Bottom,
-        modifier = Modifier.background(PrimaryGreen40, shape = RoundedCornerShape(10.dp, 10.dp, 0.dp, 0.dp)).padding(15.dp),
+        modifier = Modifier.background(PrimaryGreen40, shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp)).padding(15.dp),
     )
     {
         IconButton(
@@ -64,9 +64,3 @@ fun NavBar(
         }
     }
 }
-
-sealed class Items_bottom_nav(
-    val icon: ImageVector,
-    val title: String,
-    val rute: String
-)

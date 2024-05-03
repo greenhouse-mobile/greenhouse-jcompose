@@ -2,24 +2,41 @@ package com.integradis.greenhouse.shared.ui
 
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material.icons.outlined.Yard
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.Popup
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import com.bumptech.glide.request.RequestOptions
@@ -31,14 +48,21 @@ import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import java.security.MessageDigest
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CropCard(
     imageUrl: String,
     crop: Crop,
-    navigateTo: () -> Unit
+    navigateTo: () -> Unit,
+    selectCrop: () -> Unit,
+    deleteCrop: () -> Unit
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+
     ElevatedCard(
-        modifier = Modifier.padding(top = 20.dp, start = 30.dp, end = 30.dp).clickable { navigateTo() },
+        modifier = Modifier
+            .padding(30.dp)
+            .clickable { navigateTo() },
         elevation = CardDefaults.cardElevation(
             defaultElevation = 3.dp
         )
@@ -81,16 +105,52 @@ fun CropCard(
                     text = "",
                     modifier = Modifier.weight(1f)
                 )
-                Text(
-                    text = "Settings",
-                    color = Subtitle,
-                )
-                Icon(
-                    Icons.Filled.Settings,
-                    contentDescription = "Settings Icon",
-                    tint = Subtitle,
-                    modifier = Modifier.padding(2.dp)
-                )
+                if (showDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showDialog = false },
+                        icon = { Icon(Icons.Filled.Delete, contentDescription = "Delete Icon", tint = Color.Red, modifier = Modifier.size(100.dp)) },
+                        text = { Text("Do you want to notify an admin for the deletion of crop ${crop.id}?") },
+                        containerColor = Color.White,
+                        dismissButton = {
+                            Button(
+                                onClick = { showDialog = false },
+                                colors = ButtonDefaults.buttonColors(
+                                    Color.White
+                                )
+                            ) {
+                                Text("Cancel", color = Color.Red)
+                            }
+                        },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    //onDeleteClicked()
+                                    showDialog = false
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    Color.Red
+                                )
+                            ) {
+                                Text("Confirm")
+                            }
+                        }
+                    )
+                }
+
+                Row( modifier = Modifier.clickable { showDialog = true },
+                    verticalAlignment = Alignment.CenterVertically){
+                    Text(
+                        text = "Delete",
+                        color = Color.Red,
+                        modifier = Modifier.padding(top = 1.dp)
+                    )
+                    Icon(
+                        Icons.Filled.Delete,
+                        contentDescription = "Settings Icon",
+                        tint = Color.Red,
+                        modifier = Modifier.padding(2.dp)
+                    )
+                }
             }
             Row {
                 Icon(

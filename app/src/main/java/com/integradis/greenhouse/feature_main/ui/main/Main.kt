@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -17,20 +18,42 @@ import androidx.navigation.navArgument
 import com.integradis.greenhouse.feature_auth.ui.signin.SignInScreen
 import com.integradis.greenhouse.feature_auth.ui.signup.SignUpScreen
 import com.integradis.greenhouse.feature_crop_records.ui.CropRecords
+import com.integradis.greenhouse.feature_company.ui.Company
 import com.integradis.greenhouse.feature_crops_in_progress.ui.CropsInProgress
 import com.integradis.greenhouse.feature_dashboard.ui.Dashboard
+import com.integradis.greenhouse.feature_forgot_password.ui.ForgotPassword
 import com.integradis.greenhouse.feature_home.ui.home.HomeScreen
 import com.integradis.greenhouse.feature_mail.ui.Mail
 import com.integradis.greenhouse.feature_notification.ui.Notification
 import com.integradis.greenhouse.feature_perfil.ui.Perfil
 import com.integradis.greenhouse.feature_stepper.ui.Stepper
 import com.integradis.greenhouse.features_archive.ui.Archives
+import com.integradis.greenhouse.shared.domain.Crop
+import com.integradis.greenhouse.shared.domain.CropPhase
+import com.integradis.greenhouse.shared.ui.CropDetail
 import com.integradis.greenhouse.shared.ui.NavBar
 
 @Composable
 fun GreenhouseMainScreen() {
     val navController = rememberNavController()
-    val userName = "Winston Smith"
+    val name = "Winston Smith"
+    val username = "wsmith"
+    val company = "Peru Agro J&V S.A.C."
+    val role = "Supervising technician"
+    val tin = "8767"
+
+    val crops = remember {
+        mutableStateOf(emptyArray<Crop>())
+    }
+
+//    val crops = remember {
+//        mutableStateListOf(
+//            Crop("29", "29/23/2004", CropPhase.PREPARATION_AREA, "In Progress"),
+//            Crop("90", "29/14/2004", CropPhase.BUNKER, "In Progress"),
+//            Crop("54", "29/23/2004", CropPhase.PREPARATION_AREA, "Done"),
+//            Crop("32", "29/14/2004", CropPhase.BUNKER, "Done")
+//        )
+//    }
 
     val currentRoute = remember { mutableStateOf("") }
                                                                     
@@ -52,8 +75,7 @@ fun GreenhouseMainScreen() {
         Box(modifier = Modifier
             .padding(padding)
             .fillMaxSize()){
-            // Changed to Stepper for testing purposes
-            NavHost(navController = navController, startDestination = Routes.CropsInProgress.route) {
+            NavHost(navController = navController, startDestination = Routes.Dashboard.route)  {
                 
                 composable(route = Routes.HomeScreen.route){
                     HomeScreen(navController = navController)
@@ -74,19 +96,32 @@ fun GreenhouseMainScreen() {
                         navigateToDashboard = {navController.navigate(Routes.Dashboard.route)}
                     )
                 }
-                
+
                 composable(route = Routes.Dashboard.route){
-                    Dashboard(userName, navController)
+                    Dashboard(name, navController)
                 }
                 composable(route = Routes.Perfil.route){
-                    Perfil()
+                    Perfil(navController, name, username, company, role)
                 }
                 composable(route = Routes.Correo.route){
                     Mail()
                 }
                 composable(route = Routes.CropsInProgress.route)
                  {
-                    CropsInProgress(navController)
+                    CropsInProgress(navController,
+                        crops,
+                        newCrop = { navController.navigate(Routes.CropDetail.routeWithoutArgument) },
+                        selectCrop = {index ->
+                            navController.navigate("${Routes.Stepper.route}/${index}")
+                        },
+                        deleteCrop = {index ->
+                            crops.value = crops.value.filterIndexed { idx, _ -> idx != index }.toTypedArray()
+                        }
+                        )
+                }
+                composable(route = Routes.Company.route)
+                {
+                    Company(navController, company, tin)
                 }
                 composable(
                     route = Routes.Stepper.routeWithArgument,
@@ -105,12 +140,43 @@ fun GreenhouseMainScreen() {
                         backStackEntry.arguments?.getString("phase"))
                 }
                 composable(route = Routes.Archives.route) {
-                    Archives()
+                    Archives(
+                        navController,
+                        crops,
+                        selectCrop = {index ->
+                            navController.navigate("${Routes.Stepper.route}/${index}")
+                        },
+                        deleteCrop = {index ->
+                            crops.value = crops.value.filterIndexed { idx, _ -> idx != index }.toTypedArray()
+                        }
+                    )
+                }
+                composable(Routes.CropDetail.routeWithArgument,
+                    arguments = listOf(navArgument(Routes.CropDetail.argument) {
+                        type = NavType.IntType
+                    })) { backStackEntry ->
+                    val index =
+                        backStackEntry.arguments?.getInt(Routes.CropDetail.argument) ?: return@composable
+                    val contact = if (index < 0) {
+                        Crop("", "", CropPhase.STOCK, "")
+                    } else crops.value[index]
+                    CropDetail(
+                        navController,
+                        saveCrop = {
+                            if (index < 0) {
+                                crops.value += it
+                            } else {
+                                crops.value[index] = it
+                            }
+                        },
+                    )
                 }
                 composable(route = Routes.Notification.route) {
                     Notification()
                 }
-
+                composable(route = Routes.ForgotPassword.route) {
+                    ForgotPassword(navController,"", "")
+                }
             }
 
         }
@@ -141,4 +207,12 @@ sealed class Routes(val route: String) {
     object Archives : Routes("Archives")
     object Notification : Routes("Notification")
 
-}
+    object ForgotPassword : Routes("ForgotPassword")
+
+    object Company : Routes("Company")
+    object CropDetail : Routes("CropDetail"){
+        const val routeWithArgument = "CropDetail/{cropId}"
+        const val argument = "cropId"
+        const val routeWithoutArgument = "CropDetail/-1"
+    } }
+

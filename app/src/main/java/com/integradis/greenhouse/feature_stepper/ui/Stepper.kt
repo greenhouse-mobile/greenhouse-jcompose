@@ -32,9 +32,12 @@ fun Stepper(
     navController: NavController,
     cropId: String?
 ) {
-    val crops = mutableListOf(Crop("29", "29/23/2004",CropPhase.PREPARATION_AREA), Crop("90", "29/14/2004",CropPhase.BUNKER))
     // In production environment this should be obtained from a crop entity
-    val chosenCrop = crops.filter { it.id == cropId }[0]
+    val chosenCrop = Crop(
+    id = "1",
+    startDate = "20/11/2021",
+    phase = CropPhase.STOCK,
+    state = "In Progress")
     val itemsList = mutableListOf(CropPhase.STOCK,CropPhase.PREPARATION_AREA,
         CropPhase.BUNKER,CropPhase.TUNNEL,CropPhase.INCUBATION,CropPhase.CASING,
         CropPhase.INDUCTION,CropPhase.HARVEST)

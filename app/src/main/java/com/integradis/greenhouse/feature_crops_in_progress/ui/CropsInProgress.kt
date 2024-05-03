@@ -1,5 +1,7 @@
 package com.integradis.greenhouse.feature_crops_in_progress.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -9,12 +11,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Event
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -22,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -34,6 +40,7 @@ import com.integradis.greenhouse.shared.domain.Crop
 import com.integradis.greenhouse.shared.domain.CropPhase
 import com.integradis.greenhouse.shared.ui.CropCard
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
+import com.integradis.greenhouse.ui.theme.Brown
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
 
@@ -41,8 +48,11 @@ import com.integradis.greenhouse.ui.theme.Typography
 @Composable
 fun CropsInProgress(
     navController: NavController,
+    crops: MutableState<Array<Crop>>,
+    newCrop: () -> Unit,
+    selectCrop: (Int) -> Unit,
+    deleteCrop: (Int) -> Unit
 ){
-    val crops = mutableListOf(Crop("29", "29/23/2004",CropPhase.PREPARATION_AREA), Crop("90", "29/14/2004",CropPhase.BUNKER))
     val searchCropsInput = remember {
         mutableStateOf("")
     }
@@ -99,17 +109,28 @@ fun CropsInProgress(
                     = PrimaryGreen40)
             }
         }
-        Scaffold {paddingValues ->
+        Scaffold (floatingActionButton = {
+            FloatingActionButton(onClick = { newCrop() }, containerColor = Brown, contentColor = Color.White) {
+                Icon(Icons.Filled.Add, "New crop")
+            }
+        }){paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
-                items(crops) {crop ->
-                    CropCard(
-                        imageUrl = "https://i.pinimg.com/originals/fd/65/01/fd6501a1ed1fc18cb4685c8f69bb4df3.jpg",
-                        crop = crop,
-                        navigateTo = {
-                            navController.navigate("${Routes.Stepper.route}/${crop.id}")
-                        }
-                    )
-
+                itemsIndexed(crops.value) {index, crop ->
+                    if (crop.state == "In Progress"){
+                        CropCard(
+                            imageUrl = "https://i.pinimg.com/originals/fd/65/01/fd6501a1ed1fc18cb4685c8f69bb4df3.jpg",
+                            crop = crop,
+                            navigateTo = {
+                                navController.navigate("${Routes.Stepper.route}/${crop.id}")
+                            },
+                            selectCrop = {
+                                selectCrop(index)
+                            },
+                            deleteCrop = {
+                                deleteCrop(index)
+                            }
+                        )
+                    }
                 }
             }
         }

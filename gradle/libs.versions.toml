@@ -13,6 +13,7 @@ uiTextGoogleFonts = "1.7.0-alpha07"
 landscapist = "2.3.3"
 landscapistGlide = "2.3.3"
 materialIconsExtended = "1.7.0-alpha07"
+coreSplashscreen = "1.2.0-alpha01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +35,7 @@ androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text
 landscapist = { group = "com.github.skydoves", name = "landscapist", version.ref = "landscapist" }
 landscapist-glide = { group = "com.github.skydoves", name = "landscapist-glide", version.ref = "landscapistGlide" }
 androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

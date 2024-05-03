@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.AccessTime
@@ -27,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,12 +43,15 @@ import com.integradis.greenhouse.shared.ui.MultiStyleSpacedText
 import com.integradis.greenhouse.shared.ui.MultiStyleText
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CropRecordCard(
     cropRecordData: CropRecordData,
-    phaseData: List<Map<String,String>>
 ) {
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val coroutineScope = rememberCoroutineScope()
     // Provisional information for testing
     var expandedState by remember {
         mutableStateOf(false)
@@ -55,15 +62,20 @@ fun CropRecordCard(
             defaultElevation = 3.dp
         ),
         modifier = Modifier
-            .padding(start = 20.dp, end = 20.dp)
+            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
             .fillMaxWidth()
+            .bringIntoViewRequester(bringIntoViewRequester)
             .animateContentSize(
                 animationSpec = tween(
                     durationMillis = 300,
                     easing = LinearOutSlowInEasing
                 )
             )
-            .clickable { expandedState = !expandedState },
+            .clickable {
+                expandedState = !expandedState
+                coroutineScope.launch {
+                    bringIntoViewRequester.bringIntoView()
+                }},
 
     ) {
         Column(
@@ -76,11 +88,15 @@ fun CropRecordCard(
                     text = "Record ID: ID - #${cropRecordData.id}",
                     style = Typography.labelLarge,
                     color = PrimaryGreen40,
-                    modifier = Modifier.weight(1f).padding(start = 3.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 3.dp)
                 )
                 IconButton(
                     onClick = { /*TODO*/ },
-                    modifier = Modifier.height(20.dp).width(20.dp)
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(20.dp)
                 ) {
                     Icon(
                         Icons.Outlined.Delete,
@@ -90,7 +106,9 @@ fun CropRecordCard(
                 }
                 IconButton(
                     onClick = { /*TODO*/ },
-                    modifier = Modifier.height(20.dp).width(20.dp)
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(20.dp)
                 ) {
                     Icon(
                         Icons.Filled.Edit,
@@ -149,7 +167,9 @@ fun CropRecordCard(
                     secondTextPart = cropRecordData.entryDate,
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
-                    modifier = Modifier.weight(1f).padding(start = 5.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 5.dp)
                 )
                 if (!expandedState) {
                     Text(
@@ -161,7 +181,7 @@ fun CropRecordCard(
             }
             if (expandedState) {
                 Text("")
-                for (phaseDataEntry in phaseData) {
+                for (phaseDataEntry in cropRecordData.phaseData) {
                     phaseDataEntry["name"]?.let { name ->
                         phaseDataEntry["value"]?.let { data ->
                             MultiStyleSpacedText(

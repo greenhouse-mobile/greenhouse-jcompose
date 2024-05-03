@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.landscapist.glide)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.core.splashscreen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

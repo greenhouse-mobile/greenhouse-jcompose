@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.integradis.greenhouse.shared.data.repositories.CropRecordRepository
 import com.integradis.greenhouse.shared.domain.CropRecordData
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
@@ -40,16 +41,30 @@ import com.integradis.greenhouse.ui.theme.Typography
 fun CropRecords(
     navController : NavController,
     cropId : String?, //Data to search in API
-    phase : String?
+    phase : String?,
+    cropRecordRepository: CropRecordRepository = CropRecordRepository()
 ) {
+    val cropDataReal = remember {
+        mutableStateOf(emptyList<CropRecordData>())
+    }
     val searchRecordsInput = remember {
         mutableStateOf("")
     }
+
+    cropId?.let {
+        phase?.let { cropPhase ->
+            cropRecordRepository.getCropRecords(it, cropPhase) {
+            cropDataReal.value = it
+            }
+        }
+    }
+
     //Placeholder data
     val cropData = mutableListOf(CropRecordData(id = "127",
         author = "Alan Galavis",
         cropDay = "1",
         entryDate = "22/06/2024 12:14",
+        updateDate = "",
         phaseData = listOf(
             mapOf(
                 "name" to "Hay",
@@ -84,6 +99,7 @@ fun CropRecords(
             author = "Max Soto",
             cropDay = "4",
             entryDate = "27/06/2024 12:14",
+            updateDate = "",
             phaseData = listOf(
                 mapOf(
                     "name" to "Hay",
@@ -118,6 +134,7 @@ fun CropRecords(
             author = "Andres Soto",
             cropDay = "9",
             entryDate = "AYUDAA",
+            updateDate = "",
             phaseData = listOf(
                 mapOf(
                     "name" to "Hay",

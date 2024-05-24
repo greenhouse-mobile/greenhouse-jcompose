@@ -4,10 +4,11 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
 
+//usar comando json-server --watch db.json --host 0.0.0.0 --port 3001 , para encender el json server
 
 interface AuthService {
-    @POST("users") //api/v1/authentication/sign-in
-    fun signIn(@Body request: UserRequest): Call<UserResponse>
+    @GET("users") //api/v1/authentication/sign-in
+    fun signIn(@Query("username") username: String, @Query("password") password: String): Call<List<UserResponse>>
 
     @POST("users") //api/v1/authentication/sign-up
     fun signUp(@Body request: SignUpRequest): Call<UserResponse>

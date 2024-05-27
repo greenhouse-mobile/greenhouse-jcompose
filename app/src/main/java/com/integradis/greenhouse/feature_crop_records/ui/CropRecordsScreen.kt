@@ -59,7 +59,7 @@ fun CropRecords(
         }
     }
 
-    //Placeholder data
+    /*
     val cropData = mutableListOf(CropRecordData(id = "127",
         author = "Alan Galavis",
         cropDay = "1",
@@ -167,6 +167,8 @@ fun CropRecords(
             )),
 
     )
+    */
+
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
         Row (
             modifier = Modifier
@@ -242,7 +244,7 @@ fun CropRecords(
         }
         Scaffold {paddingValues ->  
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
-                items(cropData) {cropDatum ->
+                items(cropDataReal.value){cropDatum ->
                     CropRecordCard(
                         cropRecordData = cropDatum)
                 }

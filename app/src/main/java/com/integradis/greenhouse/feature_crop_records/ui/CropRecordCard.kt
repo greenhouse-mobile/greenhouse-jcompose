@@ -1,5 +1,6 @@
 package com.integradis.greenhouse.feature_crop_records.ui
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -181,7 +182,7 @@ fun CropRecordCard(
             }
             if (expandedState) {
                 Text("")
-                for (phaseDataEntry in cropRecordData.phaseData) {
+                for (phaseDataEntry in cropRecordData.phaseData.data) {
                     phaseDataEntry["name"]?.let { name ->
                         phaseDataEntry["value"]?.let { data ->
                             MultiStyleSpacedText(

@@ -158,9 +158,14 @@ fun CropsInProgress(
                         Button(
                             onClick = {
                                 newCrop = false
-                                //val newCrop = Crop((1..100).random().toString(), "20/11/2021", phase = CropPhase.STOCK, author = "In Progress", name = "Crop #1", state = "true")
-                                //saveCrop(newCrop)
-                                //Aqui deberia ir el metodo para crear el nuevo crop
+                                val newCrop = Crop(
+                                    "cc7c6c19-c416-453a-a93b-99a02fa136d"+(3..100).random().toString(),
+                                    "20/11/2021",
+                                    phase = CropPhase.STOCK.toString(),
+                                    author = "In Progress",
+                                    name = "Crop #1",
+                                    state = "true")
+                                crops.value = crops.value + newCrop
                             },
                             colors = ButtonDefaults.buttonColors(
                                 PrimaryGreen40

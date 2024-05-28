@@ -13,7 +13,7 @@ data class Crop(
     var startDate: String,
     var name: String,
     var author: String,
-    var phase: CropPhase,
+    var phase: String,
 
     @SerializedName("active")
     var state: String

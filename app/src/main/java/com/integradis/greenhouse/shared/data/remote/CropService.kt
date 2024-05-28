@@ -9,6 +9,6 @@ interface CropService {
 
     @GET("crops")
     fun getCrops(
-        @Query("state") endpoint: String
+        @Query("active") endpoint: String
     ) : Call<CropWrapper>
 }

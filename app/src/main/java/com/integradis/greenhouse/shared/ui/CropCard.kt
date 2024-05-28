@@ -55,7 +55,7 @@ fun CropCard(
     crop: Crop,
     navigateTo: () -> Unit,
     selectCrop: () -> Unit,
-    deleteCrop: () -> Unit
+    deleteCrop: () -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -125,6 +125,7 @@ fun CropCard(
                             Button(
                                 onClick = {
                                     //onDeleteClicked()
+                                    //Aca deberiamos poner la forma en la que se envia mensaje al admin para eliminar el crop
                                     showDialog = false
                                 },
                                 colors = ButtonDefaults.buttonColors(
@@ -170,7 +171,7 @@ fun CropCard(
                     tint = PrimaryGreen40
                 )
                 Text(
-                    text = "Current Phase: ${crop.phase.getPhaseName()}",
+                    text = "Current Phase: ${crop.phase}",
                     modifier = Modifier.padding(2.dp)
                 )
             }

@@ -109,14 +109,13 @@ fun GreenhouseMainScreen() {
                 composable(route = Routes.CropsInProgress.route)
                  {
                     CropsInProgress(navController,
-                        crops,
                         newCrop = { navController.navigate(Routes.CropDetail.routeWithoutArgument) },
                         selectCrop = {index ->
                             navController.navigate("${Routes.Stepper.route}/${index}")
                         },
                         deleteCrop = {index ->
                             crops.value = crops.value.filterIndexed { idx, _ -> idx != index }.toTypedArray()
-                        }
+                            }
                         )
                 }
                 composable(route = Routes.Company.route)
@@ -158,7 +157,7 @@ fun GreenhouseMainScreen() {
                     val index =
                         backStackEntry.arguments?.getInt(Routes.CropDetail.argument) ?: return@composable
                     val contact = if (index < 0) {
-                        Crop("", "", CropPhase.STOCK, "")
+                        Crop("", "", phase = CropPhase.STOCK, author = "Alan Galavis", name = "Crop #1", state = "true")
                     } else crops.value[index]
                     CropDetail(
                         navController,

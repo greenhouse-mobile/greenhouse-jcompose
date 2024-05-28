@@ -55,7 +55,7 @@ fun CropDetail(
                 Button(
                     onClick = {
                         showDialog = false
-                        val newCrop = Crop((1..100).random().toString(), "20/11/2021", CropPhase.STOCK, "In Progress")
+                        val newCrop = Crop((1..100).random().toString(), "20/11/2021", phase = CropPhase.STOCK, author = "In Progress", name = "Crop #1", state = "true")
                         saveCrop(newCrop)
                         navController.navigateUp()
                     },

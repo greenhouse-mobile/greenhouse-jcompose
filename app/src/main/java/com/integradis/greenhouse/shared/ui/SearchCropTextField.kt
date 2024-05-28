@@ -10,6 +10,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.integradis.greenhouse.ui.theme.GrayTextField40
@@ -17,11 +18,13 @@ import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
 
 @Composable
-fun InputTextField(
+fun SearchCropTextField(
     input: MutableState<String>,
     placeholder: String,
+    modifier : Modifier = Modifier
     ) {
     TextField(
+        modifier = modifier,
         placeholder = {
             Text(text = placeholder, style = Typography.labelMedium)
         },

@@ -1,7 +1,6 @@
 package com.integradis.greenhouse.feature_crops_in_progress.ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -27,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -36,10 +33,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.integradis.greenhouse.feature_main.ui.main.Routes
+import com.integradis.greenhouse.shared.data.repositories.CropRepository
 import com.integradis.greenhouse.shared.domain.Crop
-import com.integradis.greenhouse.shared.domain.CropPhase
 import com.integradis.greenhouse.shared.ui.CropCard
-import com.integradis.greenhouse.shared.ui.InputTextField
+import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.Brown
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
@@ -48,11 +45,15 @@ import com.integradis.greenhouse.ui.theme.Typography
 @Composable
 fun CropsInProgress(
     navController: NavController,
-    crops: MutableState<Array<Crop>>,
     newCrop: () -> Unit,
     selectCrop: (Int) -> Unit,
-    deleteCrop: (Int) -> Unit
+    deleteCrop: (Int) -> Unit,
+    cropRepository: CropRepository = CropRepository()
 ){
+    val crops = remember {
+        mutableStateOf(emptyList<Crop>())
+    }
+
     val searchCropsInput = remember {
         mutableStateOf("")
     }
@@ -62,6 +63,11 @@ fun CropsInProgress(
     )
     val showDatePicker = remember { mutableStateOf(false) }
     val selectedDate = remember { mutableStateOf("") }
+
+    cropRepository.getCrops("true") {
+        crops.value = it
+        Log.d("STATE", crops.value.toString())
+    }
 
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()){
         Row (
@@ -93,7 +99,7 @@ fun CropsInProgress(
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Row( horizontalArrangement = Arrangement.SpaceBetween){
-            InputTextField(
+            SearchCropTextField(
                 input = searchCropsInput,
                 placeholder = "Search crops...",
             )

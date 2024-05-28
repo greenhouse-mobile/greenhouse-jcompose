@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +31,6 @@ import com.integradis.greenhouse.shared.ui.CustomButton
 import com.integradis.greenhouse.shared.ui.CustomTextField
 import com.integradis.greenhouse.shared.ui.PasswordTextField
 import com.integradis.greenhouse.shared.ui.SideCustomButton
-import com.integradis.greenhouse.ui.theme.Typography
 
 @Composable
 fun SignInScreen(navigateToSignUp: () -> Unit,

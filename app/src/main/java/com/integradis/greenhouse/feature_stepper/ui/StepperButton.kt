@@ -28,12 +28,13 @@ fun StepperButton(
     phase: CropPhase,
     isComplete: Boolean = false,
     isCurrent: Boolean = false,
+    navigateTo: () -> Unit
 ) {
     if (isCurrent){
         Row() {
             Button(
                 onClick = {
-                    /*TODO*/
+                    navigateTo()
                 },
                 modifier = Modifier.size(40.dp),
                 border = BorderStroke(1.dp, SecondaryGreen40),
@@ -53,7 +54,7 @@ fun StepperButton(
                 color = PrimaryGreen40,
                 modifier = Modifier
                     .padding(top = 10.dp, start = 10.dp)
-                    .clickable { },
+                    .clickable { navigateTo() },
             )
         }
     }
@@ -62,7 +63,7 @@ fun StepperButton(
             Row() {
                 Button(
                     onClick = {
-                        /*TODO*/
+                        navigateTo()
                     },
                     modifier = Modifier.size(40.dp),
                     border = BorderStroke(1.dp, SecondaryGreen40),
@@ -80,7 +81,7 @@ fun StepperButton(
                     color = Color.Gray,
                     modifier = Modifier
                         .padding(top = 10.dp, start = 10.dp)
-                        .clickable { },
+                        .clickable { navigateTo() },
                 )
             }
         }
@@ -88,7 +89,7 @@ fun StepperButton(
             Row() {
                 OutlinedButton(
                     onClick = {
-                        /*TODO*/
+                        navigateTo()
                     },
                     modifier = Modifier.size(40.dp),
                     border = BorderStroke(1.dp, SecondaryGreen40),
@@ -106,7 +107,7 @@ fun StepperButton(
                     color = Color.Gray,
                     modifier = Modifier
                         .padding(top = 10.dp, start = 10.dp)
-                        .clickable { },
+                        .clickable { navigateTo() },
                 )
             }
         }

@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.integradis.greenhouse.shared.data.repositories.CropRecordRepository
 import com.integradis.greenhouse.shared.domain.CropRecordData
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
@@ -40,116 +41,24 @@ import com.integradis.greenhouse.ui.theme.Typography
 fun CropRecords(
     navController : NavController,
     cropId : String?, //Data to search in API
-    phase : String?
+    phase : String?,
+    cropRecordRepository: CropRecordRepository = CropRecordRepository()
 ) {
+    val cropDataReal = remember {
+        mutableStateOf(emptyList<CropRecordData>())
+    }
     val searchRecordsInput = remember {
         mutableStateOf("")
     }
-    //Placeholder data
-    val cropData = mutableListOf(CropRecordData(id = "127",
-        author = "Alan Galavis",
-        cropDay = "1",
-        entryDate = "22/06/2024 12:14",
-        phaseData = listOf(
-            mapOf(
-                "name" to "Hay",
-                "value" to "128"
-            ),
-            mapOf(
-                "name" to "Corn",
-                "value" to "300"
-            ),
-            mapOf(
-                "name" to "Guano",
-                "value" to "100"
-            ),
-            mapOf(
-                "name" to "Cotton seed cake",
-                "value" to "400"
-            ),
-            mapOf(
-                "name" to "Soybean meal",
-                "value" to "356"
-            ),
-            mapOf(
-                "name" to "Urea",
-                "value" to "356"
-            ),
-            mapOf(
-                "name" to "Ammonium sulfate",
-                "value" to "125"
-            ),
-        )),
-        CropRecordData(id = "127",
-            author = "Max Soto",
-            cropDay = "4",
-            entryDate = "27/06/2024 12:14",
-            phaseData = listOf(
-                mapOf(
-                    "name" to "Hay",
-                    "value" to "90"
-                ),
-                mapOf(
-                    "name" to "Corn",
-                    "value" to "180"
-                ),
-                mapOf(
-                    "name" to "Guano",
-                    "value" to "20"
-                ),
-                mapOf(
-                    "name" to "Cotton seed cake",
-                    "value" to "300"
-                ),
-                mapOf(
-                    "name" to "Soybean meal",
-                    "value" to "256"
-                ),
-                mapOf(
-                    "name" to "Urea",
-                    "value" to "156"
-                ),
-                mapOf(
-                    "name" to "Ammonium sulfate",
-                    "value" to "125"
-                ),
-            )),
-        CropRecordData(id = "127",
-            author = "Andres Soto",
-            cropDay = "9",
-            entryDate = "AYUDAA",
-            phaseData = listOf(
-                mapOf(
-                    "name" to "Hay",
-                    "value" to "90"
-                ),
-                mapOf(
-                    "name" to "Corn",
-                    "value" to "180"
-                ),
-                mapOf(
-                    "name" to "Guano",
-                    "value" to "20"
-                ),
-                mapOf(
-                    "name" to "Cotton seed cake",
-                    "value" to "300"
-                ),
-                mapOf(
-                    "name" to "Soybean meal",
-                    "value" to "256"
-                ),
-                mapOf(
-                    "name" to "Urea",
-                    "value" to "156"
-                ),
-                mapOf(
-                    "name" to "Ammonium sulfate",
-                    "value" to "125"
-                ),
-            )),
 
-    )
+    cropId?.let {
+        phase?.let { cropPhase ->
+            cropRecordRepository.getCropRecords(it, cropPhase) {
+            cropDataReal.value = it
+            }
+        }
+    }
+
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
         Row (
             modifier = Modifier
@@ -225,7 +134,7 @@ fun CropRecords(
         }
         Scaffold {paddingValues ->  
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
-                items(cropData) {cropDatum ->
+                items(cropDataReal.value){cropDatum ->
                     CropRecordCard(
                         cropRecordData = cropDatum)
                 }

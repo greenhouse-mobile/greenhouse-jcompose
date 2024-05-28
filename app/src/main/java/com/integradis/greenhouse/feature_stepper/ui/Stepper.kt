@@ -37,7 +37,10 @@ fun Stepper(
     id = "1",
     startDate = "20/11/2021",
     phase = CropPhase.STOCK,
-    state = "In Progress")
+    state = "true",
+    author = "Alan Galavis",
+    name = "Crop #1"
+    )
     val itemsList = mutableListOf(CropPhase.STOCK,CropPhase.PREPARATION_AREA,
         CropPhase.BUNKER,CropPhase.TUNNEL,CropPhase.INCUBATION,CropPhase.CASING,
         CropPhase.INDUCTION,CropPhase.HARVEST)

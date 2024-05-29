@@ -1,4 +1,4 @@
-package com.integradis.greenhouse.feature_auth.ui.signup
+package com.integradis.greenhouse.feature_auth.ui.ui.signup
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,16 +29,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.integradis.greenhouse.R
+import com.integradis.greenhouse.feature_auth.ui.data.remote.AuthService
+import com.integradis.greenhouse.feature_auth.ui.data.remote.SignUpRequest
+import com.integradis.greenhouse.feature_auth.ui.data.repositories.AuthRepository
+import com.integradis.greenhouse.feature_main.ui.main.Routes
+import com.integradis.greenhouse.shared.data.remote.ApiClient
 import com.integradis.greenhouse.shared.ui.CustomButton
 import com.integradis.greenhouse.shared.ui.CustomTextField
 import com.integradis.greenhouse.shared.ui.PasswordTextField
 import com.integradis.greenhouse.shared.ui.SideCustomButton
 
 @Composable
-fun SignUpScreen(navigateToSignUp: () -> Unit,
-                 navigateToSignIn: () -> Unit,
-                 navigateToDashboard: () -> Unit) {
+fun SignUpScreen(
+    navController: NavController,
+    authRepository: AuthRepository = AuthRepository(ApiClient.getRetrofit().create(AuthService::class.java))
+) {
     Scaffold { paddingValues ->
 
         Image(
@@ -94,9 +101,9 @@ fun SignUpScreen(navigateToSignUp: () -> Unit,
 
                         Row (modifier = Modifier.fillMaxWidth().padding(paddingValues),
                         ){
-                            SideCustomButton(text = "Sign in", navigateToSignIn) //lleva a Sign In
+                            SideCustomButton(text = "Sign in", onclick = {navController.navigate(Routes.SignIn.route)} ) //lleva a Sign In
                             Spacer(modifier = Modifier.weight(0.1f))
-                            SideCustomButton(text = "Sign up", navigateToSignUp) //lleva a Sign up
+                            SideCustomButton(text = "Sign up", onclick = {navController.navigate(Routes.SignUp.route)} ) //lleva a Sign up
                         }
                         Spacer(modifier = Modifier.height(20.dp))
 
@@ -142,7 +149,28 @@ fun SignUpScreen(navigateToSignUp: () -> Unit,
                         }
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        CustomButton(text = "Sign up", navigateToDashboard)
+                        CustomButton(
+                            text = "Sign up",
+                            onclick= {
+                                authRepository.signUp(
+                                    request = SignUpRequest(
+                                        businessName = businessName.value,
+                                        tin = TIN.value,
+                                        firstName = firstName.value,
+                                        lastName = lastName.value,
+                                        username = username.value,
+                                        password = password.value,
+                                    )
+                                ) { result ->
+                                    result.onSuccess { userResponse ->
+                                        navController.navigate(Routes.Dashboard.route.replace("{username}", userResponse.username))
+                                    }
+                                    result.onFailure {
+                                        error("Error: ${it.message}")
+                                    }
+                                }
+                            }
+                        )
                     }
 
 

@@ -41,7 +41,7 @@ import com.skydoves.landscapist.glide.GlideImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Dashboard(
-    name: String,
+    username: String,
     navController: NavHostController
 ){
     val rem = remember {
@@ -76,7 +76,7 @@ fun Dashboard(
             }
         }
         Text(
-            text = "Welcome, " + name,
+            text = "Welcome, " + username,
             style = Typography.titleLarge,
             color = Color(0xFF465B3F),
             modifier = Modifier.padding(15.dp)

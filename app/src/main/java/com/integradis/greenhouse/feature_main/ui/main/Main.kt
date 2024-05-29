@@ -1,30 +1,20 @@
 package com.integradis.greenhouse.feature_main.ui.main
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.integradis.greenhouse.feature_auth.ui.signin.SignInScreen
-import com.integradis.greenhouse.feature_auth.ui.signup.SignUpScreen
-import com.integradis.greenhouse.feature_crop_records.ui.CropRecords
-import com.integradis.greenhouse.feature_company.ui.Company
-import com.integradis.greenhouse.feature_crops_in_progress.ui.CropsInProgress
-import com.integradis.greenhouse.feature_dashboard.ui.Dashboard
-import com.integradis.greenhouse.feature_forgot_password.ui.ForgotPassword
-import com.integradis.greenhouse.feature_home.ui.home.HomeScreen
-import com.integradis.greenhouse.feature_layout.ui.Layout
-import com.integradis.greenhouse.feature_mail.ui.Mail
-import com.integradis.greenhouse.feature_notification.ui.Notification
-import com.integradis.greenhouse.feature_perfil.ui.Perfil
-import com.integradis.greenhouse.feature_stepper.ui.Stepper
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 
 @Composable
 fun GreenhouseMainScreen() {
     val navController = rememberNavController()
     val name = "Winston Smith"
-    val username = "wsmith"
+    val username = "wsmith" //here---------------------------
     val company = "Peru Agro J&V S.A.C."
     val role = "Supervising technician"
     val tin = "8767"
@@ -165,7 +155,10 @@ sealed class Routes(val route: String) {
         const val firstArgument = "cropId"
         const val secondArgument = "phase"
     }
-    object Dashboard : Routes("Dashboard")
+
+    object Dashboard : Routes("Dashboard/{username}"){
+        const val argument = "username"
+    }
     object Perfil : Routes("Perfil")
     object Correo : Routes("Correo")
 

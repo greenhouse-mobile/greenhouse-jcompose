@@ -47,16 +47,13 @@ fun Dashboard(
     val rem = remember {
         mutableStateOf("")
     }
-    Column (
-        modifier = Modifier.verticalScroll(rememberScrollState())
-    ){
+    Column (modifier = Modifier.verticalScroll(rememberScrollState())){
         Row (modifier = Modifier
             .fillMaxWidth()
             .padding(15.dp), verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                painter = painterResource(id = R.drawable.logo_verde),
-                contentDescription = "",
-                modifier = Modifier.size(20.dp).clip(RoundedCornerShape(80.dp))
+            GlideImage(
+                imageModel = {"https://i.imgur.com/QjnRwnX.png"},
+                modifier = Modifier.size(35.dp).padding(5.dp),
             )
             Text(
                 text = "Greenhouse",

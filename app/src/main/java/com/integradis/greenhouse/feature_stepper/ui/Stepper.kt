@@ -36,7 +36,7 @@ fun Stepper(
     val chosenCrop = Crop(
     id = "1",
     startDate = "20/11/2021",
-    phase = CropPhase.STOCK,
+    phase = CropPhase.STOCK.toString(),
     state = "true",
     author = "Alan Galavis",
     name = "Crop #1"
@@ -101,7 +101,7 @@ fun Stepper(
                     modifier = Modifier.padding(paddingValues)
                 ) {
                     items(itemsList) {item ->
-                        if (item < chosenCrop.phase){
+                        if (item < CropPhase.valueOf(chosenCrop.phase)){
                             StepperButton(
                                 phase = item,
                                 isComplete = true,
@@ -109,7 +109,7 @@ fun Stepper(
                                     navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getPhaseName()}")
                                 })
                         }
-                        else if (item == chosenCrop.phase) {
+                        else if (item == CropPhase.valueOf(chosenCrop.phase)) {
                             StepperButton(
                                 phase = item,
                                 isCurrent = true,

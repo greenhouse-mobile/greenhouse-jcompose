@@ -1,0 +1,121 @@
+{
+    "records": [
+        {
+            "id": 127,
+            "created_by":"Alan Galavis",
+            "crop_day": 1,
+            "created_at": "27/06/2024 12:14",
+            "updated_at": 2,
+            "phase_id": 1,
+            "crop_id" : 1,
+            "payload": [
+                {
+                    "name" : "Hay",
+                    "value" : "128"
+                },
+                {
+                    "name" : "Corn",
+                    "value" : "300"  
+                },
+                {
+                    "name" : "Guano",
+                    "value" : "100"
+                },
+                {
+                    "name" : "Cotton seed cake",
+                    "value" : "400"  
+                },
+                {
+                    "name" : "Soybean meal",
+                    "value" : "356"
+                },
+                {
+                    "name" : "Urea",
+                    "value" : "356"  
+                },
+                {
+                    "name" : "Ammonium sulfate",
+                    "value" : "125"  
+                }
+            ]
+        },
+        {
+            "id": 127,
+            "created_by":"Max Soto",
+            "crop_day": 4,
+            "created_at": "27/06/2024 12:14",
+            "updated_at": 2,
+            "phase_id": 1,
+            "crop_id" : 1,
+            "payload": [
+                {
+                    "name" : "Hay",
+                    "value" : "90"
+                },
+                {
+                    "name" : "Corn",
+                    "value" : "180"  
+                },
+                {
+                    "name" : "Guano",
+                    "value" : "20"
+                },
+                {
+                    "name" : "Cotton seed cake",
+                    "value" : "300"  
+                },
+                {
+                    "name" : "Soybean meal",
+                    "value" : "256"
+                },
+                {
+                    "name" : "Urea",
+                    "value" : "156"  
+                },
+                {
+                    "name" : "Ammonium sulfate",
+                    "value" : "125"  
+                }
+            ]
+        },
+        {
+            "id": 127,
+            "created_by":"Andres Soto",
+            "crop_day": 9,
+            "created_at": "27/06/2024 12:14",
+            "updated_at": 2,
+            "phase_id": 2,
+            "crop_id" : 2,
+            "payload": [
+                {
+                    "name" : "Hay",
+                    "value" : "90"
+                },
+                {
+                    "name" : "Corn",
+                    "value" : "180"  
+                },
+                {
+                    "name" : "Guano",
+                    "value" : "20"
+                },
+                {
+                    "name" : "Cotton seed cake",
+                    "value" : "300"  
+                },
+                {
+                    "name" : "Soybean meal",
+                    "value" : "256"
+                },
+                {
+                    "name" : "Urea",
+                    "value" : "156"  
+                },
+                {
+                    "name" : "Ammonium sulfate",
+                    "value" : "125"  
+                }
+            ]
+        }
+    ]
+}

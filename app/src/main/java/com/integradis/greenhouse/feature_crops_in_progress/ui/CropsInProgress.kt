@@ -1,5 +1,6 @@
 package com.integradis.greenhouse.feature_crops_in_progress.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -8,13 +9,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Event
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -22,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,9 +32,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.integradis.greenhouse.feature_main.ui.main.Routes
+import com.integradis.greenhouse.shared.data.repositories.CropRepository
 import com.integradis.greenhouse.shared.domain.Crop
 import com.integradis.greenhouse.shared.ui.CropCard
-import com.integradis.greenhouse.shared.ui.InputTextField
+import com.integradis.greenhouse.shared.ui.SearchCropTextField
+import com.integradis.greenhouse.ui.theme.Brown
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
 
@@ -40,8 +45,15 @@ import com.integradis.greenhouse.ui.theme.Typography
 @Composable
 fun CropsInProgress(
     navController: NavController,
+    newCrop: () -> Unit,
+    selectCrop: (Int) -> Unit,
+    deleteCrop: (Int) -> Unit,
+    cropRepository: CropRepository = CropRepository()
 ){
-    val crops = mutableListOf(Crop("29", "29/23/2004","Preparation Area"), Crop("90", "29/14/2004","Bunker"))
+    val crops = remember {
+        mutableStateOf(emptyList<Crop>())
+    }
+
     val searchCropsInput = remember {
         mutableStateOf("")
     }
@@ -51,6 +63,11 @@ fun CropsInProgress(
     )
     val showDatePicker = remember { mutableStateOf(false) }
     val selectedDate = remember { mutableStateOf("") }
+
+    cropRepository.getCrops("true") {
+        crops.value = it
+        Log.d("STATE", crops.value.toString())
+    }
 
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()){
         Row (
@@ -82,7 +99,7 @@ fun CropsInProgress(
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Row( horizontalArrangement = Arrangement.SpaceBetween){
-            InputTextField(
+            SearchCropTextField(
                 input = searchCropsInput,
                 placeholder = "Search crops...",
             )
@@ -98,13 +115,28 @@ fun CropsInProgress(
                     = PrimaryGreen40)
             }
         }
-        Scaffold {paddingValues ->
+        Scaffold (floatingActionButton = {
+            FloatingActionButton(onClick = { newCrop() }, containerColor = Brown, contentColor = Color.White) {
+                Icon(Icons.Filled.Add, "New crop")
+            }
+        }){paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
-                items(crops) {crop ->
-                    CropCard(
-                        imageUrl = "https://i.pinimg.com/originals/fd/65/01/fd6501a1ed1fc18cb4685c8f69bb4df3.jpg",
-                        crop = crop)
-
+                itemsIndexed(crops.value) {index, crop ->
+                    if (crop.state == "In Progress"){
+                        CropCard(
+                            imageUrl = "https://i.pinimg.com/originals/fd/65/01/fd6501a1ed1fc18cb4685c8f69bb4df3.jpg",
+                            crop = crop,
+                            navigateTo = {
+                                navController.navigate("${Routes.Stepper.route}/${crop.id}")
+                            },
+                            selectCrop = {
+                                selectCrop(index)
+                            },
+                            deleteCrop = {
+                                deleteCrop(index)
+                            }
+                        )
+                    }
                 }
             }
         }

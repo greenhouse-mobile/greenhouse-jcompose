@@ -3,12 +3,8 @@ package com.integradis.greenhouse.feature_main.ui.main
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -16,13 +12,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.integradis.greenhouse.feature_auth.ui.signin.SignInScreen
-import com.integradis.greenhouse.feature_auth.ui.signup.SignUpScreen
 import androidx.navigation.navArgument
 import com.integradis.greenhouse.feature_auth.ui.ui.signin.SignInScreen
 import com.integradis.greenhouse.feature_auth.ui.ui.signup.SignUpScreen
-import com.integradis.greenhouse.feature_crop_records.ui.CropRecords
 import com.integradis.greenhouse.feature_company.ui.Company
+import com.integradis.greenhouse.feature_crop_records.ui.CropRecords
 import com.integradis.greenhouse.feature_crops_in_progress.ui.CropsInProgress
 import com.integradis.greenhouse.feature_dashboard.ui.Dashboard
 import com.integradis.greenhouse.feature_forgot_password.ui.ForgotPassword
@@ -37,7 +31,6 @@ import com.integradis.greenhouse.shared.domain.CropPhase
 import com.integradis.greenhouse.shared.ui.CropDetail
 import com.integradis.greenhouse.shared.ui.NavBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GreenhouseMainScreen() {
     val navController = rememberNavController()
@@ -67,7 +60,6 @@ fun GreenhouseMainScreen() {
     }                                                                   
 
     Scaffold(
-        
        bottomBar = {                                         
         if (currentRoute.value != Routes.SignIn.route &&  
             currentRoute.value != Routes.SignUp.route &&  
@@ -112,14 +104,13 @@ fun GreenhouseMainScreen() {
                 composable(route = Routes.CropsInProgress.route)
                  {
                     CropsInProgress(navController,
-                        crops,
                         newCrop = { navController.navigate(Routes.CropDetail.routeWithoutArgument) },
                         selectCrop = {index ->
                             navController.navigate("${Routes.Stepper.route}/${index}")
                         },
                         deleteCrop = {index ->
                             crops.value = crops.value.filterIndexed { idx, _ -> idx != index }.toTypedArray()
-                        }
+                            }
                         )
                 }
                 composable(route = Routes.Company.route)
@@ -161,7 +152,7 @@ fun GreenhouseMainScreen() {
                     val index =
                         backStackEntry.arguments?.getInt(Routes.CropDetail.argument) ?: return@composable
                     val contact = if (index < 0) {
-                        Crop("", "", CropPhase.STOCK, "")
+                        Crop("", "", phase = CropPhase.STOCK, author = "Alan Galavis", name = "Crop #1", state = "true")
                     } else crops.value[index]
                     CropDetail(
                         navController,
@@ -207,7 +198,6 @@ sealed class Routes(val route: String) {
     object Dashboard : Routes("Dashboard/{username}"){
         const val argument = "username"
     }
-
     object Perfil : Routes("Perfil")
     object Correo : Routes("Correo")
 

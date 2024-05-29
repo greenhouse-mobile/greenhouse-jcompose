@@ -23,6 +23,9 @@ data class CropRecordData(
     val updateDate : String,
 
     @SerializedName("payload")
-    val phaseData: List<Map<String,String>>
+    val phaseData: Payload
+)
 
+data class Payload(
+    val data: List<Map<String, String>>
 )

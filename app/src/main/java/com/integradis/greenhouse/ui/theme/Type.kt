@@ -88,8 +88,8 @@ val Typography = Typography(
     labelLarge = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
-        lineHeight = 44.sp,
+        fontSize = 14.sp,
+        lineHeight = 40.sp,
         letterSpacing = 0.sp,
     ),
     headlineSmall = TextStyle(

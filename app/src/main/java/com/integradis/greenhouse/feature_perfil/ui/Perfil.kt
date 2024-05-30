@@ -1,5 +1,6 @@
 package com.integradis.greenhouse.feature_perfil.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,13 +34,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.integradis.greenhouse.R
 import com.integradis.greenhouse.shared.ui.InfoField
-import com.integradis.greenhouse.shared.domain.Information
+import com.integradis.greenhouse.shared.domain.UserInformation
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
 import com.skydoves.landscapist.glide.GlideImage
@@ -57,22 +61,22 @@ fun Perfil(
         mutableStateOf("")
     }
     val fields = listOf(
-        Information(
+        UserInformation(
             title = "Name",
             placeholder = name,
             input = rem
         ),
-        Information(
+        UserInformation(
             title = "Username",
             placeholder = username,
             input = rem
         ),
-        Information(
+        UserInformation(
             title = "Company",
             placeholder = company,
             input = rem
         ),
-        Information(
+        UserInformation(
             title = "Role within the company",
             placeholder = role,
             input = rem
@@ -111,13 +115,10 @@ fun Perfil(
                 ),
                 shape = RoundedCornerShape(1400.dp)
             ){
-                GlideImage(
-                    imageModel = {"https://www.investmentmonitor.ai/wp-content/uploads/sites/7/2020/07/cropped-Headshot-IM-177x177.png"},
-                    modifier = Modifier.size(150.dp),
-                    requestOptions = {
-                        RequestOptions()
-                            .transform(RoundedCorners(1000))
-                    },
+                Image(
+                    painter = painterResource(id = R.drawable.max2),
+                    contentDescription = "",
+                    modifier = Modifier.size(150.dp).clip(RoundedCornerShape(1400.dp))
                 )
             }
             Row(
@@ -137,18 +138,11 @@ fun Perfil(
             }
         }
         Column {
-            InfoField(fields, false)
+            InfoField(fields, false, navController)
             Text(text = "Settings", style = Typography.labelLarge, modifier = Modifier.padding(15.dp))
             Text(text = "Forgot your passowrd?",
                 style = Typography.labelLarge,
                 color = PrimaryGreen40,
-                modifier = Modifier
-                    .padding(15.dp, 5.dp, 0.dp, 0.dp)
-                    .clickable { navController.navigate("ForgotPassword") }
-            )
-            Text(text = "Delete Account",
-                style = Typography.labelLarge,
-                color = Color.Red,
                 modifier = Modifier
                     .padding(15.dp, 5.dp, 0.dp, 0.dp)
                     .clickable { navController.navigate("ForgotPassword") }

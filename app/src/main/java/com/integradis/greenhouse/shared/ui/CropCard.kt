@@ -39,6 +39,8 @@ import com.integradis.greenhouse.ui.theme.Typography
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import java.security.MessageDigest
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,9 +53,12 @@ fun CropCard(
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
+    val formatter = DateTimeFormatter.ofPattern("EE MMM dd yyyy HH:mm:ss OOOO")
+    val showedDateValue = crop.startDate.slice(IntRange(0, 32)).replaceRange(31,31,":")
+
     ElevatedCard(
         modifier = Modifier
-            .padding(30.dp)
+            .padding(20.dp)
             .clickable { navigateTo() },
         elevation = CardDefaults.cardElevation(
             defaultElevation = 3.dp
@@ -71,11 +76,12 @@ fun CropCard(
             }
         )
         Column(
-            modifier = Modifier.padding(10.dp)
+            modifier = Modifier.padding(10.dp),
+            horizontalAlignment = Alignment.Start
         ) {
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Crop ID: ${crop.id}",
+                    text = "Crop Name:",
                     modifier = Modifier.weight(1f),
                     style = Typography.labelLarge,
                     color = Color.Black
@@ -133,9 +139,15 @@ fun CropCard(
                 Row( modifier = Modifier.clickable { showDialog = true },
                     verticalAlignment = Alignment.CenterVertically){
                     Text(
+                        text = crop.id,
+                        style = Typography.labelSmall,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(end = 30.dp)
+                    )
+                    Text(
                         text = "Delete",
                         color = Color.Red,
-                        modifier = Modifier.padding(top = 1.dp)
+                        style = Typography.labelLarge,
                     )
                     Icon(
                         Icons.Filled.Delete,
@@ -152,7 +164,8 @@ fun CropCard(
                     tint = PrimaryGreen40,
                 )
                 Text(
-                    text = "Start Date: ${crop.startDate}",
+                    text = "Start Date: ${LocalDate.parse(showedDateValue, formatter)}",
+                    style = Typography.labelLarge,
                     modifier = Modifier.padding(2.dp)
                 )
             }
@@ -164,6 +177,7 @@ fun CropCard(
                 )
                 Text(
                     text = "Current Phase: ${crop.phase}",
+                    style = Typography.labelLarge,
                     modifier = Modifier.padding(2.dp)
                 )
             }

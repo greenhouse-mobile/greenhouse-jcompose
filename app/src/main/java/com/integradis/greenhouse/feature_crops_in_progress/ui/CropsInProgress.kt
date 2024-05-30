@@ -131,9 +131,9 @@ fun CropsInProgress(
         }){paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 itemsIndexed(crops.value) {index, crop ->
-                    if (crop.state == "true"){
-                        CropCard(
-                            imageUrl = "https://i.pinimg.com/originals/fd/65/01/fd6501a1ed1fc18cb4685c8f69bb4df3.jpg",
+                    if (crop.state == "true"){ // This is useless, the query for this screen already
+                        CropCard(               // uses active crops
+                            imageUrl = "https://compote.slate.com/images/e4805e57-794c-4d88-b893-c7ac42f604ac.jpeg?width=1200&rect=6480x4320&offset=112x0",
                             crop = crop,
                             navigateTo = {
                                 navController.navigate("${Routes.Stepper.route}/${crop.id}")

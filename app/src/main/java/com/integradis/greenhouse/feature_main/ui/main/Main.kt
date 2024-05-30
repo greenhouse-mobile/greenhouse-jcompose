@@ -37,7 +37,7 @@ fun GreenhouseMainScreen() {
         currentRoute.value = destination.route ?: ""
     }
 
-    NavHost(navController = navController, startDestination = Routes.Dashboard.route) {
+    NavHost(navController = navController, startDestination = Routes.HomeScreen.route) {
 
                 composable(route = Routes.HomeScreen.route) {
                     HomeScreen(navController = navController)
@@ -100,10 +100,12 @@ fun GreenhouseMainScreen() {
                     })
                 ) { backStackEntry ->
                     Layout(navController = navController) {
-                        Stepper(
-                            navController = navController,
-                            backStackEntry.arguments?.getString("cropId")
-                        )
+                        backStackEntry.arguments?.getString("cropId")?.let {
+                            Stepper(
+                                navController = navController,
+                                it
+                            )
+                        }
                     }
                 }
 

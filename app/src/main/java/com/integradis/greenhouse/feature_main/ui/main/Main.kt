@@ -37,7 +37,7 @@ fun GreenhouseMainScreen() {
         currentRoute.value = destination.route ?: ""
     }
 
-    NavHost(navController = navController, startDestination = Routes.HomeScreen.route) {
+    NavHost(navController = navController, startDestination = Routes.Dashboard.route) {
 
                 composable(route = Routes.HomeScreen.route) {
                     HomeScreen(navController = navController)
@@ -173,7 +173,8 @@ sealed class Routes(val route: String) {
         const val secondArgument = "phase"
     }
 
-    object Dashboard : Routes("Dashboard/{username}"){
+    object Dashboard : Routes("Dashboard"){
+        const val routeWithArgument = "Dashboard/{username}"
         const val argument = "username"
     }
     object Perfil : Routes("Perfil")

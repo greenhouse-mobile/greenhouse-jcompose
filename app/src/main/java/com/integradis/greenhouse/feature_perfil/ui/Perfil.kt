@@ -52,14 +52,15 @@ import com.skydoves.landscapist.glide.GlideImage
 @Composable
 fun Perfil(
     navController: NavHostController,
-    name: String,
-    username: String,
-    company: String,
-    role: String
+    name: String?,
+    username: String?,
+    company: String?,
+    role: String?
 ){
     val rem = remember {
         mutableStateOf("")
     }
+    name?.let { rem.value = it }
     val fields = listOf(
         UserInformation(
             title = "Name",

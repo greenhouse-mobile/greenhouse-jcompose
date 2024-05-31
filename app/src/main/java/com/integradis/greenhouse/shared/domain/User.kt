@@ -16,5 +16,7 @@ data class UserData(
     @SerializedName("userId")
     val userId: String,
     @SerializedName("role")
-    val role: String
+    val role: String,
+    @SerializedName("iconUrl")
+    val image: String
 )

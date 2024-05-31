@@ -17,7 +17,6 @@ import com.integradis.greenhouse.feature_dashboard.ui.Dashboard
 import com.integradis.greenhouse.feature_forgot_password.ui.ForgotPassword
 import com.integradis.greenhouse.feature_home.ui.home.HomeScreen
 import com.integradis.greenhouse.feature_layout.ui.Layout
-import com.integradis.greenhouse.feature_mail.ui.Mail
 import com.integradis.greenhouse.feature_notification.ui.Notification
 import com.integradis.greenhouse.feature_perfil.ui.Perfil
 import com.integradis.greenhouse.feature_stepper.ui.Stepper
@@ -60,12 +59,6 @@ fun GreenhouseMainScreen() {
                         Perfil(
                             navController,
                             company)
-                    }
-                }
-
-                composable(route = Routes.Correo.route) {
-                    Layout(navController = navController) {
-                        Mail()
                     }
                 }
 
@@ -178,7 +171,6 @@ sealed class Routes(val route: String) {
         const val argument = "username"
     }
     object Perfil : Routes("Perfil")
-    object Correo : Routes("Correo")
 
     object Archives : Routes("Archives")
     object Notification : Routes("Notification")

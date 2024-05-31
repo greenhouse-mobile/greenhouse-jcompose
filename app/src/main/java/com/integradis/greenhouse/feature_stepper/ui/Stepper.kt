@@ -40,7 +40,7 @@ fun Stepper(
 ) {
 
     val crop = remember {
-        mutableStateOf<Crop>(Crop("", "", "", "", "", ""))
+        mutableStateOf<Crop?>(null)
     }
 
     cropRepository.getCropById(cropId) {
@@ -110,7 +110,7 @@ fun Stepper(
                     modifier = Modifier.padding(paddingValues)
                 ) {
                     items(itemsList) {item ->
-                        if (item < CropPhase.valueOf(crop.value.phase.uppercase())){
+                        if (item < CropPhase.getValueOf(crop.value?.phase)){
                             StepperButton(
                                 phase = item,
                                 isComplete = true,
@@ -118,7 +118,7 @@ fun Stepper(
                                     navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getPhaseName()}")
                                 })
                         }
-                        else if (item == CropPhase.valueOf(crop.value.phase.uppercase())) {
+                        else if (item == CropPhase.getValueOf(crop.value?.phase)) {
                             StepperButton(
                                 phase = item,
                                 isCurrent = true,

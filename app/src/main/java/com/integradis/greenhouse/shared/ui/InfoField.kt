@@ -1,8 +1,12 @@
 package com.integradis.greenhouse.shared.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.TextSelectionColors
@@ -31,20 +35,15 @@ import com.integradis.greenhouse.ui.theme.Typography
 @Composable
 fun InfoField(
     fields: List<UserInformation>,
-    navController: NavHostController
+    navController: NavHostController,
 ) {
-    val rem = remember {
-        mutableStateOf("")
-
-    }
-
     Column (
         modifier = Modifier.padding(15.dp),
     )
         {
         fields.forEach {fields->
             if (fields.title == "Company"){
-                Row {
+                Row{
                     Text(text = fields.title, style = Typography.labelLarge, modifier = Modifier.padding(15.dp).clickable { navController.navigate("Company") })
                     IconButton(
                         onClick = { navController.navigate("Company")},
@@ -61,7 +60,7 @@ fun InfoField(
                 Text(text = fields.title, style = Typography.labelLarge, modifier = Modifier.padding(15.dp))
             }
             Text(
-                text = fields.placeholder, style = Typography.labelLarge, modifier = Modifier.padding(15.dp),
+                text = fields.placeholder, style = Typography.labelLarge, modifier = Modifier.background(GrayTextField40, shape = RoundedCornerShape(10.dp)).fillMaxSize().padding(15.dp, 20.dp),
             )
         }
     }

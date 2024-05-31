@@ -31,7 +31,6 @@ import com.integradis.greenhouse.ui.theme.Typography
 @Composable
 fun InfoField(
     fields: List<UserInformation>,
-    state: Boolean,
     navController: NavHostController
 ) {
     val rem = remember {
@@ -61,29 +60,8 @@ fun InfoField(
             else {
                 Text(text = fields.title, style = Typography.labelLarge, modifier = Modifier.padding(15.dp))
             }
-            TextField(
-                placeholder = {
-                    Text(text = fields.placeholder, style = Typography.labelLarge)
-                },
-                enabled = state,
-                value = fields.input.value,
-                onValueChange = {
-                    fields.input.value = it
-                },
-                maxLines = 1,
-                shape = RoundedCornerShape(10.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = GrayTextField40,
-                    unfocusedContainerColor = GrayTextField40,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = PrimaryGreen40,
-                    selectionColors = TextSelectionColors(
-                        handleColor = PrimaryGreen40,
-                        backgroundColor = PrimaryGreen40
-                    )
-                ),
-                textStyle = Typography.labelMedium,
+            Text(
+                text = fields.placeholder, style = Typography.labelLarge, modifier = Modifier.padding(15.dp),
             )
         }
     }

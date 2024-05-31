@@ -77,7 +77,6 @@ fun CropsInProgress(
         Log.d("active", crops.value.toString())
     }
     var newCrop by remember { mutableStateOf(false) }
-
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()){
         Row (
             modifier = Modifier

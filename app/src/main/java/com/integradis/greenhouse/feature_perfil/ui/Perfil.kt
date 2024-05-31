@@ -1,5 +1,6 @@
 package com.integradis.greenhouse.feature_perfil.ui
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,48 +40,54 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.integradis.greenhouse.R
+import com.integradis.greenhouse.shared.data.repositories.UserRepository
+import com.integradis.greenhouse.shared.domain.UserData
 import com.integradis.greenhouse.shared.ui.InfoField
 import com.integradis.greenhouse.shared.domain.UserInformation
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
-import com.skydoves.landscapist.glide.GlideImage
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Perfil(
     navController: NavHostController,
-    name: String?,
-    username: String?,
-    company: String?,
-    role: String?
+    company: String,
+    userRepository: UserRepository = UserRepository()
 ){
-    val rem = remember {
-        mutableStateOf("")
+    val userData = remember {
+        mutableStateOf(emptyList<UserData>())
     }
-    name?.let { rem.value = it }
+    userRepository.getUser("wsmith") {
+        userData.value = it
+        Log.d("Perfil", userData.value.toString())
+    }
+    var userId = ""
+    var userUsername = ""
+    var userRole = ""
+
+    for (i in userData.value){
+        if (i.id == "2"){
+            userId = i.id
+            userUsername = i.username
+            userRole = i.role
+        }
+    }
     val fields = listOf(
         UserInformation(
             title = "Name",
-            placeholder = name,
-            input = rem
+            placeholder = userId,
         ),
         UserInformation(
             title = "Username",
-            placeholder = username,
-            input = rem
+            placeholder = userUsername,
         ),
         UserInformation(
             title = "Company",
             placeholder = company,
-            input = rem
         ),
         UserInformation(
             title = "Role within the company",
-            placeholder = role,
-            input = rem
+            placeholder = userRole,
         )
     )
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())
@@ -139,7 +146,7 @@ fun Perfil(
             }
         }
         Column {
-            InfoField(fields, false, navController)
+            InfoField(fields, navController)
             Text(text = "Settings", style = Typography.labelLarge, modifier = Modifier.padding(15.dp))
             Text(text = "Forgot your passowrd?",
                 style = Typography.labelLarge,

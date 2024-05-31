@@ -9,19 +9,17 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 class UserRepository(private val userService: UserService = UserServiceFactory.getUserService()) {
-    fun getUser(id: String, username: String, callback: (List<UserData>) -> Unit) {
-            val getUser = userService.getUser(id, username)
-
-            getUser.enqueue(object: Callback<UserWrapper>{
+    fun getUser(username: String, callback: (List<UserData>) -> Unit) {
+            val getUser = userService.getUser(username)
+            getUser.enqueue(object: Callback<UserWrapper> {
                 override fun onResponse(
                     call: Call<UserWrapper>,
                     response: Response<UserWrapper>
                 ) {
-                    if (response.isSuccessful){
+                    if(response.isSuccessful){
                         callback(response.body()?.users ?: emptyList())
                     }
                 }
-
                 override fun onFailure(
                     call: Call<UserWrapper>,
                     t: Throwable
@@ -30,7 +28,6 @@ class UserRepository(private val userService: UserService = UserServiceFactory.g
                         Log.d("UserRepository", it)
                     }
                 }
-
             })
         }
 

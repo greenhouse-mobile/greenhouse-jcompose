@@ -6,9 +6,8 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface UserService {
-    @GET("users")
+    @GET("profiles")
     fun getUser(
-        @Query("id") id: String,
-        @Query("username") username: String
+        @Query("userId") username: String
     ) : Call<UserWrapper>
 }

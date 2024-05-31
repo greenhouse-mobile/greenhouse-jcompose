@@ -26,9 +26,7 @@ import com.integradis.greenhouse.feature_stepper.ui.Stepper
 fun GreenhouseMainScreen() {
     val navController = rememberNavController()
     val name = "Winston Smith"
-    val username = "wsmith" //here---------------------------
     val company = "Peru Agro J&V S.A.C."
-    val role = "Supervising technician"
     val tin = "8767"
 
     val currentRoute = remember { mutableStateOf("") }
@@ -59,7 +57,9 @@ fun GreenhouseMainScreen() {
 
                 composable(route = Routes.Perfil.route) {
                     Layout(navController = navController) {
-                        Perfil(navController, name, username, company, role)
+                        Perfil(
+                            navController,
+                            company)
                     }
                 }
 

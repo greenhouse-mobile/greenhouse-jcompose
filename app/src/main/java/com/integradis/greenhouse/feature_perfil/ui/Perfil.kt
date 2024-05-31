@@ -61,21 +61,21 @@ fun Perfil(
         userData.value = it
         Log.d("Perfil", userData.value.toString())
     }
-    var userId = ""
+    var userName = ""
     var userUsername = ""
     var userRole = ""
 
     for (i in userData.value){
-        if (i.id == "2"){
-            userId = i.id
-            userUsername = i.username
+        if (i.id == "99c5c19-c426-453a-a93b-99a02fa136d2"){
+            userName = i.firstName + " " + i.lastName
+            userUsername = i.userId
             userRole = i.role
         }
     }
     val fields = listOf(
         UserInformation(
             title = "Name",
-            placeholder = userId,
+            placeholder = userName,
         ),
         UserInformation(
             title = "Username",

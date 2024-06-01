@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.integradis.greenhouse.shared.domain.UserInformation
+import com.integradis.greenhouse.model.data.user_information.UserInformation
 import com.integradis.greenhouse.ui.theme.GrayTextField40
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography

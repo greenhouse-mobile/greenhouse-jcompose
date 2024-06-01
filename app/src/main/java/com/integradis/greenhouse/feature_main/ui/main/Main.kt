@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.integradis.greenhouse.feature_auth.ui.ui.signin.SignInScreen
-import com.integradis.greenhouse.feature_auth.ui.ui.signup.SignUpScreen
 import com.integradis.greenhouse.feature_company.ui.Company
 import com.integradis.greenhouse.feature_crop_records.ui.CropRecords
 import com.integradis.greenhouse.feature_crops_in_progress.ui.CropsInProgress
@@ -43,10 +42,6 @@ fun GreenhouseMainScreen() {
 
                 composable(route = Routes.SignIn.route) {
                     SignInScreen(navController = navController)
-                }
-
-                composable(route = Routes.SignUp.route) {
-                    SignUpScreen(navController = navController)
                 }
 
                 composable(route = Routes.Dashboard.route) {
@@ -160,7 +155,6 @@ sealed class Routes(val route: String) {
 
     object HomeScreen : Routes("HomeScreen")
     object SignIn : Routes("SignIn")
-    object SignUp : Routes("SignUp")
     
     object CropsInProgress : Routes("CropsInProgress")
     object Stepper : Routes("Stepper") {
@@ -188,4 +182,3 @@ sealed class Routes(val route: String) {
     object Company : Routes("Company")
 
 }
-

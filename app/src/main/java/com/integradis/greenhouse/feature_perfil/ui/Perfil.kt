@@ -156,7 +156,7 @@ fun Perfil(
                     .clickable { navController.navigate("ForgotPassword") }
             )
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("HomeScreen") },
                 modifier = Modifier
                     .padding(15.dp)
                     .width(300.dp)

@@ -102,8 +102,6 @@ fun SignInScreen(
 
                         Row {
                             SideCustomButton(text = "Sign in", onclick = {navController.navigate(Routes.SignIn.route)} ) //lleva a Sign In
-                            Spacer(modifier = Modifier.weight(0.1f))
-                            SideCustomButton(text = "Sign up", onclick = {navController.navigate(Routes.SignUp.route)}) //lleva a Sign up
                         }
                         Spacer(modifier = Modifier.height(20.dp))
 

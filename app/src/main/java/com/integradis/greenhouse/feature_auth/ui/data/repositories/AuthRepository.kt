@@ -39,27 +39,4 @@ class AuthRepository(private val authService: AuthService = AuthServiceFactory.g
         })
     }
 
-    fun signUp(
-        request: SignUpRequest,
-        callback: (Result<UserResponse>) -> Unit
-    ){
-        val call = authService.signUp(request)
-        call.enqueue(object : Callback<UserResponse> {
-            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        callback(Result.success(it))
-                    } ?: callback(Result.failure(Exception("Response body is null")))
-                } else {
-                    callback(Result.failure(Exception("Failed to sign up: ${response.message()}")))
-                }
-            }
-
-            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                callback(Result.failure(t))
-            }
-        })
-    }
-
-
 }

@@ -97,7 +97,7 @@ fun AuthenticationHomeScreen(navController: NavController) {
                         }
                         Spacer(modifier = Modifier.height(30.dp))
                         Button(
-                            onClick = { navController.navigate(Routes.SignUp.route) },
+                            onClick = {  },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(50.dp), // Altura del botón ajustable

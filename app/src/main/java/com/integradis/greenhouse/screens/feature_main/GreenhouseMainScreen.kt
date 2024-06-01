@@ -18,6 +18,7 @@ import com.integradis.greenhouse.screens.feature_authentication_home.Authenticat
 import com.integradis.greenhouse.shared.ui.Layout
 import com.integradis.greenhouse.feature_mail.ui.Mail
 import com.integradis.greenhouse.feature_notification.ui.Notification
+import com.integradis.greenhouse.screens.feature_crops_archive.CropsArchivesScreen
 import com.integradis.greenhouse.screens.feature_profile.ProfileScreen
 import com.integradis.greenhouse.screens.feature_stepper.Stepper
 
@@ -120,16 +121,16 @@ fun GreenhouseMainScreen() {
 
                 composable(route = Routes.Archives.route) {
                     Layout(navController = navController) {
-//                Archives(
-//                    navController,
-//                    crops,
-//                    selectCrop = {index ->
-//                        navController.navigate("${Routes.Stepper.route}/${index}")
-//                    },
-//                    deleteCrop = {index ->
-//                        crops.value = crops.value.filterIndexed { idx, _ -> idx != index }.toTypedArray()
-//                    }
-//                )
+                        CropsArchivesScreen(
+                            navController,
+                            selectCrop = {index ->
+                                navController.navigate("${Routes.Stepper.route}/${index}")
+                            },
+                            deleteCrop = {
+//                                index ->
+//                                crops.value = crops.value.filterIndexed { idx, _ -> idx != index }.toTypedArray()
+                            }
+                        )
                     }
                 }
 

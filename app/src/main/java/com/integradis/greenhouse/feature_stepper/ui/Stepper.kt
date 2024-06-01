@@ -1,5 +1,6 @@
 package com.integradis.greenhouse.feature_stepper.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -15,12 +16,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.integradis.greenhouse.feature_main.ui.main.Routes
+import com.integradis.greenhouse.shared.data.repositories.CropRepository
 import com.integradis.greenhouse.shared.domain.Crop
 import com.integradis.greenhouse.shared.domain.CropPhase
 import com.integradis.greenhouse.shared.ui.MultiStyleText
@@ -30,20 +35,24 @@ import com.integradis.greenhouse.ui.theme.Typography
 @Composable
 fun Stepper(
     navController: NavController,
-    cropId: String?
+    cropId: String,
+    cropRepository: CropRepository = CropRepository()
 ) {
-    // In production environment this should be obtained from a crop entity
-    val chosenCrop = Crop(
-    id = "1",
-    startDate = "20/11/2021",
-    phase = CropPhase.STOCK,
-    state = "true",
-    author = "Alan Galavis",
-    name = "Crop #1"
-    )
+
+    val crop = remember {
+        mutableStateOf<Crop?>(null)
+    }
+
+    cropRepository.getCropById(cropId) {
+        crop.value = it
+    }
+
+    Log.d("STATE", crop.value.toString())
+
     val itemsList = mutableListOf(CropPhase.STOCK,CropPhase.PREPARATION_AREA,
         CropPhase.BUNKER,CropPhase.TUNNEL,CropPhase.INCUBATION,CropPhase.CASING,
         CropPhase.INDUCTION,CropPhase.HARVEST)
+
     Scaffold {paddingValues ->
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -101,7 +110,7 @@ fun Stepper(
                     modifier = Modifier.padding(paddingValues)
                 ) {
                     items(itemsList) {item ->
-                        if (item < chosenCrop.phase){
+                        if (item < CropPhase.getValueOf(crop.value?.phase)){
                             StepperButton(
                                 phase = item,
                                 isComplete = true,
@@ -109,7 +118,7 @@ fun Stepper(
                                     navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getPhaseName()}")
                                 })
                         }
-                        else if (item == chosenCrop.phase) {
+                        else if (item == CropPhase.getValueOf(crop.value?.phase)) {
                             StepperButton(
                                 phase = item,
                                 isCurrent = true,

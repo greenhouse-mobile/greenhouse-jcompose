@@ -4,6 +4,5 @@ import androidx.compose.runtime.MutableState
 
 data class UserInformation(
     val title: String,
-    val placeholder: String,
-    val input: MutableState<String>,
+    val placeholder: String
 ) {}

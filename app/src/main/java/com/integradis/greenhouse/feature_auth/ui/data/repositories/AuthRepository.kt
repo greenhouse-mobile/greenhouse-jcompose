@@ -5,6 +5,7 @@ import com.integradis.greenhouse.feature_auth.ui.data.remote.AuthServiceFactory
 import com.integradis.greenhouse.feature_auth.ui.data.remote.SignUpRequest
 import com.integradis.greenhouse.feature_auth.ui.data.remote.UserRequest
 import com.integradis.greenhouse.feature_auth.ui.data.remote.UserResponse
+import com.integradis.greenhouse.feature_auth.ui.data.remote.UserResponseWrapper
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,10 +14,10 @@ class AuthRepository(private val authService: AuthService = AuthServiceFactory.g
 
     fun signIn(username: String, password: String, callback: (Result<UserResponse>) -> Unit) {
         val call = authService.signIn(username, password)
-        call.enqueue(object : Callback<List<UserResponse>> {
-            override fun onResponse(call: Call<List<UserResponse>>, response: Response<List<UserResponse>>) {
+        call.enqueue(object : Callback<UserResponseWrapper> {
+            override fun onResponse(call: Call<UserResponseWrapper>, response: Response<UserResponseWrapper>) {
                 if (response.isSuccessful) {
-                    val users = response.body()
+                    val users = response.body()?.users
                     if (users != null && users.isNotEmpty()) {
                         val user = users.firstOrNull { it.username == username && it.password == password }
                         if (user != null) {
@@ -32,7 +33,7 @@ class AuthRepository(private val authService: AuthService = AuthServiceFactory.g
                 }
             }
 
-            override fun onFailure(call: Call<List<UserResponse>>, t: Throwable) {
+            override fun onFailure(call: Call<UserResponseWrapper>, t: Throwable) {
                 callback(Result.failure(t))
             }
         })

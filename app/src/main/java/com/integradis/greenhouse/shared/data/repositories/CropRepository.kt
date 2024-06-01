@@ -34,4 +34,22 @@ class CropRepository(private val cropService : CropService = CropServiceFactory.
             }
         })
     }
+
+    fun getCropById(id: String, callback: (Crop) -> Unit) {
+        val getCropById = cropService.getCropById(id = id)
+
+        getCropById.enqueue(object: Callback<Crop> {
+            override fun onResponse(call: Call<Crop>, response: Response<Crop>) {
+                if (response.isSuccessful) {
+                    callback(response.body() as Crop)
+                }
+            }
+
+            override fun onFailure(call: Call<Crop>, t: Throwable) {
+                t.message?.let {
+                    Log.d("HeroRepository", it)
+                }
+            }
+        })
+    }
 }

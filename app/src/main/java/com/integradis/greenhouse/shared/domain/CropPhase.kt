@@ -36,4 +36,11 @@ enum class CropPhase {
 
     abstract fun getPhaseName() : String
     abstract fun getPhaseNumber() : String
+
+    companion object {
+        fun getValueOf(phase : String?) : CropPhase  {
+            if (phase.isNullOrBlank()) return STOCK
+            return CropPhase.valueOf(phase.uppercase())
+        }
+    }
 }

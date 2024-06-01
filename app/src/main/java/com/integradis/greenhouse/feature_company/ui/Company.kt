@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,12 +59,10 @@ fun Company(
         UserInformation(
             title = "Company Name",
             placeholder = companyName,
-            input = rem
         ),
         UserInformation(
             title = "TIN",
             placeholder = TIN,
-            input = rem
         ),
     )
     val coworkers = mutableListOf(
@@ -121,7 +118,7 @@ fun Company(
                 modifier = Modifier.size(100.dp).clip(RoundedCornerShape(1400.dp))
             )
         }
-        InfoField(fields, false, navController)
+        InfoField(fields, navController)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
                 .background(GrayBg, shape = RoundedCornerShape(0.dp))

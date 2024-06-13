@@ -111,13 +111,13 @@ fun DashboardScreen(
             modifier = Modifier.padding(15.dp)
         )
         DashboardCard(
-            imageUrl = "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg",
+            imageUrl = "https://img.freepik.com/free-photo/asian-woman-studying-different-plants-with-tablet_23-2148776800.jpg?t=st=1718303749~exp=1718307349~hmac=4ccf17973d553b198da732c2e6027fc0bf5f735c80a93ce28e95331f26e88926&w=2000",
             title = "Crops In Progress",
             navController,
             route = "CropsInProgress"
         )
         DashboardCard(
-            imageUrl = "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg",
+            imageUrl = "https://img.freepik.com/free-photo/ring-binder-used-stored-documents_23-2149362548.jpg?t=st=1718303998~exp=1718307598~hmac=9a9eaad26b4de7184802f61144ff7542f827916dfab101bd98db69b127bc60d6&w=2000",
             title = "Crops Archive",
             navController,
             route = "Archives"

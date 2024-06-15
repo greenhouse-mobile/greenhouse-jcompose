@@ -2,7 +2,7 @@ package com.integradis.greenhouse.shared.ui
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -12,25 +12,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.integradis.greenhouse.ui.theme.errorRed
+import com.integradis.greenhouse.ui.theme.alertGreen
 
 @Composable
-fun DeleteItemPopUp(
+fun AlertPopUp(
     onDismissRequest: () -> Unit,
+    inlineText: String,
     onClickDismissButton: () -> Unit,
+    buttonText: String,
     onConfirmButton: () -> Unit,
-    id : String,
-    type : String,
 ) {
     AlertDialog(
         onDismissRequest = { onDismissRequest() },
         icon = {
-            Icon(Icons.Filled.Delete,
-                contentDescription = "Delete Icon",
-                tint = errorRed,
-                modifier = Modifier.size(100.dp))
-               },
-        text = { Text("Do you want to notify an admin for the deletion of $type $id?") },
+               Icon(
+                   Icons.Outlined.Info,
+                   contentDescription = "Information Icon",
+                   tint = alertGreen,
+                   modifier = Modifier.size(100.dp))
+        },
+        text = {Text(inlineText)},
         containerColor = Color.White,
         dismissButton = {
             Button(
@@ -39,24 +40,19 @@ fun DeleteItemPopUp(
                     Color.White
                 )
             ) {
-                Text("Cancel", color = errorRed)
+                Text("Cancel", color = alertGreen)
             }
         },
         confirmButton = {
             Button(
                 onClick = {
-                    //onDeleteClicked()
-                    //Aca deberiamos poner la forma en la que se envia mensaje al admin para eliminar el crop
                     onConfirmButton()
                 },
                 colors = ButtonDefaults.buttonColors(
-                    errorRed
+                    alertGreen
                 )
             ) {
-                Text("Confirm")
+                Text(buttonText)
             }
-        }
-    )
+        })
 }
-
-

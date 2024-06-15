@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.integradis.greenhouse.model.data.crop_records.CropRecordData
+import com.integradis.greenhouse.shared.ui.AlertPopUp
 import com.integradis.greenhouse.shared.ui.DeleteItemPopUp
 import com.integradis.greenhouse.shared.ui.MultiStyleSpacedText
 import com.integradis.greenhouse.shared.ui.MultiStyleText
@@ -55,6 +56,7 @@ fun CropRecordCard(
         mutableStateOf(false)
     }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -74,7 +76,8 @@ fun CropRecordCard(
                 expandedState = !expandedState
                 coroutineScope.launch {
                     bringIntoViewRequester.bringIntoView()
-                }},
+                }
+            },
 
     ) {
         Column(
@@ -90,6 +93,16 @@ fun CropRecordCard(
                         onConfirmButton = { showDeleteDialog = false },
                         id = cropRecordData.id,
                         type = "record"
+                    )
+                }
+                if (showEditDialog){
+                    AlertPopUp(
+                        onDismissRequest = { showEditDialog = false },
+                        inlineText = "Do you want to notify an admin for the editing of " +
+                                "record ${cropRecordData.id}?",
+                        onClickDismissButton = { showEditDialog = false },
+                        buttonText = "Yes, notify",
+                        onConfirmButton = { showEditDialog = false }
                     )
                 }
                 Text(
@@ -113,7 +126,7 @@ fun CropRecordCard(
                     )
                 }
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { showEditDialog = true   },
                     modifier = Modifier
                         .height(20.dp)
                         .width(20.dp)

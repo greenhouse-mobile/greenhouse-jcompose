@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import com.bumptech.glide.request.RequestOptions
-import com.integradis.greenhouse.shared.domain.Crop
+import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
 import com.skydoves.landscapist.ImageOptions

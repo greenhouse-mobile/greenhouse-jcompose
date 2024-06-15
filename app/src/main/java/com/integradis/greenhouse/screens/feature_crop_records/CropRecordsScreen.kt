@@ -1,21 +1,28 @@
 package com.integradis.greenhouse.screens.feature_crop_records
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.rounded.Event
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -36,6 +43,8 @@ import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.SubtitleCropList
 import com.integradis.greenhouse.ui.theme.Typography
+import com.integradis.greenhouse.ui.theme.buttonBrown
+import com.integradis.greenhouse.ui.theme.errorRed
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -133,7 +142,31 @@ fun CropRecordsScreen(
                 }
             }
         }
-        Scaffold {paddingValues ->  
+        Scaffold(
+            floatingActionButton = { Row() {
+                FloatingActionButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier.offset(x= (-200).dp),
+                    shape = RoundedCornerShape(30.dp),
+                    containerColor = errorRed,
+                    contentColor = Color.White
+                ) {
+                    Text(
+                        "End phase",
+                        modifier = Modifier.padding(start = 20.dp, end = 20.dp),
+                        fontWeight = FontWeight.Bold
+
+                    )
+                }
+                FloatingActionButton(
+                    onClick = { /*TODO*/ },
+                    containerColor = buttonBrown,
+                    contentColor = Color.White
+                ) {
+                    Icon(Icons.Filled.Add, "Add New Record")
+                }
+            }
+            }) { paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 items(cropDataReal.value){cropDatum ->
                     CropRecordCard(

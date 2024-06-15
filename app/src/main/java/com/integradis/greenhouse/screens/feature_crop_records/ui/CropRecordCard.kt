@@ -14,9 +14,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.AccessTime
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Yard
 import androidx.compose.material3.CardDefaults
@@ -35,10 +35,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.integradis.greenhouse.model.data.crop_records.CropRecordData
+import com.integradis.greenhouse.shared.ui.DeleteItemPopUp
 import com.integradis.greenhouse.shared.ui.MultiStyleSpacedText
 import com.integradis.greenhouse.shared.ui.MultiStyleText
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
+import com.integradis.greenhouse.ui.theme.errorRed
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -52,6 +54,7 @@ fun CropRecordCard(
     var expandedState by remember {
         mutableStateOf(false)
     }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -80,6 +83,15 @@ fun CropRecordCard(
             Row (
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                if (showDeleteDialog){
+                    DeleteItemPopUp(
+                        onDismissRequest = { showDeleteDialog = false },
+                        onClickDismissButton = { showDeleteDialog = false },
+                        onConfirmButton = { showDeleteDialog = false },
+                        id = cropRecordData.id,
+                        type = "record"
+                    )
+                }
                 Text(
                     text = "Record ID: ID - #${cropRecordData.id}",
                     style = Typography.labelLarge,
@@ -89,15 +101,15 @@ fun CropRecordCard(
                         .padding(start = 3.dp)
                 )
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { showDeleteDialog = true },
                     modifier = Modifier
                         .height(20.dp)
                         .width(20.dp)
                 ) {
                     Icon(
-                        Icons.Outlined.Delete,
+                        Icons.Filled.Delete,
                         contentDescription = "Delete Crop Record",
-                        tint = Color.Red,
+                        tint = errorRed,
                     )
                 }
                 IconButton(

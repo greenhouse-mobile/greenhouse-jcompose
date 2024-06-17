@@ -1,7 +1,10 @@
 package com.integradis.greenhouse.screens.feature_auth
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,16 +19,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.NavController
 import com.integradis.greenhouse.R
 import com.integradis.greenhouse.model.remote.authentication.AuthService
@@ -42,7 +52,7 @@ fun SignInScreen(
     navController: NavController,
     authRepository: AuthRepository = AuthRepository(ApiClient.getRetrofit().create(AuthService::class.java))
 ) {
-
+    val context = LocalContext.current
     val username = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 
@@ -99,8 +109,27 @@ fun SignInScreen(
                             .padding(16.dp),
                     ) {
 
-                        Row {
-                            SideCustomButton(text = "Sign in", onclick = {navController.navigate(Routes.SignIn.route)} ) //lleva a Sign In
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp)
+                        ) {
+                            Text(
+                                text = "Login",
+                                color = Color(0xFF67864A), // Color del texto
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.Center)
+                                    .clickable { navController.navigate(Routes.SignIn.route) },
+                                textAlign = TextAlign.Center
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(2.dp)
+                                    .align(Alignment.BottomCenter)
+                                    .background(Color(0xFF67864A))
+                            )
                         }
                         Spacer(modifier = Modifier.height(20.dp))
 
@@ -117,16 +146,37 @@ fun SignInScreen(
                         )
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        CustomButton( text = "Sign in", onclick = {
-                            authRepository.signIn(username.value, password.value) { result ->
-                                result.onSuccess { userResponse ->
-                                    navController.navigate(Routes.Dashboard.route.replace("{username}", userResponse.username))  // Pasar el username al Dashboard
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF67864A),
+                                contentColor = Color.White
+                            ),
+                            onClick = {
+                                if (username.value.isBlank() || password.value.isBlank()) {
+                                    Toast.makeText(context, "Username and password must not be empty", Toast.LENGTH_LONG).show()
+                                } else {
+                                    authRepository.signIn(
+                                        username.value,
+                                        password.value
+                                    ) { result ->
+                                        result.fold(
+                                            onSuccess = { userResponse ->
+                                                navController.navigate(
+                                                    Routes.Dashboard.route.replace("{username}", userResponse.username)
+                                                ) // Pasar el username al Dashboard
+                                            },
+                                            onFailure = {
+                                                Toast.makeText(
+                                                    context, "Error: ${it.message}", Toast.LENGTH_LONG
+                                                ).show()
+                                            }
+                                        )
+                                    }
                                 }
-                                result.onFailure {
-                                    error("Error: ${it.message}")
-                                }
-                            }
-                        })
+                        }){
+                            Text("Login")
+                        }
 
                     }
                 }

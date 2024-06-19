@@ -136,6 +136,7 @@ fun CropsInProgressScreen(
                             crop = crop,
                             navigateTo = {
                                 navController.navigate("${Routes.Stepper.route}/${crop.id}")
+                                Log.d("navigation:", "Navigating to ${Routes.Stepper.route}/${crop.id}")
                             },
                             selectCrop = {
                                 selectCrop(index)

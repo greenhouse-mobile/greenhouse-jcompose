@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -87,25 +88,21 @@ fun AuthenticationHomeScreen(navController: NavController) {
                         )
 
                         Spacer(modifier = Modifier.height(30.dp))
+
                         Button(
                             onClick = { navController.navigate(Routes.SignIn.route) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(50.dp)
+                                .height(50.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF67864A),
+                                contentColor = Color.White
+                            )
                         ) {
-                            Text("Sign In")
+                            Text("Log In")
                         }
-                        Spacer(modifier = Modifier.height(30.dp))
-                        Button(
-                            onClick = { navController.navigate(Routes.SignUp.route) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp), // Altura del botón ajustable
-                            shape = RoundedCornerShape(16.dp), // Esquinas circulares
-                        ) {
-                            Text("Sign Up")
-                        }
-                        Spacer(modifier = Modifier.height(200.dp))
+
+                        Spacer(modifier = Modifier.height(250.dp))
                     }
                 }
 

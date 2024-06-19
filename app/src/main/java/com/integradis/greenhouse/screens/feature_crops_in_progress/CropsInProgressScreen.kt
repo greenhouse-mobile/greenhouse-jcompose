@@ -48,6 +48,7 @@ import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.Brown
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
+import com.integradis.greenhouse.ui.theme.buttonBrown
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,7 +124,7 @@ fun CropsInProgressScreen(
             }
         }
         Scaffold (floatingActionButton = {
-            FloatingActionButton(onClick = { newCrop = true }, containerColor = Brown, contentColor = Color.White) {
+            FloatingActionButton(onClick = { newCrop = true }, containerColor = buttonBrown, contentColor = Color.White) {
                 Icon(Icons.Filled.Add, "New crop")
             }
         }){paddingValues ->
@@ -135,6 +136,7 @@ fun CropsInProgressScreen(
                             crop = crop,
                             navigateTo = {
                                 navController.navigate("${Routes.Stepper.route}/${crop.id}")
+                                Log.d("navigation:", "Navigating to ${Routes.Stepper.route}/${crop.id}")
                             },
                             selectCrop = {
                                 selectCrop(index)

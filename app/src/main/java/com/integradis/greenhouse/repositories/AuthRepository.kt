@@ -11,21 +11,11 @@ import retrofit2.Response
 class AuthRepository(private val authService: AuthService = AuthServiceFactory.getAuthService()) {
 
     fun signIn(username: String, password: String, callback: (Result<UserResponse>) -> Unit) {
-        val call = authService.signIn(username, password)
-        call.enqueue(object : Callback<UserResponseWrapper> {
+        authService.signIn(username, password).enqueue(object : Callback<UserResponseWrapper> {
             override fun onResponse(call: Call<UserResponseWrapper>, response: Response<UserResponseWrapper>) {
-                if (response.isSuccessful) {
-                    val users = response.body()?.users
-                    if (users != null && users.isNotEmpty()) {
-                        val user = users.firstOrNull { it.username == username && it.password == password }
-                        if (user != null) {
-                            callback(Result.success(user))
-                        } else {
-                            callback(Result.failure(Exception("Invalid credentials")))
-                        }
-                    } else {
-                        callback(Result.failure(Exception("No users found")))
-                    }
+                val user = response.body()?.users?.firstOrNull { it.username == username && it.password == password }
+                if (response.isSuccessful && user != null) {
+                    callback(Result.success(user))
                 } else {
                     callback(Result.failure(Exception("Failed to sign in: ${response.message()}")))
                 }

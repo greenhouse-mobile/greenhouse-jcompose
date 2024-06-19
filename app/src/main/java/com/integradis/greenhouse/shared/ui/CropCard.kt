@@ -36,6 +36,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
+import com.integradis.greenhouse.ui.theme.errorRed
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import java.security.MessageDigest
@@ -104,35 +105,12 @@ fun CropCard(
                     modifier = Modifier.weight(1f)
                 )
                 if (showDialog) {
-                    AlertDialog(
+                    DeleteItemPopUp(
                         onDismissRequest = { showDialog = false },
-                        icon = { Icon(Icons.Filled.Delete, contentDescription = "Delete Icon", tint = Color.Red, modifier = Modifier.size(100.dp)) },
-                        text = { Text("Do you want to notify an admin for the deletion of crop ${crop.id}?") },
-                        containerColor = Color.White,
-                        dismissButton = {
-                            Button(
-                                onClick = { showDialog = false },
-                                colors = ButtonDefaults.buttonColors(
-                                    Color.White
-                                )
-                            ) {
-                                Text("Cancel", color = Color.Red)
-                            }
-                        },
-                        confirmButton = {
-                            Button(
-                                onClick = {
-                                    //onDeleteClicked()
-                                    //Aca deberiamos poner la forma en la que se envia mensaje al admin para eliminar el crop
-                                    showDialog = false
-                                },
-                                colors = ButtonDefaults.buttonColors(
-                                    Color.Red
-                                )
-                            ) {
-                                Text("Confirm")
-                            }
-                        }
+                        onClickDismissButton = { showDialog = false },
+                        onConfirmButton = { showDialog = false },
+                        id = crop.id,
+                        type = "crop"
                     )
                 }
 
@@ -146,13 +124,13 @@ fun CropCard(
                     )
                     Text(
                         text = "Delete",
-                        color = Color.Red,
+                        color = errorRed,
                         style = Typography.labelLarge,
                     )
                     Icon(
                         Icons.Filled.Delete,
                         contentDescription = "Settings Icon",
-                        tint = Color.Red,
+                        tint = errorRed,
                         modifier = Modifier.padding(2.dp)
                     )
                 }

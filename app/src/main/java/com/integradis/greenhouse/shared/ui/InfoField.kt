@@ -1,8 +1,10 @@
 package com.integradis.greenhouse.shared.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.TextSelectionColors
@@ -61,7 +63,7 @@ fun InfoField(
                 Text(text = fields.title, style = Typography.labelLarge, modifier = Modifier.padding(15.dp))
             }
             Text(
-                text = fields.placeholder, style = Typography.labelLarge, modifier = Modifier.padding(15.dp),
+                text = fields.placeholder, style = Typography.labelLarge, modifier = Modifier.fillMaxWidth().background(GrayTextField40, RoundedCornerShape(10.dp)).padding(15.dp),
             )
         }
     }

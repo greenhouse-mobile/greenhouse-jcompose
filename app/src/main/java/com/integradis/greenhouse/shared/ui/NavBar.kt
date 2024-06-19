@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.Apartment
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Mail
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,12 +54,12 @@ fun NavBar(
             )
         }
         IconButton(
-            onClick = { navController.navigate("Correo")},
+            onClick = { navController.navigate("Company")},
             modifier = Modifier.weight(1F)
         ) {
             Icon(
-                imageVector = Icons.Rounded.Mail,
-                contentDescription = "Mail",
+                imageVector = Icons.Rounded.Apartment,
+                contentDescription = "Company",
                 tint = Color.White
             )
         }

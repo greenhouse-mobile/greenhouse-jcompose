@@ -49,6 +49,9 @@ import com.integradis.greenhouse.ui.theme.Brown
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
 import com.integradis.greenhouse.ui.theme.buttonBrown
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,18 +73,18 @@ fun CropsInProgressScreen(
         yearRange = 2000..2024
     )
     val showDatePicker = remember { mutableStateOf(false) }
-    val selectedDate = remember { mutableStateOf("") }
+    val selectedDate = remember { mutableStateOf<Date?>(null) }
 
     cropRepository.getCrops("true") {
         crops.value = it
         Log.d("active", crops.value.toString())
     }
     var newCrop by remember { mutableStateOf(false) }
-    Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()){
-        Row (
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+        Row(
             modifier = Modifier
                 .align(Alignment.Start)
-                .height(intrinsicSize = IntrinsicSize.Max)
+                .height(IntrinsicSize.Max)
         ) {
             IconButton(
                 onClick = {
@@ -106,7 +109,7 @@ fun CropsInProgressScreen(
             color = Color(0xFF465B3F),
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        Row( horizontalArrangement = Arrangement.SpaceBetween){
+        Row(horizontalArrangement = Arrangement.SpaceBetween) {
             SearchCropTextField(
                 input = searchCropsInput,
                 placeholder = "Search crops...",
@@ -119,19 +122,26 @@ fun CropsInProgressScreen(
                 Icon(
                     imageVector = Icons.Rounded.Event,
                     contentDescription = "Calendar",
-                    tint
-                    = PrimaryGreen40)
+                    tint = PrimaryGreen40
+                )
             }
         }
-        Scaffold (floatingActionButton = {
+        Scaffold(floatingActionButton = {
             FloatingActionButton(onClick = { newCrop = true }, containerColor = buttonBrown, contentColor = Color.White) {
                 Icon(Icons.Filled.Add, "New crop")
             }
-        }){paddingValues ->
+        }) { paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
-                itemsIndexed(crops.value) {index, crop ->
-                    if (crop.state == "true"){ // This is useless, the query for this screen already
-                        CropCard(               // uses active crops
+                val sdf = SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (z)", Locale.ENGLISH)
+                val filteredCrops = crops.value.filter { crop ->
+                    selectedDate.value == null || sdf.parse(crop.startDate)?.let { cropDate ->
+                        val selected = selectedDate.value
+                        selected != null && cropDate.year == selected.year && cropDate.month == selected.month && cropDate.date == selected.date
+                    } ?: true
+                }
+                itemsIndexed(filteredCrops) { index, crop ->
+                    if (crop.state == "true") { // This is useless, the query for this screen already
+                        CropCard( // uses active crops
                             imageUrl = "https://compote.slate.com/images/e4805e57-794c-4d88-b893-c7ac42f604ac.jpeg?width=1200&rect=6480x4320&offset=112x0",
                             crop = crop,
                             navigateTo = {
@@ -151,7 +161,14 @@ fun CropsInProgressScreen(
             if (newCrop) {
                 AlertDialog(
                     onDismissRequest = { newCrop = false },
-                    icon = { Icon(Icons.Outlined.Info, contentDescription = "Info Icon", tint = PrimaryGreen40, modifier = Modifier.size(100.dp)) },
+                    icon = {
+                        Icon(
+                            Icons.Outlined.Info,
+                            contentDescription = "Info Icon",
+                            tint = PrimaryGreen40,
+                            modifier = Modifier.size(100.dp)
+                        )
+                    },
                     text = { Text("Are you sure you want to create a crop?") },
                     containerColor = Color.White,
                     confirmButton = {
@@ -159,12 +176,13 @@ fun CropsInProgressScreen(
                             onClick = {
                                 newCrop = false
                                 val newCrop = Crop(
-                                    "cc7c6c19-c416-453a-a93b-99a02fa136d"+(3..100).random().toString(),
-                                    "20/11/2021",
+                                    "cc7c6c19-c416-453a-a93b-99a02fa136d" + (3..100).random().toString(),
+                                    "Mon Nov 25 2024 00:00:00 GMT-0500 (Colombia Standard Time)",
                                     phase = CropPhase.STOCK.toString(),
                                     author = "In Progress",
                                     name = "Crop #1",
-                                    state = "true")
+                                    state = "true"
+                                )
                                 crops.value = crops.value + newCrop
                             },
                             colors = ButtonDefaults.buttonColors(
@@ -176,8 +194,10 @@ fun CropsInProgressScreen(
                     },
                     dismissButton = {
                         Button(
-                            onClick = { newCrop = false
-                                navController.navigateUp()},
+                            onClick = {
+                                newCrop = false
+                                navController.navigateUp()
+                            },
                             colors = ButtonDefaults.buttonColors(
                                 Color.White
                             )
@@ -195,7 +215,15 @@ fun CropsInProgressScreen(
             onDismissRequest = { showDatePicker.value = false },
             confirmButton = {
                 TextButton(
-                    onClick = { showDatePicker.value = false },
+                    onClick = {
+                        val selectedMillis = datePickerState.selectedDateMillis
+                        selectedDate.value = if (selectedMillis != null) {
+                            Date(selectedMillis)
+                        } else {
+                            null
+                        }
+                        showDatePicker.value = false
+                    },
                     enabled = datePickerState.selectedDateMillis != null
                 ) {
                     Text(text = "Confirm")
@@ -205,8 +233,7 @@ fun CropsInProgressScreen(
                 TextButton(onClick = { showDatePicker.value = false }) {
                     Text(text = "Dismiss")
                 }
-            }){
-            selectedDate.value = datePickerState.selectedDateMillis.toString()
+            }) {
             DatePicker(state = datePickerState)
         }
     }

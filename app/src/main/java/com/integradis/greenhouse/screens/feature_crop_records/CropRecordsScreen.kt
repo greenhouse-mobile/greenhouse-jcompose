@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,8 +46,15 @@ import com.integradis.greenhouse.ui.theme.SubtitleCropList
 import com.integradis.greenhouse.ui.theme.Typography
 import com.integradis.greenhouse.ui.theme.buttonBrown
 import com.integradis.greenhouse.ui.theme.errorRed
+import java.util.Date
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TextButton
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CropRecordsScreen(
     navController : NavController,
@@ -60,7 +68,12 @@ fun CropRecordsScreen(
     val searchRecordsInput = remember {
         mutableStateOf("")
     }
-
+    val datePickerState = rememberDatePickerState(
+        initialDisplayedMonthMillis = System.currentTimeMillis(),
+        yearRange = 2000..2024
+    )
+    val showDatePicker = remember { mutableStateOf(false) }
+    val selectedDate = remember { mutableStateOf<Date?>(null) }
     var showEndPhaseDialog by remember { mutableStateOf(false) }
 
     cropId?.let {
@@ -136,7 +149,9 @@ fun CropRecordsScreen(
                     defaultElevation = 3.dp
                 ),
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {
+                    showDatePicker.value = true
+                }) {
                     Icon(
                         Icons.Rounded.Event,
                         contentDescription = "Filter Records"
@@ -180,11 +195,47 @@ fun CropRecordsScreen(
             }
             }) { paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
-                items(cropDataReal.value){cropDatum ->
+                val sdf = SimpleDateFormat("EEE MMM dd yyyy", Locale.ENGLISH)
+                val filteredRecords = cropDataReal.value.filter { record ->
+                    selectedDate.value == null || sdf.parse(record.updateDate)?.let { recordDate ->
+                        val selected = selectedDate.value
+                        selected != null && recordDate.year == selected.year && recordDate.month == selected.month && recordDate.date == selected.date
+                    } ?: true
+                }
+                items(filteredRecords){cropDatum ->
                     CropRecordCard(
                         cropRecordData = cropDatum)
                 }
             }
+        }
+    }
+
+
+    if (showDatePicker.value) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker.value = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val selectedMillis = datePickerState.selectedDateMillis
+                        selectedDate.value = if (selectedMillis != null) {
+                            Date(selectedMillis)
+                        } else {
+                            null
+                        }
+                        showDatePicker.value = false
+                    },
+                    enabled = datePickerState.selectedDateMillis != null
+                ) {
+                    Text(text = "Confirm")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker.value = false }) {
+                    Text(text = "Dismiss")
+                }
+            }) {
+            DatePicker(state = datePickerState)
         }
     }
 }

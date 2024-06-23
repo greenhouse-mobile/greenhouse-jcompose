@@ -1,6 +1,9 @@
 package com.integradis.greenhouse.repositories
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.integradis.greenhouse.factories.AuthServiceFactory
+import com.integradis.greenhouse.model.data.authentication_requests.UserRequest
 import com.integradis.greenhouse.model.data.authentication_requests.UserResponse
 import com.integradis.greenhouse.model.data.authentication_requests.UserResponseWrapper
 import com.integradis.greenhouse.model.remote.authentication.AuthService
@@ -10,12 +13,17 @@ import retrofit2.Response
 
 class AuthRepository(private val authService: AuthService = AuthServiceFactory.getAuthService()) {
 
-    fun signIn(username: String, password: String, callback: (Result<UserResponse>) -> Unit) {
-        authService.signIn(username, password).enqueue(object : Callback<UserResponseWrapper> {
+    fun signIn(username: String,
+               password: String,
+               callback: (Result<Pair<String, UserResponse>>) -> Unit)
+    {
+        authService.signIn(
+            UserRequest(username, password)
+        ).enqueue(object : Callback<UserResponseWrapper> {
             override fun onResponse(call: Call<UserResponseWrapper>, response: Response<UserResponseWrapper>) {
-                val user = response.body()?.users?.firstOrNull { it.username == username && it.password == password }
-                if (response.isSuccessful && user != null) {
-                    callback(Result.success(user))
+                val userResponseWrapper = response.body()
+                if (response.isSuccessful && userResponseWrapper != null) {
+                    callback(Result.success(Pair(userResponseWrapper.token, userResponseWrapper.profile)))
                 } else {
                     callback(Result.failure(Exception("Failed to sign in: ${response.message()}")))
                 }

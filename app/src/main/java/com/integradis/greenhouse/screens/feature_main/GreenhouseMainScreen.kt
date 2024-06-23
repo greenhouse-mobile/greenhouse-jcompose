@@ -8,6 +8,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.compose.ui.platform.LocalContext
 import com.integradis.greenhouse.screens.feature_auth.SignInScreen
 import com.integradis.greenhouse.screens.feature_company.CompanyScreen
 import com.integradis.greenhouse.screens.feature_crop_records.CropRecordsScreen
@@ -20,14 +23,17 @@ import com.integradis.greenhouse.feature_mail.ui.Mail
 import com.integradis.greenhouse.feature_notification.ui.Notification
 import com.integradis.greenhouse.screens.feature_profile.ProfileScreen
 import com.integradis.greenhouse.screens.feature_stepper.Stepper
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 
 @Composable
-fun GreenhouseMainScreen() {
-    val navController = rememberNavController()
+fun GreenhouseMainScreen(sharedPreferencesHelper: SharedPreferencesHelper) {
     val name = "Winston Smith"
     val company = "Peru Agro J&V S.A.C."
     val tin = "8767"
 
+    val navController = rememberNavController()
+    val context = LocalContext.current
+    val sharedPreferencesHelper = SharedPreferencesHelper(context)
     val currentRoute = remember { mutableStateOf("") }
 
     navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -41,18 +47,18 @@ fun GreenhouseMainScreen() {
                 }
 
                 composable(route = Routes.SignIn.route) {
-                    SignInScreen(navController = navController)
+                    SignInScreen(navController = navController, sharedPreferencesHelper = sharedPreferencesHelper)
                 }
 
                 composable(route = Routes.Dashboard.route) {
                     Layout(navController = navController) {
-                        DashboardScreen(username = name, navController = navController)
+                        DashboardScreen(username = name, navController = navController) //sharedPreferencesHelper = sharedPreferencesHelper
                     }
                 }
 
                 composable(route = Routes.Perfil.route) {
                     Layout(navController = navController) {
-                        ProfileScreen(navController, company)
+                        ProfileScreen(navController, company) //sharedPreferencesHelper = sharedPreferencesHelper
                     }
                 }
 
@@ -165,10 +171,7 @@ sealed class Routes(val route: String) {
         const val secondArgument = "phase"
     }
 
-    object Dashboard : Routes("Dashboard"){
-        const val routeWithArgument = "Dashboard/{username}"
-        const val argument = "username"
-    }
+    object Dashboard : Routes("Dashboard")
     object Perfil : Routes("Perfil")
     object Correo : Routes("Correo")
 

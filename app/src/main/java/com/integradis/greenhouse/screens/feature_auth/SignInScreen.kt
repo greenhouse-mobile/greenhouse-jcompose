@@ -42,6 +42,7 @@ import com.integradis.greenhouse.model.remote.authentication.AuthService
 import com.integradis.greenhouse.network.ApiClient
 import com.integradis.greenhouse.repositories.AuthRepository
 import com.integradis.greenhouse.screens.feature_main.Routes
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.shared.ui.CustomButton
 import com.integradis.greenhouse.shared.ui.CustomTextField
 import com.integradis.greenhouse.shared.ui.PasswordTextField
@@ -50,9 +51,10 @@ import com.integradis.greenhouse.shared.ui.SideCustomButton
 @Composable
 fun SignInScreen(
     navController: NavController,
-    authRepository: AuthRepository = AuthRepository(ApiClient.getRetrofit().create(AuthService::class.java))
+    sharedPreferencesHelper: SharedPreferencesHelper
 ) {
     val context = LocalContext.current
+    val authRepository = AuthRepository(ApiClient.getRetrofit().create(AuthService::class.java))
     val username = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 
@@ -69,7 +71,6 @@ fun SignInScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-
         ) {
             Column(
                 modifier = Modifier
@@ -78,7 +79,6 @@ fun SignInScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom
             ) {
-
                 Box(
                     modifier = Modifier.padding(paddingValues),
                     contentAlignment = Alignment.BottomCenter
@@ -161,12 +161,17 @@ fun SignInScreen(
                                         password.value
                                     ) { result ->
                                         result.fold(
-                                            onSuccess = { userResponse ->
-                                                navController.navigate(
-                                                    Routes.Dashboard.route.replace("{username}", userResponse.username)
-                                                ) // Pasar el username al Dashboard
+                                            onSuccess = { pair ->
+                                                val token = pair.first
+                                                val userResponse = pair.second
+
+                                                //Guardar token
+                                                sharedPreferencesHelper.saveToken(token)
+
+                                                navController.navigate("Dashboard")
                                             },
                                             onFailure = {
+                                                print(it.message)
                                                 Toast.makeText(
                                                     context, "Error: ${it.message}", Toast.LENGTH_LONG
                                                 ).show()
@@ -174,7 +179,8 @@ fun SignInScreen(
                                         )
                                     }
                                 }
-                        }){
+                            }
+                        ){
                             Text("Login")
                         }
 

@@ -82,7 +82,7 @@ fun AuthenticationHomeScreen(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.height(30.dp))
                         Text(
-                            text = "To use the app, please log in or sign up",
+                            text = "To use the app, please log in",
                             style = Typography.labelLarge,
                             textAlign = TextAlign.Center,
                         )

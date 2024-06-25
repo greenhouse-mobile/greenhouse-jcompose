@@ -55,7 +55,6 @@ fun CropCard(
     var showDialog by remember { mutableStateOf(false) }
 
     val formatter = DateTimeFormatter.ofPattern("EE MMM dd yyyy HH:mm:ss OOOO")
-    val showedDateValue = crop.startDate.slice(IntRange(0, 32)).replaceRange(31,31,":")
 
     ElevatedCard(
         modifier = Modifier
@@ -69,7 +68,6 @@ fun CropCard(
             imageModel = { imageUrl },
             imageOptions = ImageOptions(
                 contentScale = ContentScale.Inside,
-
             ),
             requestOptions = {
                 RequestOptions()
@@ -82,7 +80,7 @@ fun CropCard(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Crop Name:",
+                    text = "ID:",
                     modifier = Modifier.weight(1f),
                     style = Typography.labelLarge,
                     color = Color.Black
@@ -142,7 +140,7 @@ fun CropCard(
                     tint = PrimaryGreen40,
                 )
                 Text(
-                    text = "Start Date: ${LocalDate.parse(showedDateValue, formatter)}",
+                    text = "Start Date: ${crop.startDate}",
                     style = Typography.labelLarge,
                     modifier = Modifier.padding(2.dp)
                 )
@@ -162,6 +160,7 @@ fun CropCard(
         }
     }
 }
+
 
 class CutOffCardImage : BitmapTransformation() {
     override fun transform(

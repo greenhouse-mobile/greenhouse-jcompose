@@ -5,51 +5,64 @@ import com.integradis.greenhouse.model.remote.crops.CropService
 import com.integradis.greenhouse.factories.CropServiceFactory
 import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.model.data.crops.CropWrapper
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CropRepository(private val cropService : CropService = CropServiceFactory.getCropService()) {
+class CropRepository(
+    private val cropService: CropService = CropServiceFactory.getCropService(),
+    private val sharedPreferencesHelper: SharedPreferencesHelper
+) {
 
-    fun getCrops(endpoint: String, callback: (List<Crop>) -> Unit) {
-        val getCrops = cropService.getCrops(endpoint)
+    private val token: String?
+        get() = sharedPreferencesHelper.getToken()
 
-        getCrops.enqueue(object: Callback<CropWrapper> {
-            override fun onResponse(
-                call: Call<CropWrapper>,
-                response: Response<CropWrapper>
-            ) {
-                if(response.isSuccessful){
-                    callback(response.body()?.crops ?: emptyList())
+    fun getCrops(callback: (List<Crop>) -> Unit) {
+        token?.let {
+            val getCrops = cropService.getCrops("Bearer $it")
+
+            getCrops.enqueue(object : Callback<CropWrapper> {
+                override fun onResponse(
+                    call: Call<CropWrapper>,
+                    response: Response<CropWrapper>
+                ) {
+                    if (response.isSuccessful) {
+                        callback(response.body()?.crops ?: emptyList())
+                    }
                 }
-            }
 
-            override fun onFailure(
-                call: Call<CropWrapper>,
-                t: Throwable
-            ) {
-                t.message?.let {
-                    Log.d("CropRepository", it)
+                override fun onFailure(
+                    call: Call<CropWrapper>,
+                    t: Throwable
+                ) {
+                    t.message?.let { message ->
+                        Log.d("CropRepository", message)
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     fun getCropById(id: String, callback: (Crop) -> Unit) {
-        val getCropById = cropService.getCropById(id = id)
+        token?.let {
+            val getCropById = cropService.getCropById("Bearer $it", id = id)
 
-        getCropById.enqueue(object: Callback<Crop> {
-            override fun onResponse(call: Call<Crop>, response: Response<Crop>) {
-                if (response.isSuccessful) {
-                    callback(response.body() as Crop)
+            getCropById.enqueue(object : Callback<Crop> {
+                override fun onResponse(call: Call<Crop>, response: Response<Crop>) {
+                    if (response.isSuccessful) {
+                        response.body()?.let { crop ->
+                            callback(crop)
+                        }
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<Crop>, t: Throwable) {
-                t.message?.let {
-                    Log.d("HeroRepository", it)
+                override fun onFailure(call: Call<Crop>, t: Throwable) {
+                    t.message?.let { message ->
+                        Log.d("CropRepository", message)
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 }

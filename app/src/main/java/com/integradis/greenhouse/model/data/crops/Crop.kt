@@ -8,13 +8,9 @@ data class CropWrapper(
 
 data class Crop(
     var id: String,
-
-    @SerializedName("createdDate")
-    var startDate: String,
     var name: String,
     var author: String,
+    var state: String,
     var phase: String,
-
-    @SerializedName("active")
-    var state: String
+    var startDate: String,
 )

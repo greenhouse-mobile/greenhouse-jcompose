@@ -1,8 +1,8 @@
 package com.integradis.greenhouse.model.data.crops
 
 enum class CropPhase {
-    STOCK {
-        override fun getPhaseName() = "Stock"
+    FORMULA {
+        override fun getPhaseName() = "Formula"
         override fun getPhaseNumber() = "0"
     },
     PREPARATION_AREA {
@@ -39,7 +39,7 @@ enum class CropPhase {
 
     companion object {
         fun getValueOf(phase : String?) : CropPhase {
-            if (phase.isNullOrBlank()) return STOCK
+            if (phase.isNullOrBlank()) return FORMULA
             return CropPhase.valueOf(phase.uppercase())
         }
     }

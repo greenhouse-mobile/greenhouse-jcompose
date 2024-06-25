@@ -24,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,11 +34,11 @@ import androidx.navigation.NavController
 import com.integradis.greenhouse.screens.feature_main.Routes
 import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.repositories.CropRepository
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.shared.ui.CropCard
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,7 +46,7 @@ fun CropsArchivesScreen(
     navController: NavController,
     selectCrop: (Int) -> Unit,
     deleteCrop: (Int) -> Unit,
-    cropRepository: CropRepository = CropRepository()
+    sharedPreferencesHelper: SharedPreferencesHelper
 ){
     val finishedCrops = remember {
         mutableStateOf(emptyList<Crop>())
@@ -62,7 +61,9 @@ fun CropsArchivesScreen(
     val showDatePicker = remember { mutableStateOf(false) }
     val selectedDate = remember { mutableStateOf("") }
 
-    cropRepository.getCrops("false") {
+    val cropRepository = CropRepository(sharedPreferencesHelper = sharedPreferencesHelper)
+
+    cropRepository.getCrops() {
         finishedCrops.value = it
         Log.d("active", finishedCrops.value.toString())
     }

@@ -1,10 +1,13 @@
 package com.integradis.greenhouse.screens.feature_crops_in_progress
 
 import android.util.Log
+import com.integradis.greenhouse.factories.CropRepositoryFactory
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -40,12 +43,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.integradis.greenhouse.screens.feature_main.Routes
-import com.integradis.greenhouse.repositories.CropRepository
 import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.model.data.crops.CropPhase
 import com.integradis.greenhouse.shared.ui.CropCard
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
-import com.integradis.greenhouse.ui.theme.Brown
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
 import com.integradis.greenhouse.ui.theme.buttonBrown
@@ -54,14 +55,21 @@ import com.integradis.greenhouse.ui.theme.buttonBrown
 @Composable
 fun CropsInProgressScreen(
     navController: NavController,
+    sharedPreferencesHelper: SharedPreferencesHelper,
     selectCrop: (Int) -> Unit,
-    deleteCrop: (Int) -> Unit,
-    cropRepository: CropRepository = CropRepository()
+    deleteCrop: (Int) -> Unit
 ){
-    val crops = remember {
-        mutableStateOf(emptyList<Crop>())
+    val crops = remember { mutableStateOf(emptyList<Crop>()) }
+
+    val cropRepository = CropRepositoryFactory.getCropRepository(sharedPreferencesHelper)
+
+    cropRepository.getCrops { crops.value = it
+        Log.d("CropsInProgressScreen", "Crops: $crops")
     }
 
+    var newCrop by remember { mutableStateOf(false) }
+    val showDatePicker = remember { mutableStateOf(false) }
+    val selectedDate = remember { mutableStateOf("") }
     val searchCropsInput = remember {
         mutableStateOf("")
     }
@@ -69,14 +77,7 @@ fun CropsInProgressScreen(
         initialDisplayedMonthMillis = System.currentTimeMillis(),
         yearRange = 2000..2024
     )
-    val showDatePicker = remember { mutableStateOf(false) }
-    val selectedDate = remember { mutableStateOf("") }
 
-    cropRepository.getCrops("true") {
-        crops.value = it
-        Log.d("active", crops.value.toString())
-    }
-    var newCrop by remember { mutableStateOf(false) }
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()){
         Row (
             modifier = Modifier
@@ -129,22 +130,13 @@ fun CropsInProgressScreen(
             }
         }){paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
-                itemsIndexed(crops.value) {index, crop ->
-                    if (crop.state == "true"){ // This is useless, the query for this screen already
-                        CropCard(               // uses active crops
-                            imageUrl = "https://compote.slate.com/images/e4805e57-794c-4d88-b893-c7ac42f604ac.jpeg?width=1200&rect=6480x4320&offset=112x0",
-                            crop = crop,
-                            navigateTo = {
-                                navController.navigate("${Routes.Stepper.route}/${crop.id}")
-                            },
-                            selectCrop = {
-                                selectCrop(index)
-                            },
-                            deleteCrop = {
-                                deleteCrop(index)
-                            }
-                        )
-                    }
+                items(crops.value.size) { index ->
+                    CropCard(
+                        imageUrl = "https://compote.slate.com/images/e4805e57-794c-4d88-b893-c7ac42f604ac.jpeg?width=1200&rect=6480x4320&offset=112x0",
+                        crop = crops.value[index],
+                        navigateTo = { navController.navigate("${Routes.Stepper.route}/${crops.value[index].id}") },
+                        selectCrop = { selectCrop(index)},
+                        deleteCrop = { deleteCrop(index)})
                 }
             }
             if (newCrop) {
@@ -156,15 +148,6 @@ fun CropsInProgressScreen(
                     confirmButton = {
                         Button(
                             onClick = {
-                                newCrop = false
-                                val newCrop = Crop(
-                                    "cc7c6c19-c416-453a-a93b-99a02fa136d"+(3..100).random().toString(),
-                                    "20/11/2021",
-                                    phase = CropPhase.STOCK.toString(),
-                                    author = "In Progress",
-                                    name = "Crop #1",
-                                    state = "true")
-                                crops.value = crops.value + newCrop
                             },
                             colors = ButtonDefaults.buttonColors(
                                 PrimaryGreen40
@@ -210,3 +193,4 @@ fun CropsInProgressScreen(
         }
     }
 }
+

@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.integradis.greenhouse.factories.CropRepositoryFactory
 import com.integradis.greenhouse.screens.feature_main.Routes
 import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.repositories.CropRepository
@@ -48,9 +49,7 @@ fun CropsArchivesScreen(
     deleteCrop: (Int) -> Unit,
     sharedPreferencesHelper: SharedPreferencesHelper
 ){
-    val finishedCrops = remember {
-        mutableStateOf(emptyList<Crop>())
-    }
+
     val searchCropsInput = remember {
         mutableStateOf("")
     }
@@ -61,12 +60,15 @@ fun CropsArchivesScreen(
     val showDatePicker = remember { mutableStateOf(false) }
     val selectedDate = remember { mutableStateOf("") }
 
-    val cropRepository = CropRepository(sharedPreferencesHelper = sharedPreferencesHelper)
+    val finishedCrops = remember { mutableStateOf(emptyList<Crop>()) }
 
-    cropRepository.getCrops() {
+    val cropRepository = CropRepositoryFactory.getCropRepository(sharedPreferencesHelper)
+
+    cropRepository.getCrops {
         finishedCrops.value = it
-        Log.d("active", finishedCrops.value.toString())
+        Log.d("CropsInProgressScreen", "Crops: $finishedCrops")
     }
+
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()){
         Row (
             modifier = Modifier
@@ -115,13 +117,14 @@ fun CropsArchivesScreen(
         }
         Scaffold {paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
-                itemsIndexed(finishedCrops.value) {index, crop ->
-                    if (crop.state == "false"){
+                items(finishedCrops.value.size) { index ->
+                    Log.d("CropsInProgressScreen", "State: ${finishedCrops.value[index].state}" )
+                    if (finishedCrops.value[index].state == "false"){
                         CropCard(
                             imageUrl = "https://compote.slate.com/images/e4805e57-794c-4d88-b893-c7ac42f604ac.jpeg?width=1200&rect=6480x4320&offset=112x0",
-                            crop = crop,
+                            crop = finishedCrops.value[index],
                             navigateTo = {
-                                navController.navigate("${Routes.Stepper.route}/${crop.id}")
+                                navController.navigate("${Routes.Stepper.route}/${finishedCrops.value[index].id}")
                             },
                             selectCrop = {
                                 selectCrop(index)

@@ -131,12 +131,14 @@ fun CropsInProgressScreen(
         }){paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 items(crops.value.size) { index ->
+                    if (crops.value[index].state == "false"){
                     CropCard(
                         imageUrl = "https://compote.slate.com/images/e4805e57-794c-4d88-b893-c7ac42f604ac.jpeg?width=1200&rect=6480x4320&offset=112x0",
                         crop = crops.value[index],
                         navigateTo = { navController.navigate("${Routes.Stepper.route}/${crops.value[index].id}") },
                         selectCrop = { selectCrop(index)},
-                        deleteCrop = { deleteCrop(index)})
+                        deleteCrop = { deleteCrop(index)}
+                    )}
                 }
             }
             if (newCrop) {

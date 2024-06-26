@@ -2,7 +2,7 @@ package com.integradis.greenhouse.model.data.crop_records
 
 import com.google.gson.annotations.SerializedName
 
-data class CropRecordsWrapper(
+data class CropRecordsList(
     @SerializedName("records")
     val cropRecords : List<CropRecordData>
 )

@@ -2,7 +2,9 @@ package com.integradis.greenhouse.model.remote.crop_records
 
 import com.integradis.greenhouse.model.data.crop_records.CropRecordsWrapper
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface CropRecordService {
@@ -12,4 +14,9 @@ interface CropRecordService {
         @Query("cropId") endpoint1: String,
         @Query("phase") endpoint2: String
     ) : Call<CropRecordsWrapper>
+
+    @POST("records")
+    fun postCropRecord(
+        //@Body
+    )
 }

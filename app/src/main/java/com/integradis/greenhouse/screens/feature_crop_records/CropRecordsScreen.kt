@@ -1,5 +1,6 @@
 package com.integradis.greenhouse.screens.feature_crop_records
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -35,9 +36,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.integradis.greenhouse.factories.CropRecordRepositoryFactory
 import com.integradis.greenhouse.model.data.crop_records.CropRecordData
 import com.integradis.greenhouse.repositories.CropRecordRepository
 import com.integradis.greenhouse.screens.feature_crop_records.ui.CropRecordCard
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.shared.ui.AlertPopUp
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
@@ -52,8 +55,11 @@ fun CropRecordsScreen(
     navController : NavController,
     cropId : String?, //Data to search in API
     phase : String?,
-    cropRecordRepository: CropRecordRepository = CropRecordRepository()
+    sharedPreferencesHelper: SharedPreferencesHelper
 ) {
+
+    val cropRecordRepository = CropRecordRepositoryFactory.getRecordRepository(sharedPreferencesHelper)
+
     val cropDataReal = remember {
         mutableStateOf(emptyList<CropRecordData>())
     }
@@ -181,8 +187,10 @@ fun CropRecordsScreen(
             }) { paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 items(cropDataReal.value){cropDatum ->
+                    Log.d("CropRecord: ", cropDatum.toString())
                     CropRecordCard(
-                        cropRecordData = cropDatum)
+                        cropRecordData = cropDatum,
+                        navController = navController)
                 }
             }
         }

@@ -56,7 +56,6 @@ class CropRepository(
                         }
                     }
                 }
-
                 override fun onFailure(call: Call<Crop>, t: Throwable) {
                     t.message?.let { message ->
                         Log.d("CropRepository", message)

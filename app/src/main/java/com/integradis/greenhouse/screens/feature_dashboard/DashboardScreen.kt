@@ -1,5 +1,6 @@
 package com.integradis.greenhouse.screens.feature_dashboard
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,8 @@ import androidx.navigation.NavHostController
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.integradis.greenhouse.R
+import com.integradis.greenhouse.factories.UserRepositoryFactory
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.shared.ui.DashboardCard
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
@@ -39,11 +42,20 @@ import com.skydoves.landscapist.glide.GlideImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
-    username: String,
-    navController: NavHostController
-){
-    val rem = remember {
+    navController: NavHostController,
+    sharedPreferencesHelper: SharedPreferencesHelper,
+    ){
+    val userName = remember {
         mutableStateOf("")
+    }
+    val userRepository = UserRepositoryFactory.getUserRepository(sharedPreferencesHelper)
+    userRepository.getMe { user ->
+        user?.let {
+            userName.value = it.firstName + " " + it.lastName
+
+        } ?: run {
+            Log.d("dashboard", "Usuario no encontrado")
+        }
     }
     Column (
         modifier = Modifier.verticalScroll(rememberScrollState())
@@ -74,7 +86,7 @@ fun DashboardScreen(
             }
         }
         Text(
-            text = "Welcome, " + username,
+            text = "Welcome, " + userName.value,
             style = Typography.titleLarge,
             color = Color(0xFF465B3F),
             modifier = Modifier.padding(15.dp)

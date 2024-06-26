@@ -12,7 +12,10 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">10.0.2.2</domain>
     </domain-config>
-    <domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">192.168.1.52</domain>
+    </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">ip172-18-0-38-cprlbsq91nsg00b8n2hg-3000.direct.labs.play-with-docker.com</domain>
     </domain-config>
     <domain-config cleartextTrafficPermitted="true">

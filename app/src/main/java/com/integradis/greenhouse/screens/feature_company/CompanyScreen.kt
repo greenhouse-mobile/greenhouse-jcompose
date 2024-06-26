@@ -1,5 +1,6 @@
 package com.integradis.greenhouse.screens.feature_company
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,9 +34,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.rememberImagePainter
 import com.integradis.greenhouse.R
+import com.integradis.greenhouse.factories.CompanyRepositoryFactory
+import com.integradis.greenhouse.factories.UserRepositoryFactory
 import com.integradis.greenhouse.model.data.coworkers.Coworkers
 import com.integradis.greenhouse.model.data.user_information.UserInformation
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.shared.ui.InfoField
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.GrayBg
@@ -46,25 +51,41 @@ import com.integradis.greenhouse.ui.theme.Typography
 @Composable
 fun CompanyScreen(
     navController: NavHostController,
-    companyName: String,
-    TIN: String,
-) {
-    val rem = remember {
+    sharedPreferencesHelper: SharedPreferencesHelper,
+    ) {
+    val name = remember {
+        mutableStateOf("")
+    }
+    val tin = remember {
+        mutableStateOf("")
+    }
+    val profilePicture = remember {
+        mutableStateOf("")
+    }
+    val profileId = remember {
         mutableStateOf("")
     }
     val searchEmployee = remember {
         mutableStateOf("")
     }
-    val fields = listOf(
-        UserInformation(
-            title = "Company Name",
-            placeholder = companyName,
-        ),
-        UserInformation(
-            title = "TIN",
-            placeholder = TIN,
-        ),
-    )
+    val userRepository = UserRepositoryFactory.getUserRepository(sharedPreferencesHelper)
+    userRepository.getMe { user ->
+        user?.let {
+            profileId.value = it.id
+        } ?: run {
+            Log.d("dashboard", "Usuario no encontrado")
+        }
+    }
+    val companyRepository = CompanyRepositoryFactory.getCompanyRepository(sharedPreferencesHelper)
+    companyRepository.getCompany(profileId.value) { companyData ->
+        companyData?.let {
+            name.value = it.name
+            tin.value = it.tin
+            profilePicture.value = it.logoUrl
+        } ?: run {
+            Log.d("dashboard", "Company not found")
+        }
+    }
     val coworkers = mutableListOf(
         Coworkers("Alan", "Supervising technician"),
         Coworkers("Eric", "Supervising technician"),
@@ -76,7 +97,16 @@ fun CompanyScreen(
         Coworkers("Casimiro", "Supervising technician"),
         Coworkers("Max", "Supervising technician"),
     )
-
+    val fields = listOf(
+        UserInformation(
+            title = "Company Name",
+            placeholder = name.value,
+        ),
+        UserInformation(
+            title = "TIN",
+            placeholder = tin.value,
+        ),
+    )
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
             .fillMaxWidth()
@@ -113,7 +143,7 @@ fun CompanyScreen(
             shape = RoundedCornerShape(1400.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.campo_alegre),
+                painter = rememberImagePainter(profilePicture.value),
                 contentDescription = "",
                 modifier = Modifier.size(100.dp).clip(RoundedCornerShape(1400.dp))
             )

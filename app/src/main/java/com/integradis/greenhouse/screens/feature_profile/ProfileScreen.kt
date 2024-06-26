@@ -40,8 +40,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.integradis.greenhouse.R
+import com.integradis.greenhouse.factories.UserRepositoryFactory
+import com.integradis.greenhouse.model.data.crops.UserData
 import com.integradis.greenhouse.repositories.UserRepository
-import com.integradis.greenhouse.shared.domain.UserData
+import coil.compose.rememberImagePainter
+import com.integradis.greenhouse.factories.CompanyRepositoryFactory
+
 import com.integradis.greenhouse.shared.ui.InfoField
 import com.integradis.greenhouse.model.data.user_information.UserInformation
 import com.integradis.greenhouse.shared.SharedPreferencesHelper
@@ -53,42 +57,62 @@ fun ProfileScreen(
     navController: NavHostController,
     company: String,
     sharedPreferencesHelper: SharedPreferencesHelper,
-    userRepository: UserRepository = UserRepository(sharedPreferencesHelper = sharedPreferencesHelper )
 ){
-    val userData = remember {
-        mutableStateOf(emptyList<UserData>())
+    val name = remember {
+        mutableStateOf("")
     }
-    userRepository.getUser("wsmith") {
-        userData.value = it
-        Log.d("Perfil", userData.value.toString())
+    val username = remember {
+        mutableStateOf("")
     }
-    var userName = ""
-    var userUsername = ""
-    var userRole = ""
-
-    for (i in userData.value){
-        if (i.id == "99c5c19-c426-453a-a93b-99a02fa136d2"){
-            userName = i.firstName + " " + i.lastName
-            userUsername = i.userId
-            userRole = i.role
+    val role = remember {
+        mutableStateOf("")
+    }
+    val profilePicture = remember {
+        mutableStateOf("")
+    }
+    val id = remember {
+        mutableStateOf("")
+    }
+    val Company = remember {
+        mutableStateOf("")
+    }
+    val userRepository = UserRepositoryFactory.getUserRepository(sharedPreferencesHelper)
+    val companyRepository = CompanyRepositoryFactory.getCompanyRepository(sharedPreferencesHelper)
+    userRepository.getMe { user ->
+        user?.let {
+            id.value = it.id
+            name.value = it.firstName + " " + it.lastName
+            username.value = it.username
+            role.value = it.role
+            profilePicture.value = it.iconUrl
+        } ?: run {
+            Log.d("dashboard", "Usuario no encontrado")
         }
     }
+    companyRepository.getCompany(id.value) { companyData ->
+        companyData?.let {
+            Company.value = it.name
+        } ?: run {
+            Log.d("dashboard", "Company not found")
+        }
+    }
+
     val fields = listOf(
         UserInformation(
             title = "Name",
-            placeholder = userName,
+            placeholder = name.value,
         ),
         UserInformation(
             title = "Username",
-            placeholder = userUsername,
+            placeholder = username.value,
         ),
         UserInformation(
             title = "Company",
-            placeholder = company,
+            placeholder = Company.value,
         ),
         UserInformation(
             title = "Role within the company",
-            placeholder = userRole,
+            placeholder = role.value,
         )
     )
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())
@@ -125,7 +149,7 @@ fun ProfileScreen(
                 shape = RoundedCornerShape(1400.dp)
             ){
                 Image(
-                    painter = painterResource(id = R.drawable.max2),
+                    painter = rememberImagePainter(profilePicture.value),
                     contentDescription = "",
                     modifier = Modifier.size(150.dp).clip(RoundedCornerShape(1400.dp))
                 )

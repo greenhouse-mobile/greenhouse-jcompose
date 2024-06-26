@@ -70,8 +70,13 @@ fun CropsInProgressScreen(
         Log.d("CropsInProgressScreen", "Crops: $crops")
     }
 
-    userRepository.getMe { newCropAuthor.value = it.firstName + " " + it.lastName
-        Log.d("CropsInProgressScreen", "User: $newCropAuthor")
+    userRepository.getMe { user ->
+        user?.let {
+            newCropAuthor.value = it.firstName + " " + it.lastName
+
+        } ?: run {
+            Log.d("dashboard", "Usuario no encontrado")
+        }
     }
 
     var newCrop by remember { mutableStateOf(false) }

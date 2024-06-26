@@ -56,8 +56,8 @@ fun GreenhouseMainScreen(sharedPreferencesHelper1: SharedPreferencesHelper) {
         composable(route = Routes.Dashboard.route) {
             Layout(navController = navController) {
                 DashboardScreen(
-                    username = name,
-                    navController = navController
+                    navController = navController,
+                    sharedPreferencesHelper = sharedPreferencesHelper
                 ) //sharedPreferencesHelper = sharedPreferencesHelper
             }
         }
@@ -99,7 +99,7 @@ fun GreenhouseMainScreen(sharedPreferencesHelper1: SharedPreferencesHelper) {
         composable(route = Routes.Company.route)
         {
             Layout(navController = navController) {
-                CompanyScreen(navController, company, tin)
+                CompanyScreen(navController, sharedPreferencesHelper)
             }
         }
 

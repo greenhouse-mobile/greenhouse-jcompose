@@ -3,31 +3,30 @@ package com.integradis.greenhouse.screens.feature_main
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import android.content.Context
-import android.content.SharedPreferences
-import androidx.compose.ui.platform.LocalContext
-import com.integradis.greenhouse.screens.feature_auth.SignInScreen
-import com.integradis.greenhouse.screens.feature_company.CompanyScreen
-import com.integradis.greenhouse.screens.feature_crop_records.CropRecordsScreen
-import com.integradis.greenhouse.screens.feature_crops_in_progress.CropsInProgressScreen
-import com.integradis.greenhouse.screens.feature_dashboard.DashboardScreen
-import com.integradis.greenhouse.screens.feature_auth.ForgotPassword
-import com.integradis.greenhouse.screens.feature_authentication_home.AuthenticationHomeScreen
-import com.integradis.greenhouse.shared.ui.Layout
 import com.integradis.greenhouse.feature_mail.ui.Mail
 import com.integradis.greenhouse.feature_notification.ui.Notification
+import com.integradis.greenhouse.screens.feature_auth.ForgotPassword
+import com.integradis.greenhouse.screens.feature_auth.SignInScreen
+import com.integradis.greenhouse.screens.feature_authentication_home.AuthenticationHomeScreen
+import com.integradis.greenhouse.screens.feature_company.CompanyScreen
+import com.integradis.greenhouse.screens.feature_crop_records.CropRecordsScreen
+import com.integradis.greenhouse.screens.feature_crop_records.ModifyRecordScreen
 import com.integradis.greenhouse.screens.feature_crops_archive.CropsArchivesScreen
+import com.integradis.greenhouse.screens.feature_crops_in_progress.CropsInProgressScreen
+import com.integradis.greenhouse.screens.feature_dashboard.DashboardScreen
 import com.integradis.greenhouse.screens.feature_profile.ProfileScreen
 import com.integradis.greenhouse.screens.feature_stepper.Stepper
 import com.integradis.greenhouse.shared.SharedPreferencesHelper
+import com.integradis.greenhouse.shared.ui.Layout
 
 @Composable
-fun GreenhouseMainScreen(sharedPreferencesHelper: SharedPreferencesHelper) {
+fun GreenhouseMainScreen(sharedPreferencesHelper1: SharedPreferencesHelper) {
     val name = "Winston Smith"
     val company = "Peru Agro J&V S.A.C."
     val tin = "8767"
@@ -67,8 +66,9 @@ fun GreenhouseMainScreen(sharedPreferencesHelper: SharedPreferencesHelper) {
             Layout(navController = navController) {
                 ProfileScreen(
                     navController,
-                    company
-                ) //sharedPreferencesHelper = sharedPreferencesHelper
+                    company,
+                    sharedPreferencesHelper = sharedPreferencesHelper
+                )
             }
         }
 
@@ -120,18 +120,31 @@ fun GreenhouseMainScreen(sharedPreferencesHelper: SharedPreferencesHelper) {
             }
         }
 
+
         composable(
-            route = Routes.CropRecords.routeWithArgument,
+            route = Routes.ModifyRecords.routeWithArgument,
             arguments = listOf(
-                navArgument(Routes.CropRecords.firstArgument) { type = NavType.StringType },
-                navArgument(Routes.CropRecords.secondArgument) { type = NavType.StringType }
+                navArgument(Routes.ModifyRecords.firstArgument) { type = NavType.StringType }
             )
         ) { backStackEntry ->
             Layout(navController = navController) {
+                backStackEntry.arguments?.getString("recordId")?.let {
+                    ModifyRecordScreen(
+                        navController = navController,
+                        it,
+                        sharedPreferencesHelper
+                    )
+                }
+            }
+        }
+
+        composable(
+            route = Routes.CropRecords.route,
+        ) {
+            Layout(navController = navController) {
                 CropRecordsScreen(
                     navController = navController,
-                    backStackEntry.arguments?.getString("cropId"),
-                    backStackEntry.arguments?.getString("phase")
+                    sharedPreferencesHelper
                 )
             }
         }
@@ -179,13 +192,17 @@ sealed class Routes(val route: String) {
         const val argument = "cropId"
     }
 
-    object CropRecords : Routes("CropRecords") {
-        const val routeWithArgument = "CropRecords/{cropId}/{phase}"
-        const val firstArgument = "cropId"
-        const val secondArgument = "phase"
+    object CropRecords : Routes("CropRecords")
+
+    object ModifyRecords : Routes("ModifyRecords"){
+        const val routeWithArgument = "ModifyRecords/{recordId}"
+        const val firstArgument = "recordId"
     }
 
-    object Dashboard : Routes("Dashboard")
+    object Dashboard : Routes("Dashboard"){
+        const val routeWithArgument = "Dashboard/{username}"
+        const val argument = "username"
+    }
     object Perfil : Routes("Perfil")
     object Correo : Routes("Correo")
 

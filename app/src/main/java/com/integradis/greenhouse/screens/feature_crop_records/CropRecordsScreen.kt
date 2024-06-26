@@ -1,5 +1,6 @@
 package com.integradis.greenhouse.screens.feature_crop_records
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -23,8 +24,11 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,9 +39,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.integradis.greenhouse.model.data.crop_records.CropRecordData
+import com.integradis.greenhouse.factories.CropRecordRepositoryFactory
+import com.integradis.greenhouse.model.data.crop_records.CropRecordResponse
+import com.integradis.greenhouse.model.data.crop_records.Payload
 import com.integradis.greenhouse.repositories.CropRecordRepository
 import com.integradis.greenhouse.screens.feature_crop_records.ui.CropRecordCard
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.shared.ui.AlertPopUp
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
@@ -46,27 +53,53 @@ import com.integradis.greenhouse.ui.theme.Typography
 import com.integradis.greenhouse.ui.theme.buttonBrown
 import com.integradis.greenhouse.ui.theme.errorRed
 
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CropRecordsScreen(
     navController : NavController,
-    cropId : String?, //Data to search in API
-    phase : String?,
-    cropRecordRepository: CropRecordRepository = CropRecordRepository()
+    sharedPreferencesHelper: SharedPreferencesHelper
 ) {
+
+    val cropRecordResponseDePrueba = CropRecordResponse(
+        id = "696f9e94-3c2b-4446-97f7-aa6e4240a46c",
+        createdDate = "6/26/2024, 5:26 AM",
+        updatedDate = "6/26/2024, 5:26 AM",
+        author = "tecnicoK",
+        phase = "formula",
+        phaseData = Payload(
+            data = listOf(
+                mapOf("name" to "Hay", "value" to "127"),
+                mapOf("name" to "Corn", "value" to "301"),
+                mapOf("name" to "Guano", "value" to "100"),
+                mapOf("name" to "Cotton seed cake", "value" to "400"),
+                mapOf("name" to "Soybean meal", "value" to "356"),
+                mapOf("name" to "Urea", "value" to "356"),
+                mapOf("name" to "Ammonium sulfate", "value" to "125")
+            )
+        )
+    )
+
+    val cropRecordRepository = CropRecordRepositoryFactory.getRecordRepository(sharedPreferencesHelper)
+
+    val snackbarMessage = remember { mutableStateOf<String?>(null) }
+
     val cropDataReal = remember {
-        mutableStateOf(emptyList<CropRecordData>())
+        mutableStateOf(emptyList<CropRecordResponse>())
     }
+
     val searchRecordsInput = remember {
         mutableStateOf("")
     }
 
     var showEndPhaseDialog by remember { mutableStateOf(false) }
 
-    cropId?.let {
-        phase?.let { cropPhase ->
-            cropRecordRepository.getCropRecords(it, cropPhase) {
-            cropDataReal.value = it
+    LaunchedEffect(key1 = cropDataReal.value) {
+        cropRecordRepository.getCropRecords { data ->
+            if (data != null) {
+                cropDataReal.value = data
+            } else {
+                snackbarMessage.value = "Error getting crop records"
             }
         }
     }
@@ -96,7 +129,7 @@ fun CropRecordsScreen(
         }
         // Change for crop.id
         Text(
-            text = "Crop ID: ID - #127",
+            text = "crop id", //here goes crop id
             style = Typography.labelLarge,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF465B3F),
@@ -143,6 +176,10 @@ fun CropRecordsScreen(
                     )
                 }
             }
+            CropRecordCard(
+                cropRecordResponse = cropRecordResponseDePrueba,
+                navController = navController
+            )
         }
         if(showEndPhaseDialog){
             AlertPopUp(
@@ -181,9 +218,23 @@ fun CropRecordsScreen(
             }) { paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 items(cropDataReal.value){cropDatum ->
+                    Log.d("CropRecord: ", cropDatum.toString())
                     CropRecordCard(
-                        cropRecordData = cropDatum)
+                        cropRecordResponse = cropDatum,
+                        navController = navController)
                 }
+            }
+        }
+        if (snackbarMessage.value != null) {
+            Snackbar(
+                modifier = Modifier.padding(16.dp),
+                action = {
+                    TextButton(onClick = { snackbarMessage.value = null }) {
+                        Text("Dismiss")
+                    }
+                }
+            ) {
+                Text(snackbarMessage.value!!)
             }
         }
     }

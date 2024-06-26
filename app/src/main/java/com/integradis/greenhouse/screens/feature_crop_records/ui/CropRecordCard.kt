@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.PhotoAlbum
 import androidx.compose.material.icons.outlined.Yard
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -34,7 +35,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.integradis.greenhouse.model.data.crop_records.CropRecordData
+import androidx.navigation.NavController
+import com.integradis.greenhouse.model.data.crop_records.CropRecordResponse
+import com.integradis.greenhouse.screens.feature_main.Routes
 import com.integradis.greenhouse.shared.ui.AlertPopUp
 import com.integradis.greenhouse.shared.ui.DeleteItemPopUp
 import com.integradis.greenhouse.shared.ui.MultiStyleSpacedText
@@ -47,7 +50,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CropRecordCard(
-    cropRecordData: CropRecordData,
+    cropRecordResponse: CropRecordResponse,
+    navController: NavController,
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -91,7 +95,7 @@ fun CropRecordCard(
                         onDismissRequest = { showDeleteDialog = false },
                         onClickDismissButton = { showDeleteDialog = false },
                         onConfirmButton = { showDeleteDialog = false },
-                        id = cropRecordData.id,
+                        id = cropRecordResponse.id,
                         type = "record"
                     )
                 }
@@ -99,14 +103,17 @@ fun CropRecordCard(
                     AlertPopUp(
                         onDismissRequest = { showEditDialog = false },
                         inlineText = "Do you want to notify an admin for the editing of " +
-                                "record ${cropRecordData.id}?",
+                                "record ${cropRecordResponse.id}?",
                         onClickDismissButton = { showEditDialog = false },
                         buttonText = "Yes, notify",
-                        onConfirmButton = { showEditDialog = false }
+                        onConfirmButton = {
+                            navController.navigate("${Routes.ModifyRecords.route}/${cropRecordResponse.id}")
+                            showEditDialog = false
+                        }
                     )
                 }
                 Text(
-                    text = "Record ID: ID - #${cropRecordData.id}",
+                    text = "Record ID: ID - #${cropRecordResponse.id}",
                     style = Typography.labelLarge,
                     color = PrimaryGreen40,
                     modifier = Modifier
@@ -151,7 +158,7 @@ fun CropRecordCard(
                 MultiStyleText(
                     firstTextPart = "Author: ",
                     firstColor = Color.Black,
-                    secondTextPart = cropRecordData.author,
+                    secondTextPart = /*CropRecordResponse.author*/ "123",
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier.padding(start = 5.dp)
@@ -161,14 +168,14 @@ fun CropRecordCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    Icons.Outlined.AccessTime,
-                    contentDescription = "Crop Day Icon",
+                    Icons.Outlined.PhotoAlbum,
+                    contentDescription = "Phase Icon",
                     tint = PrimaryGreen40
                 )
                 MultiStyleText(
-                    firstTextPart = "Day: ",
+                    firstTextPart = "Phase: ",
                     firstColor = Color.Black,
-                    secondTextPart = cropRecordData.cropDay,
+                    secondTextPart = cropRecordResponse.phase ,
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier.padding(start = 5.dp)
@@ -185,7 +192,7 @@ fun CropRecordCard(
                 MultiStyleText(
                     firstTextPart = "Entry Date: ",
                     firstColor = Color.Black,
-                    secondTextPart = cropRecordData.entryDate,
+                    secondTextPart = cropRecordResponse.createdDate,
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier
@@ -202,7 +209,7 @@ fun CropRecordCard(
             }
             if (expandedState) {
                 Text("")
-                for (phaseDataEntry in cropRecordData.phaseData.data) {
+                for (phaseDataEntry in cropRecordResponse.phaseData.data) {
                     phaseDataEntry["name"]?.let { name ->
                         phaseDataEntry["value"]?.let { data ->
                             MultiStyleSpacedText(

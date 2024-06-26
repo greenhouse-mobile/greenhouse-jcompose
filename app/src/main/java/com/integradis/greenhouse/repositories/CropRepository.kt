@@ -56,6 +56,36 @@ class CropRepository(
                         }
                     }
                 }
+                override fun onFailure(call: Call<Crop>, t: Throwable) {
+                    t.message?.let { message ->
+                        Log.d("CropRepository", message)
+                    }
+                }
+            })
+        }
+    }
+
+    fun createCrop(name: String, author: String, callback: (Crop) -> Unit){
+        token?.let {
+            val crop = Crop(
+                id = "",
+                name = name,
+                author = author,
+                state = "true",
+                phase = "",
+                startDate = ""
+            )
+            val postCrop = cropService.createCrop("Bearer $it", crop)
+
+            postCrop.enqueue(object : Callback<Crop> {
+                override fun onResponse(call: Call<Crop>, response: Response<Crop>) {
+                    if (response.isSuccessful) {
+                        response.body()?.let { crop ->
+                            callback(crop)
+                        }
+                        Log.d("CropRepository", response.body().toString())
+                    }
+                }
 
                 override fun onFailure(call: Call<Crop>, t: Throwable) {
                     t.message?.let { message ->

@@ -3,7 +3,7 @@ package com.integradis.greenhouse.model.data.crop_records
 import com.google.gson.annotations.SerializedName
 
 data class CropRecordsWrapper(
-    val cropRecords : List<CropRecordData>
+    val records : List<CropRecordResponse>
 )
 
 data class CropRecordResponse(
@@ -13,4 +13,8 @@ data class CropRecordResponse(
     val author : String,
     val phase : String,
     val phaseData: Payload
+)
+
+data class Payload(
+    val data: List<Map<String, String>>
 )

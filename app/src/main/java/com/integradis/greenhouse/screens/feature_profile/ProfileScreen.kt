@@ -44,6 +44,7 @@ import com.integradis.greenhouse.repositories.UserRepository
 import com.integradis.greenhouse.shared.domain.UserData
 import com.integradis.greenhouse.shared.ui.InfoField
 import com.integradis.greenhouse.model.data.user_information.UserInformation
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
 
@@ -51,7 +52,8 @@ import com.integradis.greenhouse.ui.theme.Typography
 fun ProfileScreen(
     navController: NavHostController,
     company: String,
-    userRepository: UserRepository = UserRepository()
+    sharedPreferencesHelper: SharedPreferencesHelper,
+    userRepository: UserRepository = UserRepository(sharedPreferencesHelper = sharedPreferencesHelper )
 ){
     val userData = remember {
         mutableStateOf(emptyList<UserData>())

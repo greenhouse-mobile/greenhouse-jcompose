@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.integradis.greenhouse.factories.UserRepositoryFactory
 import com.integradis.greenhouse.screens.feature_main.Routes
 import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.model.data.crops.CropPhase
@@ -60,11 +61,17 @@ fun CropsInProgressScreen(
     deleteCrop: (Int) -> Unit
 ){
     val crops = remember { mutableStateOf(emptyList<Crop>()) }
+    val newCropAuthor = remember { mutableStateOf("") }
 
     val cropRepository = CropRepositoryFactory.getCropRepository(sharedPreferencesHelper)
+    val userRepository = UserRepositoryFactory.getUserRepository(sharedPreferencesHelper)
 
     cropRepository.getCrops { crops.value = it
         Log.d("CropsInProgressScreen", "Crops: $crops")
+    }
+
+    userRepository.getMe { newCropAuthor.value = it.firstName + " " + it.lastName
+        Log.d("CropsInProgressScreen", "User: $newCropAuthor")
     }
 
     var newCrop by remember { mutableStateOf(false) }
@@ -131,7 +138,7 @@ fun CropsInProgressScreen(
         }){paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 items(crops.value.size) { index ->
-                    if (crops.value[index].state == "false"){
+                    if (crops.value[index].state == "true"){
                     CropCard(
                         imageUrl = "https://compote.slate.com/images/e4805e57-794c-4d88-b893-c7ac42f604ac.jpeg?width=1200&rect=6480x4320&offset=112x0",
                         crop = crops.value[index],
@@ -150,6 +157,13 @@ fun CropsInProgressScreen(
                     confirmButton = {
                         Button(
                             onClick = {
+                                      cropRepository.createCrop(
+                                          name = "New Crop",
+                                          author = newCropAuthor.value,
+                                            callback = { crop ->
+                                                crops.value += crop
+                                            }
+                                      )
                             },
                             colors = ButtonDefaults.buttonColors(
                                 PrimaryGreen40
@@ -161,7 +175,7 @@ fun CropsInProgressScreen(
                     dismissButton = {
                         Button(
                             onClick = { newCrop = false
-                                navController.navigateUp()},
+                                },
                             colors = ButtonDefaults.buttonColors(
                                 Color.White
                             )

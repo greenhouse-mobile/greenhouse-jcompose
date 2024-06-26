@@ -67,8 +67,9 @@ fun GreenhouseMainScreen(sharedPreferencesHelper: SharedPreferencesHelper) {
             Layout(navController = navController) {
                 ProfileScreen(
                     navController,
-                    company
-                ) //sharedPreferencesHelper = sharedPreferencesHelper
+                    company,
+                    sharedPreferencesHelper = sharedPreferencesHelper
+                )
             }
         }
 

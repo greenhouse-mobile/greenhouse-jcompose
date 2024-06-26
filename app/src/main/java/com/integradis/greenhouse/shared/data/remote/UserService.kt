@@ -10,4 +10,8 @@ interface UserService {
     fun getUser(
         @Query("userId") userId: String
     ) : Call<UserWrapper>
+
+    // Get profiles/users/me
+    @GET("profiles/users/me")
+    fun getMe() : Call<UserWrapper>
 }

@@ -22,6 +22,9 @@ data class CropRecordData(
     @SerializedName("updated_at")
     val updateDate : String,
 
+    @SerializedName("phase")
+    val phase : String,
+
     @SerializedName("payload")
     val phaseData: Payload
 )

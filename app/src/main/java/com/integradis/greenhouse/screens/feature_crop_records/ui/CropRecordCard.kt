@@ -34,7 +34,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.integradis.greenhouse.model.data.crop_records.CropRecordData
+import com.integradis.greenhouse.screens.feature_main.Routes
 import com.integradis.greenhouse.shared.ui.AlertPopUp
 import com.integradis.greenhouse.shared.ui.DeleteItemPopUp
 import com.integradis.greenhouse.shared.ui.MultiStyleSpacedText
@@ -48,6 +50,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CropRecordCard(
     cropRecordData: CropRecordData,
+    navController: NavController,
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -102,7 +105,10 @@ fun CropRecordCard(
                                 "record ${cropRecordData.id}?",
                         onClickDismissButton = { showEditDialog = false },
                         buttonText = "Yes, notify",
-                        onConfirmButton = { showEditDialog = false }
+                        onConfirmButton = {
+                            navController.navigate("${Routes.ModifyRecords.route}/${cropRecordData.id}")
+                            showEditDialog = false
+                        }
                     )
                 }
                 Text(
@@ -151,7 +157,7 @@ fun CropRecordCard(
                 MultiStyleText(
                     firstTextPart = "Author: ",
                     firstColor = Color.Black,
-                    secondTextPart = cropRecordData.author,
+                    secondTextPart = /*cropRecordData.author*/ "123",
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier.padding(start = 5.dp)
@@ -168,7 +174,7 @@ fun CropRecordCard(
                 MultiStyleText(
                     firstTextPart = "Day: ",
                     firstColor = Color.Black,
-                    secondTextPart = cropRecordData.cropDay,
+                    secondTextPart = /*cropRecordData.cropDay*/ "123",
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier.padding(start = 5.dp)
@@ -185,7 +191,7 @@ fun CropRecordCard(
                 MultiStyleText(
                     firstTextPart = "Entry Date: ",
                     firstColor = Color.Black,
-                    secondTextPart = cropRecordData.entryDate,
+                    secondTextPart = /*cropRecordData.entryDate*/ "123",
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier
@@ -208,7 +214,7 @@ fun CropRecordCard(
                             MultiStyleSpacedText(
                                 firstTextPart = name,
                                 firstColor = Color.Gray,
-                                secondTextPart = data,
+                                secondTextPart = /*data*/ "123",
                                 secondColor = Color.Black,
                                 typography = Typography.labelMedium,
                             )

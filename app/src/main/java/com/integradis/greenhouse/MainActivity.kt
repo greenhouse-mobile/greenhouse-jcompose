@@ -12,16 +12,19 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.integradis.greenhouse.screens.feature_main.GreenhouseMainScreen
 import com.integradis.greenhouse.ui.theme.GreenhouseTheme
 
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val sharedPreferencesHelper = SharedPreferencesHelper(this)
         installSplashScreen()
         setContent {
             GreenhouseTheme {
                 Box(
                     modifier = Modifier.fillMaxSize().background(Color(0xFFF8F7F6))
                 ){
-                    GreenhouseMainScreen()
+                    GreenhouseMainScreen(sharedPreferencesHelper)
                 }
             }
         }

@@ -29,6 +29,7 @@ import com.integradis.greenhouse.screens.feature_stepper.ui.StepperDivider
 import com.integradis.greenhouse.repositories.CropRepository
 import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.model.data.crops.CropPhase
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.shared.ui.MultiStyleText
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
@@ -37,21 +38,21 @@ import com.integradis.greenhouse.ui.theme.Typography
 fun Stepper(
     navController: NavController,
     cropId: String,
-    cropRepository: CropRepository = CropRepository()
+    sharedPreferencesHelper: SharedPreferencesHelper
 ) {
 
     val crop = remember {
         mutableStateOf<Crop?>(null)
     }
 
+    val cropRepository = CropRepository(sharedPreferencesHelper = sharedPreferencesHelper)
+
     cropRepository.getCropById(cropId) {
         crop.value = it
     }
 
-    Log.d("STATE", crop.value.toString())
-
     val itemsList = mutableListOf(
-        CropPhase.STOCK, CropPhase.PREPARATION_AREA,
+        CropPhase.FORMULA, CropPhase.PREPARATION_AREA,
         CropPhase.BUNKER, CropPhase.TUNNEL, CropPhase.INCUBATION, CropPhase.CASING,
         CropPhase.INDUCTION, CropPhase.HARVEST)
 
@@ -117,7 +118,7 @@ fun Stepper(
                                 phase = item,
                                 isComplete = true,
                                 navigateTo = {
-                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getPhaseName()}")
+                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getDatabaseName()}")
                                 })
                         }
                         else if (item == CropPhase.getValueOf(crop.value?.phase)) {
@@ -125,14 +126,14 @@ fun Stepper(
                                 phase = item,
                                 isCurrent = true,
                                 navigateTo = {
-                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getPhaseName()}")
+                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getDatabaseName()}")
                                 })
                         }
                         else {
                             StepperButton(
                                 phase = item,
                                 navigateTo = {
-                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getPhaseName()}")
+                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getDatabaseName()}")
                                 })
                         }
                         if(item != CropPhase.HARVEST) StepperDivider()

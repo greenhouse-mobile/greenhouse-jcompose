@@ -63,7 +63,7 @@ fun InfoField(
                 Text(text = fields.title, style = Typography.labelLarge, modifier = Modifier.padding(15.dp))
             }
             Text(
-                text = fields.placeholder, style = Typography.labelLarge, modifier = Modifier.fillMaxWidth().background(GrayTextField40, RoundedCornerShape(10.dp)).padding(15.dp),
+                text = fields.placeholder ?: "", style = Typography.labelLarge, modifier = Modifier.fillMaxWidth().background(GrayTextField40, RoundedCornerShape(10.dp)).padding(15.dp),
             )
         }
     }

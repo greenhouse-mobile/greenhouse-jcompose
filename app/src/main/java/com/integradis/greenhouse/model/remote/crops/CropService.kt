@@ -2,19 +2,37 @@ package com.integradis.greenhouse.model.remote.crops
 
 import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.model.data.crops.CropWrapper
+import com.integradis.greenhouse.model.data.crops.NewCrop
+import com.integradis.greenhouse.model.data.crops.UpdateCrop
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.PATCH
+import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
+
 
 interface CropService {
 
     @GET("crops")
-    fun getCrops(
-        @Query("active") endpoint: String
-    ) : Call<CropWrapper>
+    fun getCrops(@Header("Authorization") token: String): Call<CropWrapper>
 
     @GET("crops/{id}")
     fun getCropById(
-        @Path("id") id: String): Call<Crop>
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): Call<Crop>
+
+    @POST("crops")
+    fun createCrop(
+        @Header("Authorization") token: String,
+        @Body crop: NewCrop
+    ): Call<NewCrop>
+    @PATCH("crops/{id}")
+    fun patchCrop(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Body crop: UpdateCrop
+    ): Call<Crop>
 }

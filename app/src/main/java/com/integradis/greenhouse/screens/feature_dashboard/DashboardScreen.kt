@@ -36,6 +36,8 @@ import androidx.navigation.NavHostController
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.integradis.greenhouse.R
+import com.integradis.greenhouse.factories.UserRepositoryFactory
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.data.RecordViewModel
 import com.integradis.greenhouse.data.RecordViewModelFactory
 import com.integradis.greenhouse.screens.feature_main.Routes
@@ -48,8 +50,21 @@ import com.skydoves.landscapist.glide.GlideImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
-    username: String,
     navController: NavHostController,
+    sharedPreferencesHelper: SharedPreferencesHelper,
+    ){
+    val userName = remember {
+        mutableStateOf("")
+    }
+    val userRepository = UserRepositoryFactory.getUserRepository(sharedPreferencesHelper)
+    userRepository.getMe { user ->
+        user?.let {
+            userName.value = it.firstName + " " + it.lastName
+
+        } ?: run {
+            Log.d("dashboard", "Usuario no encontrado")
+        }
+    }
     recordViewModel: RecordViewModel = viewModel(factory = RecordViewModelFactory(LocalContext.current.applicationContext as Application))
 ){
     val record by recordViewModel.record.observeAsState()
@@ -82,7 +97,7 @@ fun DashboardScreen(
             }
         }
         Text(
-            text = "Welcome, " + username,
+            text = "Welcome, " + userName.value,
             style = Typography.titleLarge,
             color = Color(0xFF465B3F),
             modifier = Modifier.padding(15.dp)
@@ -97,21 +112,20 @@ fun DashboardScreen(
                     .fillMaxWidth()
                     .padding(15.dp), verticalAlignment = Alignment.CenterVertically) {
 
-                    Text(
-                        text = "Return to your most recent record",
-                        style = Typography.bodyLarge,
-                        color = Color(0xFF465B3F),
-                        modifier = Modifier.weight(1F)
-                    )
-                    GlideImage(
-                        imageModel = { "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" },
-                        modifier = Modifier.size(80.dp),
-                        requestOptions = {
-                            RequestOptions()
-                                .transform(RoundedCorners(900))
-                        }
-                    )
-                }
+                Text(
+                    text = "Return to your most recent record",
+                    style = Typography.bodyLarge,
+                    color = Color(0xFF465B3F),
+                    modifier = Modifier.weight(1F)
+                )
+                GlideImage(
+                    imageModel = { "https://img.freepik.com/free-vector/clock-basic-style_78370-6152.jpg?t=st=1719459798~exp=1719463398~hmac=256c8be5ddd7b96ababf700af4fb0959026a4d68b1b04d0b2e4ca24b7e0752b8&w=826" },
+                    modifier = Modifier.size(80.dp),
+                    requestOptions = {
+                        RequestOptions()
+                            .transform(RoundedCorners(900))
+                    }
+                )
             }
         }
         Text(

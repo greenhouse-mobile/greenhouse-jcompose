@@ -29,11 +29,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import com.bumptech.glide.request.RequestOptions
 import com.integradis.greenhouse.model.data.crops.Crop
+import com.integradis.greenhouse.model.data.crops.CropPhase
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
 import com.integradis.greenhouse.ui.theme.errorRed
@@ -55,7 +57,6 @@ fun CropCard(
     var showDialog by remember { mutableStateOf(false) }
 
     val formatter = DateTimeFormatter.ofPattern("EE MMM dd yyyy HH:mm:ss OOOO")
-    val showedDateValue = crop.startDate.slice(IntRange(0, 32)).replaceRange(31,31,":")
 
     ElevatedCard(
         modifier = Modifier
@@ -69,7 +70,6 @@ fun CropCard(
             imageModel = { imageUrl },
             imageOptions = ImageOptions(
                 contentScale = ContentScale.Inside,
-
             ),
             requestOptions = {
                 RequestOptions()
@@ -82,7 +82,7 @@ fun CropCard(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Crop Name:",
+                    text = "ID:",
                     modifier = Modifier.weight(1f),
                     style = Typography.labelLarge,
                     color = Color.Black
@@ -142,7 +142,7 @@ fun CropCard(
                     tint = PrimaryGreen40,
                 )
                 Text(
-                    text = "Start Date: ${LocalDate.parse(showedDateValue, formatter)}",
+                    text = "Start Date: ${crop.startDate}",
                     style = Typography.labelLarge,
                     modifier = Modifier.padding(2.dp)
                 )
@@ -154,7 +154,7 @@ fun CropCard(
                     tint = PrimaryGreen40
                 )
                 Text(
-                    text = "Current Phase: ${crop.phase}",
+                    text = "Current Phase: ${CropPhase.getValueOf(crop.phase).getPhaseName()}",
                     style = Typography.labelLarge,
                     modifier = Modifier.padding(2.dp)
                 )
@@ -162,6 +162,7 @@ fun CropCard(
         }
     }
 }
+
 
 class CutOffCardImage : BitmapTransformation() {
     override fun transform(

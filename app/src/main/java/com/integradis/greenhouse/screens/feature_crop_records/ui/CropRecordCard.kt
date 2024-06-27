@@ -34,7 +34,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.integradis.greenhouse.model.data.crop_records.CropRecordData
+import com.integradis.greenhouse.screens.feature_main.Routes
 import com.integradis.greenhouse.shared.ui.AlertPopUp
 import com.integradis.greenhouse.shared.ui.DeleteItemPopUp
 import com.integradis.greenhouse.shared.ui.MultiStyleSpacedText
@@ -48,6 +50,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CropRecordCard(
     cropRecordData: CropRecordData,
+    navController: NavController,
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -102,7 +105,10 @@ fun CropRecordCard(
                                 "record ${cropRecordData.id}?",
                         onClickDismissButton = { showEditDialog = false },
                         buttonText = "Yes, notify",
-                        onConfirmButton = { showEditDialog = false }
+                        onConfirmButton = {
+                            navController.navigate("${Routes.ModifyRecords.route}/${cropRecordData.id}")
+                            showEditDialog = false
+                        }
                     )
                 }
                 Text(
@@ -166,9 +172,9 @@ fun CropRecordCard(
                     tint = PrimaryGreen40
                 )
                 MultiStyleText(
-                    firstTextPart = "Day: ",
+                    firstTextPart = "Updated date: ",
                     firstColor = Color.Black,
-                    secondTextPart = cropRecordData.cropDay,
+                    secondTextPart = cropRecordData.updatedDate,
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier.padding(start = 5.dp)
@@ -185,7 +191,7 @@ fun CropRecordCard(
                 MultiStyleText(
                     firstTextPart = "Entry Date: ",
                     firstColor = Color.Black,
-                    secondTextPart = cropRecordData.entryDate,
+                    secondTextPart = cropRecordData.createdDate,
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier

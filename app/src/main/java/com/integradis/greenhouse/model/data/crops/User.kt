@@ -1,20 +1,14 @@
-package com.integradis.greenhouse.shared.domain
-
-import com.google.gson.annotations.SerializedName
+package com.integradis.greenhouse.model.data.crops
 
 data class UserWrapper(
-    @SerializedName("profiles")
     val users : List<UserData>
 )
 data class UserData(
-    @SerializedName("id")
-    val id: String,
-    @SerializedName("firstName")
-    val firstName: String,
-    @SerializedName("lastName")
-    val lastName: String,
-    @SerializedName("userId")
-    val userId: String,
-    @SerializedName("role")
-    val role: String
+    var id: String,
+    var userId: String,
+    var firstName: String,
+    var lastName: String,
+    var iconUrl: String,
+    var role: String,
+    var username: String
 )

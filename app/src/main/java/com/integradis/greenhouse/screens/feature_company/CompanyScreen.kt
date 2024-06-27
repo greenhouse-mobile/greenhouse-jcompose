@@ -1,5 +1,6 @@
 package com.integradis.greenhouse.screens.feature_company
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -33,9 +36,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.rememberImagePainter
 import com.integradis.greenhouse.R
-import com.integradis.greenhouse.model.data.coworkers.Coworkers
+import com.integradis.greenhouse.factories.CompanyRepositoryFactory
+import com.integradis.greenhouse.factories.CropRepositoryFactory
+import com.integradis.greenhouse.factories.ProfileRepositoryFactory
+import com.integradis.greenhouse.factories.UserRepositoryFactory
+import com.integradis.greenhouse.model.data.profile.Profile
 import com.integradis.greenhouse.model.data.user_information.UserInformation
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.shared.ui.InfoField
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.GrayBg
@@ -46,41 +55,58 @@ import com.integradis.greenhouse.ui.theme.Typography
 @Composable
 fun CompanyScreen(
     navController: NavHostController,
-    companyName: String,
-    TIN: String,
+    sharedPreferencesHelper: SharedPreferencesHelper,
 ) {
-    val rem = remember {
-        mutableStateOf("")
+    val id = remember { mutableStateOf("") }
+    val name = remember { mutableStateOf("") }
+    val tin = remember { mutableStateOf("") }
+    val profilePicture = remember { mutableStateOf("") }
+    val profileId = remember { mutableStateOf("") }
+    val searchEmployee = remember { mutableStateOf("") }
+    val employees = remember { mutableStateOf(emptyList<Profile>()) }
+
+    val userRepository = UserRepositoryFactory.getUserRepository(sharedPreferencesHelper)
+    userRepository.getMe { user ->
+        user?.let {
+            profileId.value = it.id
+        } ?: run {
+            Log.d("dashboard", "Usuario no encontrado")
+        }
     }
-    val searchEmployee = remember {
-        mutableStateOf("")
+
+    val companyRepository = CompanyRepositoryFactory.getCompanyRepository(sharedPreferencesHelper)
+    companyRepository.getCompany(profileId.value) { companyData ->
+        companyData?.let {
+            id.value = it.id
+            name.value = it.name
+            tin.value = it.tin
+            profilePicture.value = it.logoUrl
+        } ?: run {
+            Log.d("dashboard", "Company not found")
+        }
     }
+
+    val profileRepository = ProfileRepositoryFactory.getProfileRepository(sharedPreferencesHelper)
+    profileRepository.getProfilesByCompanyId(companyId = id.value) {
+        employees.value = it
+        Log.d("CropsInProgressScreen", "Employees: $employees")
+    }
+
     val fields = listOf(
         UserInformation(
             title = "Company Name",
-            placeholder = companyName,
+            placeholder = name.value,
         ),
         UserInformation(
             title = "TIN",
-            placeholder = TIN,
+            placeholder = tin.value,
         ),
-    )
-    val coworkers = mutableListOf(
-        Coworkers("Alan", "Supervising technician"),
-        Coworkers("Eric", "Supervising technician"),
-        Coworkers("Nicolas", "Supervising technician"),
-        Coworkers("Carlo", "Supervising technician"),
-        Coworkers("Lucero", "Supervising technician"),
-        Coworkers("Dobby", "Supervising technician"),
-        Coworkers("Jessica", "Supervising technician"),
-        Coworkers("Casimiro", "Supervising technician"),
-        Coworkers("Max", "Supervising technician"),
     )
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
             .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
     ) {
         Row(
             modifier = Modifier
@@ -113,14 +139,17 @@ fun CompanyScreen(
             shape = RoundedCornerShape(1400.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.campo_alegre),
+                painter = rememberImagePainter(profilePicture.value),
                 contentDescription = "",
-                modifier = Modifier.size(100.dp).clip(RoundedCornerShape(1400.dp))
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(1400.dp))
             )
         }
         InfoField(fields, navController)
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
                 .background(GrayBg, shape = RoundedCornerShape(0.dp))
                 .padding(15.dp)
                 .fillMaxSize()
@@ -135,16 +164,21 @@ fun CompanyScreen(
                 placeholder = "Search employees...",
             )
 
-            if (searchEmployee.value != "") {
-                coworkers.forEach { coworker ->
-                    if (coworker.name.lowercase() == searchEmployee.value.lowercase()) {
-                        CoworkerCard(coworker.name, coworker.role, "https://i.imgur.com/xPyz8mG.png")
-
-                    }
+            val scrollState = rememberScrollState()
+            val filteredEmployees = if (searchEmployee.value.isNotEmpty()) {
+                employees.value.filter {
+                    (it.firstName.lowercase() + " " + it.lastName.lowercase()).contains(searchEmployee.value.lowercase())
                 }
             } else {
-                coworkers.forEach { coworker ->
-                    CoworkerCard(coworker.name, coworker.role, "https://i.imgur.com/xPyz8mG.png")
+                employees.value
+            }
+            LazyColumn {
+                items(filteredEmployees) { employee ->
+                    CoworkerCard(
+                        name = "${employee.firstName} ${employee.lastName}",
+                        role = employee.role,
+                        imageUrl = employee.iconUrl
+                    )
                 }
             }
         }
@@ -163,12 +197,13 @@ fun CoworkerCard(
             .padding(10.dp)
             .border(1.dp, PrimaryGreen40, RoundedCornerShape(10.dp))
     ) {
-        Row (modifier = Modifier.padding(10.dp))
-        {
+        Row(modifier = Modifier.padding(10.dp)) {
             Image(
-                painter = painterResource(id = R.drawable.max1),
+                painter = rememberImagePainter(imageUrl),
                 contentDescription = "",
-                modifier = Modifier.size(45.dp).clip(RoundedCornerShape(1000.dp))
+                modifier = Modifier
+                    .size(45.dp)
+                    .clip(RoundedCornerShape(1000.dp))
             )
             Spacer(Modifier.fillMaxWidth(0.1f))
             Column {

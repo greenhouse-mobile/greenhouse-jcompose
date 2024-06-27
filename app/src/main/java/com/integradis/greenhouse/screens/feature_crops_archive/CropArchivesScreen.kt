@@ -24,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,14 +31,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.integradis.greenhouse.factories.CropRepositoryFactory
 import com.integradis.greenhouse.screens.feature_main.Routes
 import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.repositories.CropRepository
+import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.shared.ui.CropCard
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,11 +47,9 @@ fun CropsArchivesScreen(
     navController: NavController,
     selectCrop: (Int) -> Unit,
     deleteCrop: (Int) -> Unit,
-    cropRepository: CropRepository = CropRepository()
+    sharedPreferencesHelper: SharedPreferencesHelper
 ){
-    val finishedCrops = remember {
-        mutableStateOf(emptyList<Crop>())
-    }
+
     val searchCropsInput = remember {
         mutableStateOf("")
     }
@@ -62,10 +60,15 @@ fun CropsArchivesScreen(
     val showDatePicker = remember { mutableStateOf(false) }
     val selectedDate = remember { mutableStateOf("") }
 
-    cropRepository.getCrops("false") {
+    val finishedCrops = remember { mutableStateOf(emptyList<Crop>()) }
+
+    val cropRepository = CropRepositoryFactory.getCropRepository(sharedPreferencesHelper)
+
+    cropRepository.getCrops {
         finishedCrops.value = it
-        Log.d("active", finishedCrops.value.toString())
+        Log.d("CropsInProgressScreen", "Crops: $finishedCrops")
     }
+
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()){
         Row (
             modifier = Modifier
@@ -114,13 +117,14 @@ fun CropsArchivesScreen(
         }
         Scaffold {paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
-                itemsIndexed(finishedCrops.value) {index, crop ->
-                    if (crop.state == "false"){
+                items(finishedCrops.value.size) { index ->
+                    Log.d("CropsInProgressScreen", "State: ${finishedCrops.value[index].state}" )
+                    if (finishedCrops.value[index].state == "false"){
                         CropCard(
                             imageUrl = "https://compote.slate.com/images/e4805e57-794c-4d88-b893-c7ac42f604ac.jpeg?width=1200&rect=6480x4320&offset=112x0",
-                            crop = crop,
+                            crop = finishedCrops.value[index],
                             navigateTo = {
-                                navController.navigate("${Routes.Stepper.route}/${crop.id}")
+                                navController.navigate("${Routes.Stepper.route}/${finishedCrops.value[index].id}")
                             },
                             selectCrop = {
                                 selectCrop(index)

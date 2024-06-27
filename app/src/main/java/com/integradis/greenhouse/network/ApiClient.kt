@@ -4,10 +4,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    private const val BASE_URL = "https://json-server-greenhouse.vercel.app/"
+    private const val BASE_URL = "http://ec2-18-219-32-31.us-east-2.compute.amazonaws.com/api/v1"
     fun getRetrofit(): Retrofit {
         return Retrofit.Builder().baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 }
+

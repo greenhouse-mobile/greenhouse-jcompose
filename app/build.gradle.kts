@@ -64,6 +64,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.coil)
+    implementation(libs.coil.compose)
     implementation(libs.androidx.room.ktx)
     implementation(libs.dagger)
     implementation(libs.androidx.runtime.livedata)
@@ -76,4 +78,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }

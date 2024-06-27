@@ -1,7 +1,5 @@
 package com.integradis.greenhouse.model.data.crops
 
-import com.google.gson.annotations.SerializedName
-
 data class UserWrapper(
     val users : List<UserData>
 )

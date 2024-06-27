@@ -1,17 +1,17 @@
 package com.integradis.greenhouse.factories
 
-import com.integradis.greenhouse.repositories.UserRepository
+import com.integradis.greenhouse.repositories.ProfileRepository
 import com.integradis.greenhouse.shared.SharedPreferencesHelper
 
-class UserRepositoryFactory private constructor() {
+class ProfileRepositoryFactory {
     companion object {
-        private var userRepository: UserRepository? = null
+        private var profileRepository: ProfileRepository? = null
 
-        fun getUserRepository(sharedPreferencesHelper: SharedPreferencesHelper): UserRepository {
-            if (userRepository == null) {
-                userRepository = UserRepository(sharedPreferencesHelper = sharedPreferencesHelper)
+        fun getProfileRepository(sharedPreferencesHelper: SharedPreferencesHelper): ProfileRepository {
+            if (profileRepository == null) {
+                profileRepository = ProfileRepository(sharedPreferencesHelper = sharedPreferencesHelper)
             }
-            return userRepository as UserRepository
+            return profileRepository as ProfileRepository
         }
     }
 }

@@ -72,6 +72,7 @@ fun CropRecordsScreen(
     cropId?.let {
         phase?.let { cropPhase ->
             cropRecordRepository.getCropRecords(it, cropPhase) {
+                Log.d("Phase: ", cropPhase)
             cropDataReal.value = it
             }
         }

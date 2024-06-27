@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
@@ -152,7 +153,9 @@ fun CropCard(
                     tint = PrimaryGreen40
                 )
                 Text(
-                    text = "Current Phase: ${crop.phase}",
+                    text = "Current Phase: ${crop.phase.replaceFirstChar { 
+                        it.uppercase()
+                    }}",
                     style = Typography.labelLarge,
                     modifier = Modifier.padding(2.dp)
                 )

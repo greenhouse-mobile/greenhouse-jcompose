@@ -10,19 +10,12 @@ data class CropRecordsWrapper(
 data class CropRecordData(
     val id: String,
 
-    @SerializedName("created_by")
     val author : String,
 
-    @SerializedName("crop_day")
-    val cropDay : String,
+    val createdDate : String,
 
-    @SerializedName("created_at")
-    val entryDate : String,
+    val updatedDate : String,
 
-    @SerializedName("updated_at")
-    val updateDate : String,
-
-    @SerializedName("phase")
     val phase : String,
 
     @SerializedName("payload")

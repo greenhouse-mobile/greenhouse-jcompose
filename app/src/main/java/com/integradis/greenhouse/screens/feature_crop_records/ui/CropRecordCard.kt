@@ -157,7 +157,7 @@ fun CropRecordCard(
                 MultiStyleText(
                     firstTextPart = "Author: ",
                     firstColor = Color.Black,
-                    secondTextPart = /*cropRecordData.author*/ "123",
+                    secondTextPart = cropRecordData.author,
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier.padding(start = 5.dp)
@@ -172,9 +172,9 @@ fun CropRecordCard(
                     tint = PrimaryGreen40
                 )
                 MultiStyleText(
-                    firstTextPart = "Day: ",
+                    firstTextPart = "Updated date: ",
                     firstColor = Color.Black,
-                    secondTextPart = /*cropRecordData.cropDay*/ "123",
+                    secondTextPart = cropRecordData.updatedDate,
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier.padding(start = 5.dp)
@@ -191,7 +191,7 @@ fun CropRecordCard(
                 MultiStyleText(
                     firstTextPart = "Entry Date: ",
                     firstColor = Color.Black,
-                    secondTextPart = /*cropRecordData.entryDate*/ "123",
+                    secondTextPart = cropRecordData.createdDate,
                     secondColor = Color.Gray,
                     typography = Typography.labelMedium,
                     modifier = Modifier
@@ -214,7 +214,7 @@ fun CropRecordCard(
                             MultiStyleSpacedText(
                                 firstTextPart = name,
                                 firstColor = Color.Gray,
-                                secondTextPart = /*data*/ "123",
+                                secondTextPart = data,
                                 secondColor = Color.Black,
                                 typography = Typography.labelMedium,
                             )

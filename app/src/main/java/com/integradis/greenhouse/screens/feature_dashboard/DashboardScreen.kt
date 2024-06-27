@@ -1,5 +1,6 @@
 package com.integradis.greenhouse.screens.feature_dashboard
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,20 +20,27 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.integradis.greenhouse.R
 import com.integradis.greenhouse.factories.UserRepositoryFactory
 import com.integradis.greenhouse.shared.SharedPreferencesHelper
+import com.integradis.greenhouse.data.RecordViewModel
+import com.integradis.greenhouse.data.RecordViewModelFactory
+import com.integradis.greenhouse.screens.feature_main.Routes
 import com.integradis.greenhouse.shared.ui.DashboardCard
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
@@ -57,6 +65,9 @@ fun DashboardScreen(
             Log.d("dashboard", "Usuario no encontrado")
         }
     }
+    recordViewModel: RecordViewModel = viewModel(factory = RecordViewModelFactory(LocalContext.current.applicationContext as Application))
+){
+    val record by recordViewModel.record.observeAsState()
     Column (
         modifier = Modifier.verticalScroll(rememberScrollState())
     ){
@@ -91,14 +102,15 @@ fun DashboardScreen(
             color = Color(0xFF465B3F),
             modifier = Modifier.padding(15.dp)
         )
-        Card (
-            modifier = Modifier
-                .padding(10.dp)
-                .clickable { }
-        ){
-            Row (modifier = Modifier
-                .fillMaxWidth()
-                .padding(15.dp), verticalAlignment = Alignment.CenterVertically) {
+        record?.let {
+            Card (
+                modifier = Modifier
+                    .padding(10.dp)
+                    .clickable { navController.navigate("${Routes.CropRecords.route}/${it.cropId}/${it.phase}") }
+            ){
+                Row (modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp), verticalAlignment = Alignment.CenterVertically) {
 
                 Text(
                     text = "Return to your most recent record",

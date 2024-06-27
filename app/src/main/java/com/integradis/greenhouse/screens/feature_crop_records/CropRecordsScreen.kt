@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.integradis.greenhouse.factories.CropRecordRepositoryFactory
@@ -51,6 +52,7 @@ import com.integradis.greenhouse.ui.theme.SubtitleCropList
 import com.integradis.greenhouse.ui.theme.Typography
 import com.integradis.greenhouse.ui.theme.buttonBrown
 import com.integradis.greenhouse.ui.theme.errorRed
+import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -74,9 +76,8 @@ fun CropRecordsScreen(
 
     cropId?.let {
         phase?.let { cropPhase ->
-            cropRecordRepository.getCropRecords(it, cropPhase) {
-                Log.d("Phase: ", cropPhase)
-            cropDataReal.value = it
+            cropRecordRepository.getCropRecords(it, cropPhase) { records ->
+                cropDataReal.value = records
             }
         }
     }

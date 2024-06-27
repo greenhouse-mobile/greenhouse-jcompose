@@ -10,11 +10,11 @@ import retrofit2.http.Query
 
 interface CropRecordService {
 
-    @GET("records")
+    @GET("records/{cropId}/{phase}")
     fun getCropRecords(
         @Header("Authorization") token: String,
-        @Query("cropId") endpoint1: String,
-        @Query("phase") endpoint2: String
+        @Path("cropId") cropId: String,
+        @Path("phase") phase: String
     ) : Call<CropRecordsWrapper>
 
     @GET("records/{id}")

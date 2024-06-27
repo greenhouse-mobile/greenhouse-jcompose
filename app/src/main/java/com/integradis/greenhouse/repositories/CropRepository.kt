@@ -100,5 +100,28 @@ class CropRepository(
             Log.e("CropRepository", "Token is null or empty")
         }
     }
+
+    fun patchCrop(id: String, phase: String, state: Boolean, callback: (Crop) -> Unit){
+        token?.let {
+            val updateCrop = cropService.patchCrop("Bearer $it", id, phase, state)
+
+            updateCrop.enqueue(object : Callback<Crop> {
+                override fun onResponse(call: Call<Crop>, response: Response<Crop>) {
+                    if (response.isSuccessful) {
+                        response.body()?.let { crop ->
+                            callback(crop)
+                        }
+                    }
+                }
+
+
+
+                override fun onFailure(p0: Call<Crop>, p1: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+        }
+    }
 }
 

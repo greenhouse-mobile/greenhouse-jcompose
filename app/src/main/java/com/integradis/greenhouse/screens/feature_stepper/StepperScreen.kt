@@ -120,7 +120,7 @@ fun Stepper(
                                 phase = item,
                                 isComplete = true,
                                 navigateTo = {
-                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getPhaseName()}")
+                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getDatabaseName()}")
                                 })
                         }
                         else if (item == CropPhase.getValueOf(crop.value?.phase)) {
@@ -128,14 +128,14 @@ fun Stepper(
                                 phase = item,
                                 isCurrent = true,
                                 navigateTo = {
-                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getPhaseName()}")
+                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getDatabaseName()}")
                                 })
                         }
                         else {
                             StepperButton(
                                 phase = item,
                                 navigateTo = {
-                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getPhaseName()}")
+                                    navController.navigate("${Routes.CropRecords.route}/${cropId}/${item.getDatabaseName()}")
                                 })
                         }
                         if(item != CropPhase.HARVEST) StepperDivider()

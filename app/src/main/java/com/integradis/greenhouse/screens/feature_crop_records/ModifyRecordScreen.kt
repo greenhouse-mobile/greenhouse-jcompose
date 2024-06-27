@@ -95,7 +95,7 @@ fun ModifyRecordScreen(
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
-            text = "Preparation area",
+            text = CropPhase.getValueOf(cropRecordDatum.value?.phase).getPhaseName(),
             style = Typography.labelMedium,
             color = SubtitleCropList,
         )

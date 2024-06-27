@@ -36,13 +36,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.integradis.greenhouse.factories.CropRecordRepositoryFactory
+import com.integradis.greenhouse.factories.CropRepositoryFactory
 import com.integradis.greenhouse.model.data.crop_records.CropRecordData
 import com.integradis.greenhouse.model.data.crops.CropPhase
-import com.integradis.greenhouse.repositories.CropRecordRepository
+import com.integradis.greenhouse.model.data.crops.UpdateCrop
 import com.integradis.greenhouse.screens.feature_crop_records.ui.CropRecordCard
 import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.shared.ui.AlertPopUp
@@ -52,7 +52,6 @@ import com.integradis.greenhouse.ui.theme.SubtitleCropList
 import com.integradis.greenhouse.ui.theme.Typography
 import com.integradis.greenhouse.ui.theme.buttonBrown
 import com.integradis.greenhouse.ui.theme.errorRed
-import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -64,6 +63,7 @@ fun CropRecordsScreen(
 ) {
 
     val cropRecordRepository = CropRecordRepositoryFactory.getRecordRepository(sharedPreferencesHelper)
+    val cropRepository = CropRepositoryFactory.getCropRepository(sharedPreferencesHelper)
 
     val cropDataReal = remember {
         mutableStateOf(emptyList<CropRecordData>())
@@ -162,7 +162,16 @@ fun CropRecordsScreen(
                         "you will not be able to add new records. Are you sure you want to continue?",
                 onClickDismissButton = { showEndPhaseDialog = false },
                 buttonText = "Yes, end phase",
-                onConfirmButton = { showEndPhaseDialog = false }
+                onConfirmButton = { showEndPhaseDialog = false
+                    val updateCropPhase = UpdateCrop(
+                        phase = CropPhase.getValueOf(phase).getNextPhase()
+                    )
+                    if (cropId != null) {
+                        cropRepository.patchCrop(cropId, updateCropPhase) {
+                            navController.navigateUp()
+                        }
+                    }
+                }
             )
         }
         Scaffold(

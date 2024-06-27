@@ -6,6 +6,7 @@ import com.integradis.greenhouse.factories.CropServiceFactory
 import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.model.data.crops.CropWrapper
 import com.integradis.greenhouse.model.data.crops.NewCrop
+import com.integradis.greenhouse.model.data.crops.UpdateCrop
 import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import retrofit2.Call
 import retrofit2.Callback
@@ -101,11 +102,15 @@ class CropRepository(
         }
     }
 
-    fun patchCrop(id: String, phase: String, state: Boolean, callback: (Crop) -> Unit){
-        token?.let {
-            val updateCrop = cropService.patchCrop("Bearer $it", id, phase, state)
+    fun patchCrop(id: String, updateCrop: UpdateCrop, callback: (Crop) -> Unit){
+        if (updateCrop.phase == "harvest"){
+            updateCrop.state = false
+        }
 
-            updateCrop.enqueue(object : Callback<Crop> {
+        token?.let {
+            val toUpdateCrop = cropService.patchCrop("Bearer $it", id, updateCrop)
+
+            toUpdateCrop.enqueue(object : Callback<Crop> {
                 override fun onResponse(call: Call<Crop>, response: Response<Crop>) {
                     if (response.isSuccessful) {
                         response.body()?.let { crop ->
@@ -114,10 +119,10 @@ class CropRepository(
                     }
                 }
 
-
-
                 override fun onFailure(p0: Call<Crop>, p1: Throwable) {
-                    TODO("Not yet implemented")
+                    p1.message?.let { message ->
+                        Log.d("CropRepository", message)
+                    }
                 }
 
             })

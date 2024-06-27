@@ -8,6 +8,7 @@ enum class CropPhase {
         override fun getFields() = listOf("Hay","Corn","Guano","Cotton Seed Cake",
             "Soybean Meal","Gypsum","Urea","Ammonium Sulfate")
         override fun getDatabaseName() = "formula"
+        override fun getNextPhase() = "preparation_area"
     },
     PREPARATION_AREA {
         override fun getPhaseName() = "Preparation Area"
@@ -15,6 +16,7 @@ enum class CropPhase {
         override fun getAmountOfFields() = 3
         override fun getFields() = listOf("Activities", "Temperature", "Comment")
         override fun getDatabaseName() = "preparation_area"
+        override fun getNextPhase() = "bunker"
     },
     BUNKER {
         override fun getPhaseName() = "Bunker"
@@ -22,6 +24,7 @@ enum class CropPhase {
         override fun getAmountOfFields() = 6
         override fun getFields() = listOf("T1", "T2", "T3", "Frequency", "Comment")
         override fun getDatabaseName() = "bunker"
+        override fun getNextPhase() = "tunnel"
     },
     TUNNEL {
         override fun getPhaseName() = "Tunnel"
@@ -30,6 +33,7 @@ enum class CropPhase {
         override fun getFields() = listOf("T1", "T2", "T3", "Frequency", "RT", "Fresh Air",
             "Recirculation", "Comment")
         override fun getDatabaseName() = "tunnel"
+        override fun getNextPhase() = "incubation"
     },
     INCUBATION {
         override fun getPhaseName() = "Incubation"
@@ -38,6 +42,7 @@ enum class CropPhase {
         override fun getFields() = listOf("Grow Room", "Air Temperature", "Compost Temperature",
             "Carbon Dioxide", "Air Humidity", "Setting", "Comment")
         override fun getDatabaseName() = "incubation"
+        override fun getNextPhase() = "casing"
     },
     CASING {
         override fun getPhaseName() = "Casing"
@@ -46,6 +51,7 @@ enum class CropPhase {
         override fun getFields() = listOf("Grow Room", "Air Temperature", "Compost Temperature",
             "Carbon Dioxide", "Air Humidity", "Setting", "Comment")
         override fun getDatabaseName() = "casing"
+        override fun getNextPhase() = "induction"
     },
     INDUCTION {
         override fun getPhaseName() = "Induction"
@@ -54,6 +60,7 @@ enum class CropPhase {
         override fun getFields() = listOf("Grow Room", "Air Temperature", "Compost Temperature",
             "Carbon Dioxide", "Air Humidity", "Setting", "Comment")
         override fun getDatabaseName() = "induction"
+        override fun getNextPhase() = "harvest"
     },
     HARVEST {
         override fun getPhaseName() = "Harvest"
@@ -62,6 +69,7 @@ enum class CropPhase {
         override fun getFields() = listOf("Grow Room", "Air Temperature", "Compost Temperature",
             "Carbon Dioxide", "Air Humidity", "Setting", "Comment")
         override fun getDatabaseName() = "harvest"
+        override fun getNextPhase() = "harvest"
     };
 
     abstract fun getPhaseName() : String
@@ -69,6 +77,7 @@ enum class CropPhase {
     abstract fun getAmountOfFields(): Int
     abstract fun getFields(): List<String>
     abstract fun getDatabaseName(): String
+    abstract fun getNextPhase(): String
 
     companion object {
         fun getValueOf(phase : String?) : CropPhase {

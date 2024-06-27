@@ -1,7 +1,4 @@
 package com.integradis.greenhouse.model.data.crops
-
-import com.google.gson.annotations.SerializedName
-
 data class CropWrapper(
     val crops : List<Crop>
 )
@@ -18,4 +15,9 @@ data class Crop(
 data class NewCrop(
     var name: String,
     var author: String,
+)
+
+data class UpdateCrop(
+    var phase: String,
+    var state: Boolean = true,
 )

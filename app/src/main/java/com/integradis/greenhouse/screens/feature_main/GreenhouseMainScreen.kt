@@ -15,6 +15,7 @@ import com.integradis.greenhouse.screens.feature_auth.ForgotPassword
 import com.integradis.greenhouse.screens.feature_auth.SignInScreen
 import com.integradis.greenhouse.screens.feature_authentication_home.AuthenticationHomeScreen
 import com.integradis.greenhouse.screens.feature_company.CompanyScreen
+import com.integradis.greenhouse.screens.feature_crop_records.CreateRecordScreen
 import com.integradis.greenhouse.screens.feature_crop_records.CropRecordsScreen
 import com.integradis.greenhouse.screens.feature_crop_records.ModifyRecordScreen
 import com.integradis.greenhouse.screens.feature_crops_archive.CropsArchivesScreen
@@ -134,6 +135,22 @@ fun GreenhouseMainScreen(sharedPreferencesHelper1: SharedPreferencesHelper) {
         }
 
         composable(
+            route = Routes.CreateRecords.routeWithArgument,
+            arguments = listOf(
+                navArgument(Routes.CreateRecords.firstArgument) { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            Layout(navController = navController) {
+                backStackEntry.arguments?.getString("cropId")?.let {
+                    CreateRecordScreen(
+                        navController = navController,
+                        cropId = it,
+                        sharedPreferencesHelper = sharedPreferencesHelper)
+                }
+            }
+        }
+
+        composable(
             route = Routes.CropRecords.routeWithArgument,
             arguments = listOf(
                 navArgument(Routes.CropRecords.firstArgument) { type = NavType.StringType },
@@ -202,6 +219,11 @@ sealed class Routes(val route: String) {
     object ModifyRecords : Routes("ModifyRecords"){
         const val routeWithArgument = "ModifyRecords/{recordId}"
         const val firstArgument = "recordId"
+    }
+
+    object CreateRecords : Routes("CreateRecords"){
+        const val routeWithArgument = "CreateRecords/{cropId}"
+        const val firstArgument = "cropId"
     }
 
     object Dashboard : Routes("Dashboard"){

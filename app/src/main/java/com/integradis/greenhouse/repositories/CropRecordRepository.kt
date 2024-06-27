@@ -1,10 +1,11 @@
 package com.integradis.greenhouse.repositories
 
 import android.util.Log
-import com.integradis.greenhouse.model.remote.crop_records.CropRecordService
 import com.integradis.greenhouse.factories.CropRecordServiceFactory
 import com.integradis.greenhouse.model.data.crop_records.CropRecordData
 import com.integradis.greenhouse.model.data.crop_records.CropRecordsWrapper
+import com.integradis.greenhouse.model.data.crop_records.NewRecordData
+import com.integradis.greenhouse.model.remote.crop_records.CropRecordService
 import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import retrofit2.Call
 import retrofit2.Callback
@@ -62,6 +63,36 @@ class CropRecordRepository(
                         Log.d("RecordRepository", message)
                     }
                 }
+            })
+        }
+    }
+
+    fun createCrop(newRecordData: NewRecordData, callback: (CropRecordData) -> Unit) {
+        token?.let {
+            val postRecord = cropRecordService.createRecord("Bearer $it", newRecordData)
+
+            postRecord.enqueue(object: Callback<NewRecordData> {
+                override fun onResponse(call: Call<NewRecordData>, response: Response<NewRecordData>) {
+                    if (response.isSuccessful){
+                        val createdNewRecord = response.body()
+                        if (createdNewRecord != null) {
+                            val record = CropRecordData(
+                                id = "",
+                                author = createdNewRecord.author,
+                                createdDate = "",
+                                phase = createdNewRecord.phase,
+                                phaseData = createdNewRecord.payload,
+                                updatedDate = "",
+                            )
+                            callback(record)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<NewRecordData>, t: Throwable) {
+                    Log.e("CropRecordRepository", "Failed to create record", t)
+                }
+
             })
         }
     }

@@ -35,6 +35,7 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import com.bumptech.glide.request.RequestOptions
 import com.integradis.greenhouse.model.data.crops.Crop
+import com.integradis.greenhouse.model.data.crops.CropPhase
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
 import com.integradis.greenhouse.ui.theme.Typography
 import com.integradis.greenhouse.ui.theme.errorRed
@@ -153,9 +154,7 @@ fun CropCard(
                     tint = PrimaryGreen40
                 )
                 Text(
-                    text = "Current Phase: ${crop.phase.replaceFirstChar { 
-                        it.uppercase()
-                    }}",
+                    text = "Current Phase: ${CropPhase.getValueOf(crop.phase).getPhaseName()}",
                     style = Typography.labelLarge,
                     modifier = Modifier.padding(2.dp)
                 )

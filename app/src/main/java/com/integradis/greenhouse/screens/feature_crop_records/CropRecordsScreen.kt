@@ -35,15 +35,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.integradis.greenhouse.factories.CropRecordRepositoryFactory
 import com.integradis.greenhouse.factories.CropRepositoryFactory
 import com.integradis.greenhouse.model.data.crop_records.CropRecordData
+import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.model.data.crops.CropPhase
 import com.integradis.greenhouse.model.data.crops.UpdateCrop
 import com.integradis.greenhouse.screens.feature_crop_records.ui.CropRecordCard
+import com.integradis.greenhouse.screens.feature_main.Routes
 import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.shared.ui.AlertPopUp
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
@@ -72,7 +76,24 @@ fun CropRecordsScreen(
         mutableStateOf("")
     }
 
+    val cropValData = remember {
+        mutableStateOf<Crop?>(null)
+    }
+
+    if (cropId != null) {
+        cropRepository.getCropById(cropId){
+            cropValData.value = it
+        }
+    }
+    var fabHeight by remember {
+        mutableStateOf(0)
+    }
+
+    val heightInDp = with(LocalDensity.current) { fabHeight.toDp() }
+
     var showEndPhaseDialog by remember { mutableStateOf(false) }
+
+    var showValidationDialog by remember { mutableStateOf(false) }
 
     cropId?.let {
         phase?.let { cropPhase ->
@@ -174,11 +195,23 @@ fun CropRecordsScreen(
                 }
             )
         }
+        if(showValidationDialog){
+            AlertPopUp(
+                onDismissRequest = { showValidationDialog = false },
+                inlineText = "You are not able to create new records in a phase not yet reached",
+                onClickDismissButton = { showValidationDialog = false },
+                buttonText = "Ok, take me back",
+                onConfirmButton = { showValidationDialog = false }
+            )
+        }
         Scaffold(
             floatingActionButton = { Row() {
                 FloatingActionButton(
                     onClick = { showEndPhaseDialog = true },
-                    modifier = Modifier.offset(x= (-200).dp),
+                    modifier = Modifier.offset(x= (-200).dp)
+                        .onGloballyPositioned {
+                            fabHeight = it.size.height
+                        },
                     shape = RoundedCornerShape(30.dp),
                     containerColor = errorRed,
                     contentColor = Color.White
@@ -191,7 +224,12 @@ fun CropRecordsScreen(
                     )
                 }
                 FloatingActionButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        if(cropValData.value?.phase != phase){
+                            showValidationDialog = true
+                        } else {
+                            navController.navigate("${Routes.CreateRecords.route}/${cropId}")}
+                        },
                     containerColor = buttonBrown,
                     contentColor = Color.White
                 ) {
@@ -200,11 +238,12 @@ fun CropRecordsScreen(
             }
             }) { paddingValues ->
             LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
-                contentPadding = PaddingValues(bottom = 16.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentPadding = PaddingValues(bottom = heightInDp + 16.dp)
             ) {
                 items(cropDataReal.value){cropDatum ->
-                    Log.d("CropRecord: ", cropDatum.toString())
                     CropRecordCard(
                         cropRecordData = cropDatum,
                         navController = navController)

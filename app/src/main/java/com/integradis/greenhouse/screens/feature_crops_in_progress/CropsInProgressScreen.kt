@@ -69,7 +69,6 @@ fun CropsInProgressScreen(
 
     cropRepository.getCrops { crops.value = it
         filteredCrops.value = it
-        Log.d("CropsInProgressScreen", "Crops: $crops")
     }
 
     userRepository.getMe { user ->

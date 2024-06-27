@@ -51,8 +51,6 @@ fun Stepper(
         crop.value = it
     }
 
-    Log.d("STATE", crop.value.toString())
-
     val itemsList = mutableListOf(
         CropPhase.FORMULA, CropPhase.PREPARATION_AREA,
         CropPhase.BUNKER, CropPhase.TUNNEL, CropPhase.INCUBATION, CropPhase.CASING,

@@ -25,3 +25,10 @@ data class CropRecordData(
 data class Payload(
     val data: List<Map<String, String>>
 )
+
+data class NewRecordData(
+    val author: String,
+    val phase: String,
+    val payload: Payload,
+    val cropId: String,
+)

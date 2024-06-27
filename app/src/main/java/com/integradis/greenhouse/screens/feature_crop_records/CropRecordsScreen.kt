@@ -1,6 +1,5 @@
 package com.integradis.greenhouse.screens.feature_crop_records
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -128,7 +127,7 @@ fun CropRecordsScreen(
         }
         // Change for crop.id
         Text(
-            text = "Crop ID: ID - #127",
+            text = "Crop ID: ID - #${cropValData.value?.id}",
             style = Typography.labelLarge,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF465B3F),
@@ -206,7 +205,7 @@ fun CropRecordsScreen(
         }
         Scaffold(
             floatingActionButton = { Row() {
-                FloatingActionButton(
+                if (cropValData.value?.state == "true")FloatingActionButton(
                     onClick = { showEndPhaseDialog = true },
                     modifier = Modifier.offset(x= (-200).dp)
                         .onGloballyPositioned {

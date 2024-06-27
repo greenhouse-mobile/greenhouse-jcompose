@@ -1,6 +1,5 @@
 package com.integradis.greenhouse.screens.feature_crops_archive
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -114,7 +113,6 @@ fun CropsArchivesScreen(
         Scaffold {paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
                 items(finishedCrops.value.size) { index ->
-                    Log.d("CropsInProgressScreen", "State: ${finishedCrops.value[index].state}" )
                     if (finishedCrops.value[index].state == "false"){
                         CropCard(
                             imageUrl = "https://compote.slate.com/images/e4805e57-794c-4d88-b893-c7ac42f604ac.jpeg?width=1200&rect=6480x4320&offset=112x0",

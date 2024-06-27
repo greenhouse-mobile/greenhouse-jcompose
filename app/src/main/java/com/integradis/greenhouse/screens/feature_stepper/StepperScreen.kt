@@ -1,6 +1,5 @@
 package com.integradis.greenhouse.screens.feature_stepper
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -94,7 +93,7 @@ fun Stepper(
             MultiStyleText(
                 firstTextPart = "Crop ID: ",
                 firstColor = Color.Black,
-                secondTextPart = "ID - #127",
+                secondTextPart = "ID - #${crop.value?.id}",
                 secondColor = Color.Gray,
                 typography = Typography.labelMedium,
             )

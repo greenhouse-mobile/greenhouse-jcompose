@@ -29,8 +29,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +45,8 @@ import androidx.navigation.NavController
 import com.integradis.greenhouse.factories.UserRepositoryFactory
 import com.integradis.greenhouse.screens.feature_main.Routes
 import com.integradis.greenhouse.model.data.crops.Crop
+import com.integradis.greenhouse.model.data.crops.CropPhase
+import com.integradis.greenhouse.model.data.crops.NewCrop
 import com.integradis.greenhouse.shared.ui.CropCard
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
 import com.integradis.greenhouse.ui.theme.PrimaryGreen40
@@ -58,12 +62,13 @@ fun CropsInProgressScreen(
     deleteCrop: (Int) -> Unit
 ){
     val crops = remember { mutableStateOf(emptyList<Crop>()) }
+    val filteredCrops = remember { mutableStateOf(emptyList<Crop>()) }
     val newCropAuthor = remember { mutableStateOf("") }
-
     val cropRepository = CropRepositoryFactory.getCropRepository(sharedPreferencesHelper)
     val userRepository = UserRepositoryFactory.getUserRepository(sharedPreferencesHelper)
 
     cropRepository.getCrops { crops.value = it
+        filteredCrops.value = it
         Log.d("CropsInProgressScreen", "Crops: $crops")
     }
 
@@ -86,12 +91,23 @@ fun CropsInProgressScreen(
         initialDisplayedMonthMillis = System.currentTimeMillis(),
         yearRange = 2000..2024
     )
+    var cropName by remember { mutableStateOf("") }
+
+    LaunchedEffect(searchCropsInput.value) {
+        filteredCrops.value = if (searchCropsInput.value.isEmpty()) {
+            crops.value
+        } else {
+            crops.value.filter { crop ->
+                crop.name.contains(searchCropsInput.value, ignoreCase = true)
+            }
+        }
+    }
 
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()){
         Row (
             modifier = Modifier
                 .align(Alignment.Start)
-                .height(intrinsicSize = IntrinsicSize.Max)
+                .height(IntrinsicSize.Max)
         ) {
             IconButton(
                 onClick = {
@@ -116,7 +132,7 @@ fun CropsInProgressScreen(
             color = Color(0xFF465B3F),
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        Row( horizontalArrangement = Arrangement.SpaceBetween){
+        Row(horizontalArrangement = Arrangement.SpaceBetween){
             SearchCropTextField(
                 input = searchCropsInput,
                 placeholder = "Search crops...",
@@ -129,58 +145,64 @@ fun CropsInProgressScreen(
                 Icon(
                     imageVector = Icons.Rounded.Event,
                     contentDescription = "Calendar",
-                    tint
-                    = PrimaryGreen40)
+                    tint = PrimaryGreen40
+                )
             }
         }
-        Scaffold (floatingActionButton = {
+        Scaffold(floatingActionButton = {
             FloatingActionButton(onClick = { newCrop = true }, containerColor = buttonBrown, contentColor = Color.White) {
                 Icon(Icons.Filled.Add, "New crop")
             }
-        }){paddingValues ->
+        }){ paddingValues ->
             LazyColumn(modifier = Modifier.padding(paddingValues)) {
-                items(crops.value.size) { index ->
-                    if (crops.value[index].state == "true"){
-                    CropCard(
-                        imageUrl = "https://compote.slate.com/images/e4805e57-794c-4d88-b893-c7ac42f604ac.jpeg?width=1200&rect=6480x4320&offset=112x0",
-                        crop = crops.value[index],
-                        navigateTo = { navController.navigate("${Routes.Stepper.route}/${crops.value[index].id}") },
-                        selectCrop = { selectCrop(index)},
-                        deleteCrop = { deleteCrop(index)}
-                    )}
+                items(filteredCrops.value.size) { index ->
+                    if (filteredCrops.value[index].state == "true") {
+                        CropCard(
+                            imageUrl = "https://compote.slate.com/images/e4805e57-794c-4d88-b893-c7ac42f604ac.jpeg?width=1200&rect=6480x4320&offset=112x0",
+                            crop = filteredCrops.value[index],
+                            navigateTo = { navController.navigate("${Routes.Stepper.route}/${crops.value[index].id}") },
+                            selectCrop = { selectCrop(index) },
+                            deleteCrop = { deleteCrop(index) }
+                        )
+                    }
                 }
             }
             if (newCrop) {
                 AlertDialog(
                     onDismissRequest = { newCrop = false },
                     icon = { Icon(Icons.Outlined.Info, contentDescription = "Info Icon", tint = PrimaryGreen40, modifier = Modifier.size(100.dp)) },
-                    text = { Text("Are you sure you want to create a crop?") },
+                    text = {
+                        Column {
+                            Text("Enter the name for the new crop:")
+                            TextField(
+                                value = cropName,
+                                onValueChange = { cropName = it },
+                                label = { Text("Crop Name") }
+                            )
+                        }
+                    },
                     containerColor = Color.White,
                     confirmButton = {
                         Button(
                             onClick = {
-                                      cropRepository.createCrop(
-                                          name = "New Crop",
-                                          author = newCropAuthor.value,
-                                            callback = { crop ->
-                                                crops.value += crop
-                                            }
-                                      )
+                                val newCropData = NewCrop(
+                                    name = cropName,
+                                    author = newCropAuthor.value
+                                )
+                                cropRepository.createCrop(newCropData) { createdCrop ->
+                                    crops.value = crops.value + createdCrop
+                                    newCrop = false
+                                }
                             },
-                            colors = ButtonDefaults.buttonColors(
-                                PrimaryGreen40
-                            )
+                            colors = ButtonDefaults.buttonColors(PrimaryGreen40)
                         ) {
                             Text("Confirm", color = Color.White)
                         }
                     },
                     dismissButton = {
                         Button(
-                            onClick = { newCrop = false
-                                },
-                            colors = ButtonDefaults.buttonColors(
-                                Color.White
-                            )
+                            onClick = { newCrop = false },
+                            colors = ButtonDefaults.buttonColors(Color.White)
                         ) {
                             Text("Cancel", color = PrimaryGreen40)
                         }
@@ -205,7 +227,7 @@ fun CropsInProgressScreen(
                 TextButton(onClick = { showDatePicker.value = false }) {
                     Text(text = "Dismiss")
                 }
-            }){
+            }) {
             selectedDate.value = datePickerState.selectedDateMillis.toString()
             DatePicker(state = datePickerState)
         }

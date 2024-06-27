@@ -5,6 +5,7 @@ import com.integradis.greenhouse.model.remote.crops.CropService
 import com.integradis.greenhouse.factories.CropServiceFactory
 import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.model.data.crops.CropWrapper
+import com.integradis.greenhouse.model.data.crops.NewCrop
 import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import retrofit2.Call
 import retrofit2.Callback
@@ -56,6 +57,7 @@ class CropRepository(
                         }
                     }
                 }
+
                 override fun onFailure(call: Call<Crop>, t: Throwable) {
                     t.message?.let { message ->
                         Log.d("CropRepository", message)
@@ -65,34 +67,38 @@ class CropRepository(
         }
     }
 
-    fun createCrop(name: String, author: String, callback: (Crop) -> Unit){
+    fun createCrop(newCrop: NewCrop, callback: (Crop) -> Unit) {
         token?.let {
-            val crop = Crop(
-                id = "",
-                name = name,
-                author = author,
-                state = "true",
-                phase = "",
-                startDate = ""
-            )
-            val postCrop = cropService.createCrop("Bearer $it", crop)
+            val postCrop = cropService.createCrop("Bearer $it", newCrop)
 
-            postCrop.enqueue(object : Callback<Crop> {
-                override fun onResponse(call: Call<Crop>, response: Response<Crop>) {
+            postCrop.enqueue(object : Callback<NewCrop> {
+                override fun onResponse(call: Call<NewCrop>, response: Response<NewCrop>) {
                     if (response.isSuccessful) {
-                        response.body()?.let { crop ->
+                        val createdNewCrop = response.body()
+                        if (createdNewCrop != null) {
+                            // Map NewCrop to Crop (assuming you get some required fields from the server)
+                            val crop = Crop(
+                                id = "", // Actual ID from the server or generated
+                                name = createdNewCrop.name,
+                                author = createdNewCrop.author,
+                                state = "", // Adjust as needed
+                                phase = "", // Adjust as needed
+                                startDate = "" // Adjust as needed
+                            )
                             callback(crop)
                         }
-                        Log.d("CropRepository", response.body().toString())
+                    } else {
+                        Log.d("CropRepository", "Failed to create crop: ${response.code()}")
                     }
                 }
 
-                override fun onFailure(call: Call<Crop>, t: Throwable) {
-                    t.message?.let { message ->
-                        Log.d("CropRepository", message)
-                    }
+                override fun onFailure(call: Call<NewCrop>, t: Throwable) {
+                    Log.e("CropRepository", "Failed to create crop", t)
                 }
             })
+        } ?: run {
+            Log.e("CropRepository", "Token is null or empty")
         }
     }
 }
+

@@ -14,3 +14,8 @@ data class Crop(
     var phase: String,
     var startDate: String,
 )
+
+data class NewCrop(
+    var name: String,
+    var author: String,
+)

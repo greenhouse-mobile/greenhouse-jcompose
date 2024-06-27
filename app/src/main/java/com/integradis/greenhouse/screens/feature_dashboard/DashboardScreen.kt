@@ -107,7 +107,7 @@ fun DashboardScreen(
                     modifier = Modifier.weight(1F)
                 )
                 GlideImage(
-                    imageModel = { "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" },
+                    imageModel = { "https://img.freepik.com/free-vector/clock-basic-style_78370-6152.jpg?t=st=1719459798~exp=1719463398~hmac=256c8be5ddd7b96ababf700af4fb0959026a4d68b1b04d0b2e4ca24b7e0752b8&w=826" },
                     modifier = Modifier.size(80.dp),
                     requestOptions = {
                         RequestOptions()

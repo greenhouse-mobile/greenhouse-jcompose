@@ -36,9 +36,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.integradis.greenhouse.R
 import com.integradis.greenhouse.factories.UserRepositoryFactory
+import com.integradis.greenhouse.model.data.crops.UserData
+import com.integradis.greenhouse.repositories.UserRepository
 import coil.compose.rememberImagePainter
 import com.integradis.greenhouse.factories.CompanyRepositoryFactory
 
@@ -51,7 +55,6 @@ import com.integradis.greenhouse.ui.theme.Typography
 @Composable
 fun ProfileScreen(
     navController: NavHostController,
-    company: String,
     sharedPreferencesHelper: SharedPreferencesHelper,
 ){
     val name = remember {

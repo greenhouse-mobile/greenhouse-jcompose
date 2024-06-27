@@ -27,10 +27,6 @@ import com.integradis.greenhouse.shared.ui.Layout
 
 @Composable
 fun GreenhouseMainScreen(sharedPreferencesHelper1: SharedPreferencesHelper) {
-    val name = "Winston Smith"
-    val company = "Peru Agro J&V S.A.C."
-    val tin = "8767"
-
     val navController = rememberNavController()
     val context = LocalContext.current
     val sharedPreferencesHelper = SharedPreferencesHelper(context)
@@ -66,7 +62,6 @@ fun GreenhouseMainScreen(sharedPreferencesHelper1: SharedPreferencesHelper) {
             Layout(navController = navController) {
                 ProfileScreen(
                     navController,
-                    company,
                     sharedPreferencesHelper = sharedPreferencesHelper
                 )
             }

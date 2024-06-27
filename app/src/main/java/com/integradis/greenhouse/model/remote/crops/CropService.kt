@@ -2,6 +2,7 @@ package com.integradis.greenhouse.model.remote.crops
 
 import com.integradis.greenhouse.model.data.crops.Crop
 import com.integradis.greenhouse.model.data.crops.CropWrapper
+import com.integradis.greenhouse.model.data.crops.NewCrop
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -23,6 +24,6 @@ interface CropService {
     @POST("crops")
     fun createCrop(
         @Header("Authorization") token: String,
-        @Body crop: Crop
-    ): Call<Crop>
+        @Body crop: NewCrop
+    ): Call<NewCrop>
 }

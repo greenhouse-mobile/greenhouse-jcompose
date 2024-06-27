@@ -1,6 +1,5 @@
 package com.integradis.greenhouse.screens.feature_crops_archive
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Event
@@ -34,7 +32,6 @@ import androidx.navigation.NavController
 import com.integradis.greenhouse.factories.CropRepositoryFactory
 import com.integradis.greenhouse.screens.feature_main.Routes
 import com.integradis.greenhouse.model.data.crops.Crop
-import com.integradis.greenhouse.repositories.CropRepository
 import com.integradis.greenhouse.shared.SharedPreferencesHelper
 import com.integradis.greenhouse.shared.ui.CropCard
 import com.integradis.greenhouse.shared.ui.SearchCropTextField
@@ -66,7 +63,6 @@ fun CropsArchivesScreen(
 
     cropRepository.getCrops {
         finishedCrops.value = it
-        Log.d("CropsInProgressScreen", "Crops: $finishedCrops")
     }
 
     Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()){

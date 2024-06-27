@@ -52,7 +52,7 @@ import com.skydoves.landscapist.glide.GlideImage
 fun DashboardScreen(
     navController: NavHostController,
     sharedPreferencesHelper: SharedPreferencesHelper,
-    ){
+    ) {
     val userName = remember {
         mutableStateOf("")
     }
@@ -65,15 +65,17 @@ fun DashboardScreen(
             Log.d("dashboard", "Usuario no encontrado")
         }
     }
-    recordViewModel: RecordViewModel = viewModel(factory = RecordViewModelFactory(LocalContext.current.applicationContext as Application))
-){
+    val recordViewModel: RecordViewModel =
+        viewModel(factory = RecordViewModelFactory(LocalContext.current.applicationContext as Application))
     val record by recordViewModel.record.observeAsState()
-    Column (
+    Column(
         modifier = Modifier.verticalScroll(rememberScrollState())
-    ){
-        Row (modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp), verticalAlignment = Alignment.CenterVertically) {
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp), verticalAlignment = Alignment.CenterVertically
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.logo_verde),
                 contentDescription = "",
@@ -84,9 +86,9 @@ fun DashboardScreen(
                 style = Typography.labelLarge,
                 color = Color(0xFF465B3F),
             )
-            Column (horizontalAlignment = Alignment.End, modifier = Modifier.fillMaxWidth()){
+            Column(horizontalAlignment = Alignment.End, modifier = Modifier.fillMaxWidth()) {
                 IconButton(
-                    onClick = { navController.navigate("Notification")},
+                    onClick = { navController.navigate("Notification") },
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.NotificationsNone,
@@ -103,49 +105,52 @@ fun DashboardScreen(
             modifier = Modifier.padding(15.dp)
         )
         record?.let {
-            Card (
+            Card(
                 modifier = Modifier
                     .padding(10.dp)
                     .clickable { navController.navigate("${Routes.CropRecords.route}/${it.cropId}/${it.phase}") }
-            ){
-                Row (modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(15.dp), verticalAlignment = Alignment.CenterVertically) {
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(15.dp), verticalAlignment = Alignment.CenterVertically
+                ) {
 
-                Text(
-                    text = "Return to your most recent record",
-                    style = Typography.bodyLarge,
-                    color = Color(0xFF465B3F),
-                    modifier = Modifier.weight(1F)
-                )
-                GlideImage(
-                    imageModel = { "https://img.freepik.com/free-vector/clock-basic-style_78370-6152.jpg?t=st=1719459798~exp=1719463398~hmac=256c8be5ddd7b96ababf700af4fb0959026a4d68b1b04d0b2e4ca24b7e0752b8&w=826" },
-                    modifier = Modifier.size(80.dp),
-                    requestOptions = {
-                        RequestOptions()
-                            .transform(RoundedCorners(900))
-                    }
-                )
+                    Text(
+                        text = "Return to your most recent record",
+                        style = Typography.bodyLarge,
+                        color = Color(0xFF465B3F),
+                        modifier = Modifier.weight(1F)
+                    )
+                    GlideImage(
+                        imageModel = { "https://img.freepik.com/free-vector/clock-basic-style_78370-6152.jpg?t=st=1719459798~exp=1719463398~hmac=256c8be5ddd7b96ababf700af4fb0959026a4d68b1b04d0b2e4ca24b7e0752b8&w=826" },
+                        modifier = Modifier.size(80.dp),
+                        requestOptions = {
+                            RequestOptions()
+                                .transform(RoundedCorners(900))
+                        }
+                    )
+                }
             }
-        }
-        Text(
-            text = "Dashboard",
-            style = Typography.titleLarge,
-            color = Color(0xFF465B3F),
-            modifier = Modifier.padding(15.dp)
-        )
-        DashboardCard(
-            imageUrl = "https://img.freepik.com/free-photo/asian-woman-studying-different-plants-with-tablet_23-2148776800.jpg?t=st=1718303749~exp=1718307349~hmac=4ccf17973d553b198da732c2e6027fc0bf5f735c80a93ce28e95331f26e88926&w=2000",
-            title = "Crops In Progress",
-            navController,
-            route = "CropsInProgress"
-        )
-        DashboardCard(
-            imageUrl = "https://img.freepik.com/free-photo/ring-binder-used-stored-documents_23-2149362548.jpg?t=st=1718303998~exp=1718307598~hmac=9a9eaad26b4de7184802f61144ff7542f827916dfab101bd98db69b127bc60d6&w=2000",
-            title = "Crops Archive",
-            navController,
-            route = "Archives"
-        )
+            Text(
+                text = "Dashboard",
+                style = Typography.titleLarge,
+                color = Color(0xFF465B3F),
+                modifier = Modifier.padding(15.dp)
+            )
+            DashboardCard(
+                imageUrl = "https://img.freepik.com/free-photo/asian-woman-studying-different-plants-with-tablet_23-2148776800.jpg?t=st=1718303749~exp=1718307349~hmac=4ccf17973d553b198da732c2e6027fc0bf5f735c80a93ce28e95331f26e88926&w=2000",
+                title = "Crops In Progress",
+                navController,
+                route = "CropsInProgress"
+            )
+            DashboardCard(
+                imageUrl = "https://img.freepik.com/free-photo/ring-binder-used-stored-documents_23-2149362548.jpg?t=st=1718303998~exp=1718307598~hmac=9a9eaad26b4de7184802f61144ff7542f827916dfab101bd98db69b127bc60d6&w=2000",
+                title = "Crops Archive",
+                navController,
+                route = "Archives"
+            )
 
+        }
     }
 }

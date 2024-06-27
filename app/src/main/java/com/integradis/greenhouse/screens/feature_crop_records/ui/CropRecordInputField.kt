@@ -18,7 +18,6 @@ fun CropRecordInputField(
     isEmpty: Boolean,
     contentPlaceholder: String? = ""
     ){
-    Text("IM BEING RENDERED")
 
     Column(
         modifier = Modifier.padding(15.dp),

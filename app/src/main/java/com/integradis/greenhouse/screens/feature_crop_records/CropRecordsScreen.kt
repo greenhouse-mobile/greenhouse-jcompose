@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -38,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.integradis.greenhouse.factories.CropRecordRepositoryFactory
 import com.integradis.greenhouse.model.data.crop_records.CropRecordData
+import com.integradis.greenhouse.model.data.crops.CropPhase
 import com.integradis.greenhouse.repositories.CropRecordRepository
 import com.integradis.greenhouse.screens.feature_crop_records.ui.CropRecordCard
 import com.integradis.greenhouse.shared.SharedPreferencesHelper
@@ -110,7 +113,7 @@ fun CropRecordsScreen(
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
-            text = "Preparation area",
+            text = CropPhase.getValueOf(phase).getPhaseName(),
             style = Typography.labelMedium,
             color = SubtitleCropList,
         )
@@ -186,7 +189,10 @@ fun CropRecordsScreen(
                 }
             }
             }) { paddingValues ->
-            LazyColumn(modifier = Modifier.padding(paddingValues)) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize().padding(paddingValues),
+                contentPadding = PaddingValues(bottom = 16.dp)
+            ) {
                 items(cropDataReal.value){cropDatum ->
                     Log.d("CropRecord: ", cropDatum.toString())
                     CropRecordCard(
